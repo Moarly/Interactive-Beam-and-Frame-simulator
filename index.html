@@ -195,6 +195,9 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 .sdt th{text-align:right;color:var(--muted);font-weight:500;font-size:12px;padding:0 0 4px}
 .sdt th:first-child,.sdt td:first-child{text-align:left}
 .sdt td{text-align:right;padding:3px 0;border-top:1px solid var(--line);font-family:var(--cond);font-weight:600}
+.sdblk{padding:6px 0;border-bottom:1px dashed var(--line)}
+.sdblk:last-child{border-bottom:0}
+.sdblk .sm{display:block;margin-bottom:2px}
 .sdeq{font-family:var(--cond);font-size:14px;line-height:1.7;margin:8px 0;padding:8px 10px;background:var(--paper);border-radius:6px;overflow-x:auto;white-space:nowrap}
 .spanbtns{display:flex;gap:8px;margin-top:4px}
 
@@ -314,6 +317,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
         <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
           <button data-v="play" aria-pressed="true">Playground</button>
           <button data-v="fm" aria-pressed="false">Force method</button>
+          <button data-v="sd" aria-pressed="false">Slope-deflection</button>
         </div>
         <div class="seg" id="diag" role="group" aria-label="Diagram">
           <button data-d="none" aria-pressed="true">No diagram</button>
@@ -344,6 +348,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
         <div class="tip" id="tip"></div>
       </div>
       <div class="fmview" id="fmView" hidden></div>
+      <div class="fmview" id="sdView" hidden></div>
     </section>
     <button class="ptoggle" id="panelToggle" aria-expanded="true" aria-controls="sidePanel" title="Hide the side panel" aria-label="Hide the side panel">
       <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M3 2l5 6-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1642,7 +1647,7 @@ document.querySelectorAll('#diag button').forEach(b=>b.onclick=()=>{
   $('#sideWrap').hidden=state.diagram!=='M';
   updateLegend(); draw();
 });
-$('#bmSide').onchange=e=>{ state.bmSide=e.target.value; updateLegend(); if(state.view==='fm') renderFM(); else draw(); };
+$('#bmSide').onchange=e=>{ state.bmSide=e.target.value; updateLegend(); if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else draw(); };
 $('#exag').oninput=e=>{ state.scaleMul=10**(+e.target.value); updateReadout(); draw(); };
 $('#fit').onclick=()=>{ fitScale(); $('#exag').value=0; state.scaleMul=1; updateReadout(); startSpring(); };
 $('#bent').onclick=e=>{ state.showBent=!state.showBent; e.currentTarget.setAttribute('aria-pressed',state.showBent?'true':'false');
@@ -1655,7 +1660,7 @@ $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); renderSD(); if(state.view==='fm') renderFM(); else draw(); }
+function recompute(){ state.result=solve(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else draw(); }
 /* ---------- saved structures: every preset remembers its edits ---------- */
 const SAVE_KEY='bfp-structures';
 let saved={}, defaults={}, lastPreset={}, saveTimer=0;
@@ -1723,6 +1728,105 @@ function resetPreset(){
   rememberCurrent();
 }
 
+
+/* ---------- slope-deflection view ---------- */
+function kinematic(){
+  const N=state.nodes.length, R=restraintsFrom(state.supports);
+  const rot=state.nodes.map((_,n)=>n).filter(n=>!(R[n]||[]).includes(2));
+  // translations: members are axially rigid, so (u_b − u_a)·e = 0 for each member
+  const rows=[];
+  state.members.forEach(([a,b])=>{ const dx=state.nodes[b][0]-state.nodes[a][0], dy=state.nodes[b][1]-state.nodes[a][1], L=Math.hypot(dx,dy);
+    const r=new Array(2*N).fill(0); r[2*a]=-dx/L; r[2*a+1]=-dy/L; r[2*b]=dx/L; r[2*b+1]=dy/L; rows.push(r); });
+  Object.entries(R).forEach(([n,d])=>d.forEach(k=>{ if(k<2){ const r=new Array(2*N).fill(0); r[2*n+k]=1; rows.push(r); } }));
+  // rank by elimination
+  const M=rows.map(r=>r.slice()); let rank=0;
+  for(let c=0;c<2*N && rank<M.length;c++){
+    let p=-1, best=1e-9; for(let i=rank;i<M.length;i++) if(Math.abs(M[i][c])>best){ best=Math.abs(M[i][c]); p=i; }
+    if(p<0) continue; [M[rank],M[p]]=[M[p],M[rank]];
+    for(let i=0;i<M.length;i++) if(i!==rank){ const f=M[i][c]/M[rank][c]; if(f) for(let k=c;k<2*N;k++) M[i][k]-=f*M[rank][k]; }
+    rank++;
+  }
+  return {rot, sway:2*N-rank};
+}
+function renderSDView(){
+  const box=$('#sdView'); if(box.hidden) return;
+  const r=state.result;
+  if(!r||r.unstable){ box.innerHTML=`<div class="fm-grid"><div class="card wide"><h3>Slope-deflection</h3><p class="status bad">The structure is unstable. Add or change a support first.</p></div></div>`; return; }
+  const kin=kinematic(), sd=slopeDeflection(), EI=uc(sd.EI,'EI'), Lf=uc(1,'len');
+  const R=restraintsFrom(state.supports);
+  const nm=(a,b)=>letter(a)+letter(b), Mv=v=>fmt(uc(v,'moment'),2), mu=uu('moment');
+  const th=n=>`θ<sub>${letter(n)}</sub>`;
+  const sgnN=v=>v<0?' − ':' + ';
+  const coef=v=>{ const a=Math.abs(v); return (Math.abs(a-1)<1e-9?'':fmt(a,4).replace(/\.?0+$/,'')) ; };
+  const free=n=>kin.rot.includes(n);
+  // ignore numerically tiny chord rotations (from the very stiff axial members)
+  const psiMax=Math.max(0,...sd.members.map(m=>Math.abs(m.psi)));
+  sd.members.forEach(m=>{ if(Math.abs(m.psi)<Math.max(1e-9,1e-3*psiMax)) m.psi=0; });
+  const cards=[];
+  // 1. kinematic indeterminacy
+  const pinNodes=kin.rot.filter(n=>{ const d=R[n]||[]; return d.includes(0)||d.includes(1); });
+  cards.push(`<div class="card wide"><h3><span class="step">1</span>Degree of kinematic indeterminacy</h3>
+    <p>Count the joint movements you don't know: rotations of joints that aren't fixed, plus independent sideways movements (sway), treating members as unable to stretch.</p>
+    <div class="eq">Unknown rotations: ${kin.rot.length?kin.rot.map(th).join(', '):'none'} &nbsp;(${kin.rot.length})<br>
+    Independent sway / joint translations: ${kin.sway}<br><b>Degree of kinematic indeterminacy = ${kin.rot.length} + ${kin.sway} = ${kin.rot.length+kin.sway}</b></div>
+    ${pinNodes.length?`<p>Tip: at a pinned or roller end (${pinNodes.map(letter).join(', ')}) you can use the modified equation M = (3EI/L)(θ − ψ) + FEM′ to remove that rotation from the unknowns.</p>`:''}
+    ${kin.sway?`<p>This structure can sway, so the chord rotations ψ of the columns are unknown too, and you need one extra equation per sway (horizontal equilibrium, written with column shears).</p>`:''}
+    <canvas class="mini" id="sdKin" style="height:280px"></canvas>
+    <p class="note">The blue line is how the loads bend the structure (exaggerated). Each red tangent shows an unknown joint rotation θ measured from the original member${kin.sway?', and Δ marks joints that move sideways or down':''}.</p></div>`);
+  // 2. fixed-end moments
+  cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Treat every member as fixed at both ends and find the end moments its loads cause (clockwise positive).</p>
+    <table class="sdt"><tr><th>Member</th><th>L (${uu('len')})</th><th>FEM near (${mu})</th><th>FEM far (${mu})</th></tr>
+    ${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.L*Lf,2)}</td><td>${Mv(m.FEMab)}</td><td>${Mv(m.FEMba)}</td></tr>`).join('')}</table></div>`);
+  // 3. chord rotations
+  const psiKnown=kin.sway===0;
+  cards.push(`<div class="card"><h3><span class="step">3</span>Chord rotations ψ</h3><p>ψ is how much a member's straight line between its ends rotates (clockwise positive): ψ = Δ/L. It comes from support settlement or sway.</p>
+    <table class="sdt"><tr><th>Member</th><th>ψ</th><th>Source</th></tr>${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${Math.abs(m.psi)<1e-9?'0':psiKnown?fmt(m.psi*1000,3)+' mrad':'unknown'}</td><td>${Math.abs(m.psi)<1e-9?'–':psiKnown?'settlement':'sway'}</td></tr>`).join('')}</table></div>`);
+  // 4. equations
+  let eqs='';
+  sd.members.forEach(m=>{
+    const L=m.L*Lf, A=letter(m.a), B=letter(m.b);
+    const end=(n1,n2,F,lab)=>{
+      let s=`M<sub>${lab}</sub> = `, parts=[];
+      if(free(n1)) parts.push({c:4/L,t:`EI${th(n1)}`});
+      if(free(n2)) parts.push({c:2/L,t:`EI${th(n2)}`});
+      let konst=uc(F,'moment');
+      if(Math.abs(m.psi)>1e-9){ if(psiKnown) konst+= -6/L*EI*m.psi; else parts.push({c:-6/L,t:`EIψ<sub>${A}${B}</sub>`}); }
+      parts.forEach((p,i)=>{ s+=(i===0?(p.c<0?'−':''):sgnN(p.c))+coef(p.c)+p.t; });
+      if(!parts.length) s+=fmt(konst,2); else if(Math.abs(konst)>1e-9) s+=sgnN(konst)+fmt(Math.abs(konst),2);
+      return s;
+    };
+    eqs+=`<div class="sdblk"><div class="sm">Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM</div>${end(m.a,m.b,m.FEMab,A+B)}<br>${end(m.b,m.a,m.FEMba,B+A)}</div>`;
+  });
+  cards.push(`<div class="card wide"><h3><span class="step">4</span>Slope-deflection equations</h3><p>Write the equation for both ends of every member. Rotations at fixed supports are zero, so they drop out${psiKnown&&sd.members.some(m=>Math.abs(m.psi)>1e-9)?', and known settlement chord rotations are already worked into the numbers':''}. Moments in ${mu}, EI in ${uu('EI')}.</p><div class="eq">${eqs}</div></div>`);
+  // 5. equilibrium
+  let eqm='';
+  kin.rot.forEach(n=>{
+    const ends=[]; sd.members.forEach(m=>{ if(m.a===n) ends.push(`M<sub>${nm(m.a,m.b)}</sub>`); if(m.b===n) ends.push(`M<sub>${nm(m.b,m.a)}</sub>`); });
+    let applied=0; (r.EL||[]).forEach(l=>{ if(l.type!=='moment') return; const [a,b]=state.members[l.m]; const at=l.t<1e-6?a:l.t>1-1e-6?b:-1; if(at===n) applied+=(l.dir==='cw'?1:-1)*l.mag; });
+    eqm+=`Joint ${letter(n)}: ${ends.join(' + ')} = ${Math.abs(applied)>1e-9?fmt(uc(applied,'moment'),2)+' (applied moment, clockwise +)':'0'}<br>`;
+  });
+  if(kin.sway) eqm+=`<span class="sm">Plus ${kin.sway} sway equation${kin.sway>1?'s':''}: horizontal equilibrium of each storey, with column shear V = −(M<sub>top</sub> + M<sub>bottom</sub>)/h plus any load on the column.</span>`;
+  cards.push(`<div class="card wide"><h3><span class="step">5</span>Joint equilibrium</h3><p>The member end moments around each unknown joint must balance. That gives one equation per unknown rotation.</p><div class="eq">${eqm||'No unknown rotations.'}</div></div>`);
+  // 6. solution
+  cards.push(`<div class="card wide"><h3><span class="step">6</span>Solve and substitute back</h3><p>Solving the equations gives the rotations${kin.sway?' and sway':''}; putting them back gives every end moment.</p>
+    <table class="sdt"><tr><th>Unknown</th><th>Value</th><th>× EI (${uu('EI')})</th></tr>
+    ${kin.rot.map(n=>`<tr><td>${th(n)}</td><td>${fmt(sd.theta[n]*1000,4)} mrad</td><td>${fmt(sd.theta[n]*EI,2)}</td></tr>`).join('')}
+    ${!psiKnown?sd.members.filter(m=>Math.abs(m.psi)>1e-9).map(m=>`<tr><td>ψ<sub>${nm(m.a,m.b)}</sub></td><td>${fmt(m.psi*1000,4)} mrad</td><td>${fmt(m.psi*EI,2)}</td></tr>`).join(''):''}</table>
+    <table class="sdt" style="margin-top:12px"><tr><th>Member</th><th>M near (${mu})</th><th>M far (${mu})</th></tr>
+    ${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${Mv(m.Mab)}</td><td>${Mv(m.Mba)}</td></tr>`).join('')}</table>
+    <p class="status ok" style="margin-top:8px">These match the full stiffness analysis ✓</p></div>`);
+  cards.push(`<div class="card wide"><h3><span class="step">7</span>Final result</h3><p>With the end moments known, draw the moment diagram member by member (end moments plus the simply supported moment from the loads).</p>
+    <canvas class="mini" id="sdBent" style="height:240px"></canvas><h4 class="sub">Bending moment (${mu})</h4><canvas class="mini" id="sdM" style="height:240px"></canvas></div>`);
+  box.innerHTML=`<div class="fm-grid">${cards.join('')}</div>`;
+  const restr=restraintsFrom(state.supports);
+  // markers: rotation arcs at unknown joints, sway arrow at a free top joint
+  const md=r.maxDisp||1;
+  const moves=state.nodes.map((_,n)=>n).filter(n=>{ const d=restr[n]||[]; if(d.includes(0)&&d.includes(1)) return false; return Math.hypot(r.nodeDisp[n][0],r.nodeDisp[n][1])>0.02*md; });
+  renderMini($('#sdKin'),{restr, EL:r.EL, res:r, thetas:kin.rot, deltas:moves.map(n=>({n,d:1,text:`Δ${letter(n)}`}))});
+  renderMini($('#sdBent'),{restr, EL:r.EL, res:r});
+  renderMini($('#sdM'),{restr, samples:r.elSamples, diag:'M'});
+}
+new ResizeObserver(()=>{ if(!$('#sdView').hidden) renderSDView(); }).observe($('#sdView'));
 
 /* ---------- mini diagrams for the force method ---------- */
 const SUBS='₀₁₂₃₄₅₆₇₈₉';
@@ -1845,6 +1949,31 @@ function renderMini(canvas,opt){
         pill(dl.text, clamp(dx+(right?1:-1)*(16+ctx.measureText(dl.text).width/2), 60, w-60), clamp(dy + (dy<oy?-1:1)*(14+stack*24), 14, h-14), C.deform, 12);
       });
     }
+    // unknown rotations: tangent to the bent shape and the angle it makes with the original member
+    if(bent) (opt.thetas||[]).forEach(n=>{
+      const p=state.nodes[n], u=opt.res.nodeDisp[n], [x,y]=toS(p[0]+u[0]*D, p[1]+u[1]*D);
+      let dir=null;
+      state.members.forEach(([a,b])=>{ if(!dir && a===n) dir=[state.nodes[b][0]-p[0], state.nodes[b][1]-p[1]]; });
+      state.members.forEach(([a,b])=>{ if(!dir && b===n) dir=[state.nodes[a][0]-p[0], state.nodes[a][1]-p[1]]; });
+      if(!dir) return;
+      const phi=Math.atan2(dir[1],dir[0]);
+      let dth=Math.atan(opt.res.u[3*n+2]*D);
+      if(Math.abs(dth)<1e-6){ label('θ'+letter(n)+' ≈ 0 here', x, y+40, C.load,'center',12.5,700); return; }
+      if(Math.abs(dth)<0.14) dth=Math.sign(dth)*0.14;
+      const a0=-phi, a1=-(phi+dth), R0=46, R1=30;
+      ctx.save();
+      ctx.strokeStyle=alpha(C.muted,0.9); ctx.lineWidth=1.2; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+R0*Math.cos(a0), y+R0*Math.sin(a0)); ctx.stroke();
+      ctx.setLineDash([]); ctx.strokeStyle=C.load; ctx.lineWidth=1.8;
+      ctx.beginPath(); ctx.moveTo(x-12*Math.cos(a1), y-12*Math.sin(a1)); ctx.lineTo(x+(R0+8)*Math.cos(a1), y+(R0+8)*Math.sin(a1)); ctx.stroke();
+      ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(x,y,R1,a0,a1,a1<a0); ctx.stroke();
+      // small arrowhead at the end of the arc
+      const tdir=a1<a0?-1:1, hx=x+R1*Math.cos(a1), hy=y+R1*Math.sin(a1), tx=-Math.sin(a1)*tdir, ty=Math.cos(a1)*tdir;
+      ctx.fillStyle=C.load; ctx.beginPath(); ctx.moveTo(hx+tx*5,hy+ty*5); ctx.lineTo(hx-tx*2+Math.cos(a1)*4,hy-ty*2+Math.sin(a1)*4); ctx.lineTo(hx-tx*2-Math.cos(a1)*4,hy-ty*2-Math.sin(a1)*4); ctx.closePath(); ctx.fill();
+      ctx.restore();
+      const am=(a0+a1)/2, lr=R1+16;
+      label('θ'+letter(n), x+lr*Math.cos(am), y+lr*Math.sin(am), C.load,'center',14,700);
+    });
     labels.forEach(L=>pill(L.t,L.x,L.y,L.col,11.5));
   });
 }
@@ -1852,7 +1981,7 @@ function renderMini(canvas,opt){
 /* ---------- pages ---------- */
 const INTRO={
   det:`<p><b>Statically determinate</b> structures can be solved with equilibrium alone: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0 and ΣM = 0 give every reaction. So the reactions and bending moments don't depend on the material or the section, and a support that settles only tilts the structure without bending it. Try changing E or I, or settling a support, and watch the reactions stay the same.</p>`,
-  ind:`<p><b>Statically indeterminate</b> structures have more unknown reactions than equilibrium equations, so you also need <b>compatibility</b>: how the structure deflects. That's why stiffness and support settlement change the forces here. Switch to the <b>Force method</b> view to see every diagram you'd draw by hand, and check slope-deflection values in the Results tab.</p>`
+  ind:`<p><b>Statically indeterminate</b> structures have more unknown reactions than equilibrium equations, so you also need <b>compatibility</b>: how the structure deflects. That's why stiffness and support settlement change the forces here. Switch to the <b>Force method</b> or <b>Slope-deflection</b> view to work through either method step by step.</p>`
 };
 function updateIntro(){
   const det=determinacy(), r=state.result, unstable=r&&r.unstable;
@@ -1870,7 +1999,7 @@ function setPage(page,keep){
   if(location.hash!==(page==='ind'?'#indeterminate':'#determinate')) history.replaceState(null,'',page==='ind'?'#indeterminate':'#determinate');
   document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
   $('#viewSeg').hidden=page!=='ind';
-  $('#sdSec').hidden=page!=='ind';
+  $('#sdSec').hidden=true;
   if(page!=='ind') setView('play');
   renderPresets();
   if(!keep){ const last=lastPreset[page]; loadPreset(PRESETS.some(p=>p.id===last&&p.page===page)?last:PRESETS.find(p=>p.page===page).id); }
@@ -1882,13 +2011,13 @@ window.addEventListener('hashchange',()=>{ const p=location.hash==='#indetermina
 function setView(v){
   state.view=v;
   document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
-  const fm=v==='fm';
-  $('#wrap').hidden=fm; $('#fmView').hidden=!fm;
-  ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=fm);
-  $('#exag').closest('.tool').hidden=fm;
+  const fm=v==='fm', sdv=v==='sd', other=fm||sdv;
+  $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv;
+  ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=other);
+  $('#exag').closest('.tool').hidden=other;
   $('#fmM').hidden=!fm; $('#fmV').hidden=!fm; $('#fmN').hidden=!fm||isBeam();
-  $('#sideWrap').hidden = fm ? !state.fm.showM : state.diagram!=='M';
-  if(fm) renderFM(); else resize();
+  $('#sideWrap').hidden = fm ? !state.fm.showM : sdv ? false : state.diagram!=='M';
+  if(fm) renderFM(); else if(sdv) renderSDView(); else resize();
 }
 document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
 $('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; renderFM(); };
@@ -1901,6 +2030,7 @@ function sgn(v){ return v<0?' − ':' + '; }
 function dispTxt(v,d){ return d===2 ? `${fmt(v*1000,3)} mrad` : q(v,'defl',3); }
 function renderFM(){
   $('#fmN').hidden = state.view!=='fm' || isBeam();
+  if(state.view==='sd'){ renderSDView(); }
   const box=$('#fmView'); if(box.hidden) return;
   const R=forceMethod(), det=R.det;
   const cards=[];
