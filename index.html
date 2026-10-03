@@ -35,8 +35,20 @@ body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:
 button,select,input{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--deform);outline-offset:2px}
 
-.app{display:grid;grid-template-rows:auto auto 1fr;height:100%}
-header{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;padding:16px 20px 6px}
+.app{display:grid;grid-template-rows:auto auto auto 1fr;height:100%}
+header{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:14px 20px 4px}
+.pages{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
+.pages a{padding:6px 14px;border-radius:7px;text-decoration:none;color:var(--muted);font-weight:600;font-size:15px}
+.pages a:hover{color:var(--ink)}
+.pages a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+.intro{display:flex;gap:16px;align-items:flex-start;padding:6px 20px 4px;max-width:1200px}
+.intro p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;max-width:78ch}
+.intro p b{color:var(--ink);font-weight:600}
+.badge{flex:0 0 auto;display:inline-flex;flex-direction:column;gap:1px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-size:13px;min-width:200px}
+.badge b{font-family:var(--cond);font-size:16px}
+.badge.ok b{color:var(--shear)} .badge.ind b{color:var(--deform)} .badge.bad b{color:var(--load)}
+.badge small{color:var(--muted);font-size:12px}
+.badge a{color:var(--deform);font-size:12.5px;font-weight:600}
 h1{font-family:var(--cond);font-weight:700;font-size:26px;letter-spacing:-.01em;margin:0}
 header p{margin:0;color:var(--muted)}
 
@@ -54,7 +66,7 @@ header p{margin:0;color:var(--muted)}
 .seg button{border:0;background:transparent;padding:6px 10px;cursor:pointer;font-size:14px;font-weight:500;border-right:1px solid var(--line)}
 .seg button:last-child{border-right:0}
 .seg button[aria-pressed="true"]{color:var(--paper)}
-.seg button[data-d="none"][aria-pressed="true"]{background:var(--ink)}
+.seg button[data-d="none"][aria-pressed="true"],.seg.view button[aria-pressed="true"]{background:var(--ink)}
 .seg button[data-d="M"][aria-pressed="true"]{background:var(--moment)}
 .seg button[data-d="V"][aria-pressed="true"]{background:var(--shear)}
 .seg button[data-d="N"][aria-pressed="true"]{background:var(--axialT)}
@@ -62,6 +74,8 @@ header p{margin:0;color:var(--muted)}
 .tool b{color:var(--ink);font-weight:600;min-width:52px}
 .btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:14px;font-weight:500}
 .btn:hover{border-color:var(--muted)}
+.btn:disabled{opacity:.45;cursor:default}
+input[type=range]:disabled{opacity:.45}
 .btn[aria-pressed="true"]{border-color:var(--deform);color:var(--deform)}
 .btn.small{padding:4px 10px;font-size:13px}
 .spacer{flex:1}
@@ -77,6 +91,11 @@ canvas{position:absolute;inset:0;width:100%;height:100%;touch-action:none;displa
 .tip b{font-family:var(--cond);font-weight:600}
 
 .panel{border-left:1px solid var(--line);background:var(--panel);overflow-y:auto;min-height:0}
+.tabs{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:repeat(3,1fr);background:var(--panel);border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:transparent;padding:12px 4px 10px;font-size:14px;white-space:nowrap;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--deform)}
+.tabpanel[hidden]{display:none}
 .sec{padding:14px 18px 16px;border-bottom:1px solid var(--line)}
 .sec h2{font-family:var(--cond);font-size:18px;font-weight:600;margin:0 0 10px;display:flex;justify-content:space-between;align-items:baseline}
 .sec h2 .link{font-family:var(--font);font-size:13px;font-weight:500}
@@ -92,9 +111,12 @@ input[type=range]{width:100%;accent-color:var(--deform);margin:2px 0}
 select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--field)}
 .lbl{font-size:13px;color:var(--muted);display:block;margin-bottom:2px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.sups{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px}
-.sups label{display:flex;align-items:center;gap:8px;font-size:14px}
-.sups label > span{font-family:var(--cond);font-weight:700;width:14px}
+.sups{display:flex;flex-direction:column;gap:8px}
+.suprow{display:grid;grid-template-columns:16px minmax(0,1fr);align-items:center;gap:10px}
+.suprow .jl{font-family:var(--cond);font-weight:700;font-size:15px}
+.settle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.settle .num input{width:52px}
+.settle.none{font-size:12px;opacity:.7;justify-self:end}
 .load{border:1px solid var(--line);border-left:4px solid var(--load);border-radius:8px;padding:10px 12px 2px;margin-bottom:10px;background:var(--paper);transition:box-shadow .15s}
 .load.hl{box-shadow:0 0 0 2px var(--load)}
 .lh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -125,9 +147,36 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 .probe-out td{padding:4px 0;border-top:1px solid var(--line);vertical-align:top}
 .probe-out td:last-child{text-align:right;font-family:var(--cond);font-weight:700;font-size:16px}
 .probe-out small{display:block;font-family:var(--font);font-weight:400;font-size:12px;color:var(--muted)}
+.fmview{flex:1;overflow-y:auto;min-height:0;padding:18px 20px 40px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;max-width:1200px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
+.card.wide{grid-column:1/-1}
+.card h3{margin:0 0 4px;font-family:var(--cond);font-size:19px;font-weight:700;display:flex;gap:10px;align-items:baseline}
+.card h3 .step{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--paper);font-size:14px;flex:0 0 auto}
+.card h4.sub{margin:10px 0 0;font-size:14px;font-weight:600}
+.card p{margin:4px 0 8px;color:var(--muted);font-size:14px;line-height:1.5;max-width:75ch}
+.card canvas.mini{position:static;width:100%;height:230px;display:block;border-radius:8px;background:var(--paper);border:1px solid var(--line);margin:6px 0 8px}
+.vals{width:100%;border-collapse:collapse;font-size:14px}
+.vals td{padding:4px 0;border-top:1px solid var(--line);vertical-align:top}
+.vals td:last-child{text-align:right;font-family:var(--cond);font-weight:600;font-size:15px}
+.vals small{display:block;color:var(--muted);font-family:var(--font);font-weight:400;font-size:12px}
+.eq{font-family:var(--cond);font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:8px 0;line-height:1.9;overflow-x:auto}
+.eq .sm{color:var(--muted);font-size:13px;font-family:var(--font)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:5px 12px;cursor:pointer;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--deform);border-color:var(--deform);color:#fff}
+.status{font-size:14px;margin:6px 0 0}
+.status.bad{color:var(--load)} .status.ok{color:var(--shear)}
+.sdt{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.sdt th{text-align:right;color:var(--muted);font-weight:500;font-size:12px;padding:0 0 4px}
+.sdt th:first-child,.sdt td:first-child{text-align:left}
+.sdt td{text-align:right;padding:3px 0;border-top:1px solid var(--line);font-family:var(--cond);font-weight:600}
+.sdeq{font-family:var(--cond);font-size:14px;line-height:1.7;margin:8px 0;padding:8px 10px;background:var(--paper);border-radius:6px;overflow-x:auto;white-space:nowrap}
 .spanbtns{display:flex;gap:8px;margin-top:4px}
 
 @media (max-width:860px){
+  .intro{flex-direction:column}
+  .fm-grid{grid-template-columns:1fr}
   .app{height:auto}
   .work{grid-template-columns:1fr}
   .wrap{flex:none;height:64vh;min-height:400px}
@@ -141,22 +190,34 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 <div class="app">
   <header>
     <h1>Beam & frame playground</h1>
-    <p>Pick a structure, change its supports and loads, and watch it bend.</p>
+    <nav class="pages" aria-label="Pages">
+      <a href="#determinate" data-page="det">Determinate</a>
+      <a href="#indeterminate" data-page="ind">Indeterminate</a>
+    </nav>
   </header>
+  <div class="intro" id="intro"></div>
   <nav class="presets" id="presets" aria-label="Choose a structure"></nav>
   <main class="work">
     <section class="stage">
       <div class="toolbar">
+        <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
+          <button data-v="play" aria-pressed="true">Playground</button>
+          <button data-v="fm" aria-pressed="false">Force method</button>
+        </div>
         <div class="seg" id="diag" role="group" aria-label="Diagram">
           <button data-d="none" aria-pressed="true">No diagram</button>
           <button data-d="M" aria-pressed="false">Bending moment</button>
           <button data-d="V" aria-pressed="false">Shear force</button>
           <button data-d="N" aria-pressed="false">Axial force</button>
         </div>
+        <button class="btn" id="fmM" aria-pressed="false" hidden title="Add the final bending moment diagram to the last step">Moment diagram</button>
+        <button class="btn" id="fmV" aria-pressed="false" hidden title="Add the final shear force diagram to the last step">Shear diagram</button>
+        <button class="btn" id="fmN" aria-pressed="false" hidden title="Add the final axial force diagram to the last step">Axial diagram</button>
         <label class="tool" id="sideWrap" hidden>Draw on
           <select id="bmSide" style="width:auto"><option value="tension">tension side</option><option value="compression">compression side</option></select>
         </label>
         <div class="spacer"></div>
+        <button class="btn" id="bent" aria-pressed="true" title="Show or hide the bent shape">Bent shape</button>
         <label class="tool">Exaggeration
           <input type="range" id="exag" min="-1.5" max="1.5" step="0.01" value="0" style="width:80px">
           <b id="exagOut">×1</b>
@@ -171,44 +232,68 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
         <div class="banner" id="banner"></div>
         <div class="tip" id="tip"></div>
       </div>
+      <div class="fmview" id="fmView" hidden></div>
     </section>
     <aside class="panel">
-      <div class="sec">
-        <h2>Results</h2>
-        <div id="readout"></div>
-        <p class="howto">Drag a red load to move it, even across supports. Click a joint to change its support. Click anywhere on the structure to check the forces and deflection at that point.</p>
+      <div class="tabs" role="tablist" aria-label="Side panel">
+        <button role="tab" id="t-edit" aria-controls="tab-edit" aria-selected="true" data-tab="edit">Edit</button>
+        <button role="tab" id="t-probe" aria-controls="tab-probe" aria-selected="false" tabindex="-1" data-tab="probe">Check a point</button>
+        <button role="tab" id="t-results" aria-controls="tab-results" aria-selected="false" tabindex="-1" data-tab="results">Results</button>
       </div>
-      <div class="sec">
-        <h2>Check a point <button class="link" id="probeToggle">Hide on drawing</button></h2>
-        <div id="probe"></div>
-      </div>
-      <div class="sec">
-        <h2>Size</h2>
-        <div id="size"></div>
-      </div>
-      <div class="sec">
-        <h2>Supports</h2>
-        <div class="sups" id="sups"></div>
-        <p class="note" style="margin-top:8px">Pinned stops movement but lets it rotate. Roller only stops vertical movement. Fixed stops everything.</p>
-      </div>
-      <div class="sec">
-        <h2>Loads <button class="link" id="clearLoads">Remove all</button></h2>
-        <div id="loads"></div>
-        <div class="adds">
-          <button class="btn" data-add="point">Add point load</button>
-          <button class="btn" data-add="udl">Add distributed load</button>
-          <button class="btn" data-add="moment">Add moment</button>
+      <div class="tabpanel" id="tab-edit" role="tabpanel" aria-labelledby="t-edit">
+        <div class="sec">
+          <p class="howto" style="margin:0">Drag a red load to move it, even across supports. Click a joint to change its support. Click anywhere on the structure to check the forces and deflection at that point.</p>
+        </div>
+        <div class="sec">
+          <h2>Size</h2>
+          <div id="size"></div>
+        </div>
+        <div class="sec">
+          <h2>Supports</h2>
+          <div class="sups" id="sups"></div>
+          <p class="note" style="margin-top:8px">Pinned stops movement but lets it rotate. Roller only stops vertical movement. Fixed stops everything.</p>
+        </div>
+        <div class="sec">
+          <h2>Support settlement <button class="link" id="clearSettle">Reset all</button></h2>
+          <p class="note">Make a support sink by a set amount, like "support C settles 6 mm". Type a value or drag. A negative value lifts the support.</p>
+          <div id="settleBox"></div>
+        </div>
+        <div class="sec">
+          <h2>Loads <button class="link" id="clearLoads">Remove all</button></h2>
+          <div id="loads"></div>
+          <div class="adds">
+            <button class="btn" data-add="point">Add point load</button>
+            <button class="btn" data-add="udl">Add distributed load</button>
+            <button class="btn" data-add="moment">Add moment</button>
+          </div>
+        </div>
+        <div class="sec">
+          <h2>Material & section</h2>
+          <div class="f"><span class="lbl">Material</span><select id="mat"></select></div>
+          <div id="matFields"></div>
+          <p class="note" id="eiNote"></p>
         </div>
       </div>
-      <div class="sec">
-        <h2>Material & section</h2>
-        <div class="f"><span class="lbl">Material</span><select id="mat"></select></div>
-        <div id="matFields"></div>
-        <p class="note" id="eiNote"></p>
+      <div class="tabpanel" id="tab-probe" role="tabpanel" aria-labelledby="t-probe" hidden>
+        <div class="sec">
+          <h2>Check a point <button class="link" id="probeToggle">Hide on drawing</button></h2>
+          <p class="note">Pick a distance below, click anywhere on the structure, or drag the P marker on the drawing.</p>
+          <div id="probe"></div>
+        </div>
       </div>
-      <div class="sec">
-        <h2>Support reactions</h2>
-        <div id="reac"></div>
+      <div class="tabpanel" id="tab-results" role="tabpanel" aria-labelledby="t-results" hidden>
+        <div class="sec">
+          <h2>Results</h2>
+          <div id="readout"></div>
+        </div>
+        <div class="sec">
+          <h2>Support reactions</h2>
+          <div id="reac"></div>
+        </div>
+        <div class="sec" id="sdSec" hidden>
+          <h2>Slope-deflection values</h2>
+          <div id="sd"></div>
+        </div>
       </div>
     </aside>
   </main>
@@ -232,26 +317,32 @@ const SUP_CYCLE = ['free','pin','roller','fixed'];
 const MATERIALS = { steel:{label:'Steel',E:200}, aluminium:{label:'Aluminium',E:70}, concrete:{label:'Concrete',E:30}, timber:{label:'Timber',E:12}, custom:{label:'Custom',E:null} };
 let uid = 1;
 
+const PORTAL=(L,H)=>({nodes:[[0,0],[0,H],[L,H],[L,0]], members:[[0,1],[1,2],[3,2]]});
 const PRESETS = [
-  {id:'ss', name:'Simply supported', kind:'beam', spans:[8], supports:{0:'pin',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'}]},
-  {id:'cant', name:'Cantilever', kind:'beam', spans:[5], supports:{0:'fixed'}, loads:[{type:'point',m:0,t:1,mag:20,dir:'down'}]},
-  {id:'ff', name:'Fixed both ends', kind:'beam', spans:[8], supports:{0:'fixed',1:'fixed'}, loads:[{type:'point',m:0,t:0.5,mag:40,dir:'down'}]},
-  {id:'prop', name:'Propped cantilever', kind:'beam', spans:[8], supports:{0:'fixed',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'}]},
-  {id:'over', name:'Overhanging', kind:'beam', spans:[6,3], supports:{0:'pin',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:1,t:1,mag:20,dir:'down'}]},
-  {id:'cont', name:'Continuous, 3 spans', kind:'beam', spans:[6,6,6], supports:{0:'pin',1:'roller',2:'roller',3:'roller'}, loads:[{type:'udl',m:0,ta:0,m2:2,tb:1,mag:10,dir:'down'}]},
-  {id:'portal', name:'Portal frame', kind:'frame', W:8, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L,H],[L,0]], members:[[0,1],[1,2],[3,2]]}), supports:{0:'fixed',3:'fixed'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
-  {id:'portalpin', name:'Pinned portal', kind:'frame', W:8, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L,H],[L,0]], members:[[0,1],[1,2],[3,2]]}), supports:{0:'pin',3:'pin'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
-  {id:'lframe', name:'L-frame', kind:'frame', W:4, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L,H]], members:[[0,1],[1,2]]}), supports:{0:'fixed'}, loads:[{type:'point',m:1,t:1,mag:10,dir:'down'}]},
-  {id:'gable', name:'Gable frame', kind:'frame', W:10, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L/2,H+L*0.2],[L,H],[L,0]], members:[[0,1],[1,2],[2,3],[4,3]]}), supports:{0:'fixed',4:'fixed'}, loads:[{type:'udl',m:1,ta:0,m2:2,tb:1,mag:8,dir:'down'}]},
-  {id:'bay2', name:'Two-bay frame', kind:'frame', W:12, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L/2,H],[L/2,0],[L,H],[L,0]], members:[[0,1],[1,2],[3,2],[2,4],[5,4]]}), supports:{0:'fixed',3:'fixed',5:'fixed'}, loads:[{type:'udl',m:1,ta:0,m2:3,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
-  {id:'storey2', name:'Two-storey frame', kind:'frame', W:6, H:3.5, gen:(L,H)=>({nodes:[[0,0],[0,H],[0,2*H],[L,0],[L,H],[L,2*H]], members:[[0,1],[1,2],[3,4],[4,5],[1,4],[2,5]]}), supports:{0:'fixed',3:'fixed'}, loads:[{type:'udl',m:4,ta:0,tb:1,mag:10,dir:'down'},{type:'udl',m:5,ta:0,tb:1,mag:6,dir:'down'},{type:'point',m:0,t:1,mag:10,dir:'right'},{type:'point',m:1,t:1,mag:10,dir:'right'}]},
+  // determinate
+  {page:'det', id:'ss', name:'Simply supported', kind:'beam', spans:[8], supports:{0:'pin',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'}]},
+  {page:'det', id:'cant', name:'Cantilever', kind:'beam', spans:[5], supports:{0:'fixed'}, loads:[{type:'point',m:0,t:1,mag:20,dir:'down'}]},
+  {page:'det', id:'over', name:'Overhanging', kind:'beam', spans:[6,3], supports:{0:'pin',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:1,t:1,mag:20,dir:'down'}]},
+  {page:'det', id:'dover', name:'Double overhang', kind:'beam', spans:[2,6,2], supports:{1:'pin',2:'roller'}, loads:[{type:'udl',m:0,ta:0,m2:2,tb:1,mag:8,dir:'down'},{type:'point',m:0,t:0,mag:10,dir:'down'},{type:'point',m:2,t:1,mag:10,dir:'down'}]},
+  {page:'det', id:'lframe', name:'L-frame', kind:'frame', W:4, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L,H]], members:[[0,1],[1,2]]}), supports:{0:'fixed'}, loads:[{type:'point',m:1,t:1,mag:10,dir:'down'}]},
+  {page:'det', id:'prportal', name:'Portal on pin & roller', kind:'frame', W:8, H:4, gen:PORTAL, supports:{0:'pin',3:'roller'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
+  // indeterminate
+  {page:'ind', id:'prop', name:'Propped cantilever', kind:'beam', spans:[8], supports:{0:'fixed',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'}]},
+  {page:'ind', id:'ff', name:'Fixed both ends', kind:'beam', spans:[8], supports:{0:'fixed',1:'fixed'}, loads:[{type:'point',m:0,t:0.5,mag:40,dir:'down'}]},
+  {page:'ind', id:'cont2', name:'Continuous, 2 spans', kind:'beam', spans:[6,6], supports:{0:'pin',1:'roller',2:'roller'}, loads:[{type:'udl',m:0,ta:0,m2:1,tb:1,mag:10,dir:'down'}]},
+  {page:'ind', id:'cont', name:'Continuous, 3 spans', kind:'beam', spans:[6,6,6], supports:{0:'pin',1:'roller',2:'roller',3:'roller'}, loads:[{type:'udl',m:0,ta:0,m2:2,tb:1,mag:10,dir:'down'}]},
+  {page:'ind', id:'portal', name:'Portal frame', kind:'frame', W:8, H:4, gen:PORTAL, supports:{0:'fixed',3:'fixed'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
+  {page:'ind', id:'portalpin', name:'Pinned portal', kind:'frame', W:8, H:4, gen:PORTAL, supports:{0:'pin',3:'pin'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
+  {page:'ind', id:'gable', name:'Gable frame', kind:'frame', W:10, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L/2,H+L*0.2],[L,H],[L,0]], members:[[0,1],[1,2],[2,3],[4,3]]}), supports:{0:'fixed',4:'fixed'}, loads:[{type:'udl',m:1,ta:0,m2:2,tb:1,mag:8,dir:'down'}]},
+  {page:'ind', id:'bay2', name:'Two-bay frame', kind:'frame', W:12, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L/2,H],[L/2,0],[L,H],[L,0]], members:[[0,1],[1,2],[3,2],[2,4],[5,4]]}), supports:{0:'fixed',3:'fixed',5:'fixed'}, loads:[{type:'udl',m:1,ta:0,m2:3,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
+  {page:'ind', id:'storey2', name:'Two-storey frame', kind:'frame', W:6, H:3.5, gen:(L,H)=>({nodes:[[0,0],[0,H],[0,2*H],[L,0],[L,H],[L,2*H]], members:[[0,1],[1,2],[3,4],[4,5],[1,4],[2,5]]}), supports:{0:'fixed',3:'fixed'}, loads:[{type:'udl',m:4,ta:0,tb:1,mag:10,dir:'down'},{type:'udl',m:5,ta:0,tb:1,mag:6,dir:'down'},{type:'point',m:0,t:1,mag:10,dir:'right'},{type:'point',m:1,t:1,mag:10,dir:'right'}]},
 ];
 
 const state = {
   preset:null, kind:'beam', spans:[8], W:8, H:4,
   nodes:[], members:[], runs:[], runOf:[], supports:{}, loads:[],
-  mat:'steel', E:200, I:8000, A:80,
-  diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
+  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, showBent:true,
+  settle:{}, diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
 };
 const isBeam = () => state.kind==='beam';
 
@@ -391,8 +482,11 @@ function evalEl(el,x){
     M:-f[2]+f[1]*x+p*x*x/2+d*x**3/(6*L), V:f[1]+p*x+d*x*x/(2*L), N:-f[0]-(pa*x+da*x*x/(2*L)),
     nx:-s, ny:c, dist:(el.t0+(x/L)*(el.t1-el.t0))*el.mLen};
 }
-function solve(){
-  const EL=expandLoads();
+function restraintsFrom(sup){ const o={}; Object.entries(sup).forEach(([n,t])=>{ if(SUP[t]&&SUP[t].dofs.length) o[n]=SUP[t].dofs.slice(); }); return o; }
+function typeFromDofs(d){ return {'012':'fixed','01':'pin','1':'roller','0':'sideroller','12':'guide','02':'guideside','2':'rotlock'}[d.slice().sort().join('')]||'free'; }
+function solve(opts={}){
+  const EL=opts.EL||expandLoads(), LS=opts.loadScale??1;
+  const RESTR=opts.restraints||restraintsFrom(state.supports), SETTLE=opts.settle||state.settle;
   const nodes=state.nodes.map(p=>({x:p[0],y:p[1]})), N0=nodes.length;
   const memberLists=[], loadNode=new Map();
   state.members.forEach((mb,mi)=>{
@@ -418,7 +512,7 @@ function solve(){
       const ta=list[k].t, tb=list[k+1].t;
       EL.forEach(l=>{ if(l.m===mi && l.type==='udl' && tm>=l.a && tm<=l.b){ const d=DIRS[l.dir], span=l.b-l.a;
         const w=t=>span>1e-9? l.wa+(l.wb-l.wa)*(t-l.a)/span : l.wa;
-        const w0=w(ta), w1=w(tb); qx0+=d[0]*w0; qy0+=d[1]*w0; qx1+=d[0]*w1; qy1+=d[1]*w1; } });
+        const w0=w(ta)*LS, w1=w(tb)*LS; qx0+=d[0]*w0; qy0+=d[1]*w0; qx1+=d[0]*w1; qy1+=d[1]*w1; } });
       const i=list[k].n, j=list[k+1].n;
       const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y, L=Math.hypot(dx,dy);
       if(L<1e-9) continue;
@@ -436,23 +530,29 @@ function solve(){
   EL.forEach(l=>{
     if(l.type==='udl') return;
     const n=loadNode.get(l.id); if(n==null) return;
-    if(l.type==='point'){ const d=DIRS[l.dir]; F[3*n]+=d[0]*l.mag; F[3*n+1]+=d[1]*l.mag; }
-    else F[3*n+2]+=(l.dir==='ccw'?1:-1)*l.mag;
+    if(l.type==='point'){ const d=DIRS[l.dir]; F[3*n]+=d[0]*l.mag*LS; F[3*n+1]+=d[1]*l.mag*LS; }
+    else F[3*n+2]+=(l.dir==='ccw'?1:-1)*l.mag*LS;
   });
   const fixed=new Uint8Array(nd);
-  Object.entries(state.supports).forEach(([n,t])=>{ if(+n<N0) SUP[t].dofs.forEach(d=>fixed[3*n+d]=1); });
+  Object.entries(RESTR).forEach(([n,dofs])=>{ if(+n<N0) dofs.forEach(d=>fixed[3*n+d]=1); });
+  if(opts.unit) F[3*opts.unit.n+opts.unit.d]+=opts.unit.val;
   const freeIdx=[]; for(let d=0;d<nd;d++) if(!fixed[d]) freeIdx.push(d);
+  // prescribed support settlements (mm, positive = down) on restrained vertical directions
+  const up=new Float64Array(nd); let anySettle=false;
+  Object.entries(SETTLE).forEach(([n,mm])=>{ n=+n; if(n<N0 && fixed[3*n+1] && mm){ up[3*n+1]=-mm/1000; anySettle=true; } });
   const nf=freeIdx.length, Kr=new Float64Array(nf*nf), Fr=new Float64Array(nf);
-  for(let a=0;a<nf;a++){ Fr[a]=F[freeIdx[a]]; for(let b=0;b<nf;b++) Kr[a*nf+b]=K[freeIdx[a]*nd+freeIdx[b]]; }
+  for(let a=0;a<nf;a++){ const fa=freeIdx[a]; let rhs=F[fa];
+    if(anySettle) for(let d=0;d<nd;d++) if(up[d]) rhs-=K[fa*nd+d]*up[d];
+    Fr[a]=rhs; for(let b=0;b<nf;b++) Kr[a*nf+b]=K[fa*nd+freeIdx[b]]; }
   const x=solveSPD(Kr,Fr,nf);
   if(!x) return {unstable:true, nodes, loadNode, EL};
-  const u=new Float64Array(nd); freeIdx.forEach((d,a)=>u[d]=x[a]);
+  const u=Float64Array.from(up); freeIdx.forEach((d,a)=>u[d]=x[a]);
   const reactions=[];
-  Object.entries(state.supports).forEach(([n,t])=>{
-    n=+n; if(t==='free'||n>=N0) return;
+  Object.entries(RESTR).forEach(([n,dofs])=>{
+    n=+n; if(!dofs.length||n>=N0) return;
     const r=[0,0,0];
-    SUP[t].dofs.forEach(d=>{ const row=3*n+d; let s=-F[row]; for(let q=0;q<nd;q++) s+=K[row*nd+q]*u[q]; r[d]=s; });
-    reactions.push({n,type:t,Rx:r[0],Ry:r[1],Mz:r[2]});
+    dofs.forEach(d=>{ const row=3*n+d; let s=-F[row]; for(let q=0;q<nd;q++) s+=K[row*nd+q]*u[q]; r[d]=s; });
+    reactions.push({n,type:typeFromDofs(dofs),dofs,Rx:r[0],Ry:r[1],Mz:r[2]});
   });
   const samples=[], byMember=state.members.map(()=>[]), elSamples=[];
   const mx={D:0,M:0,V:0,N:0}, mxS={};
@@ -475,12 +575,124 @@ function solve(){
     maxDisp:mx.D, maxDispS:mxS.D, maxM:mx.M, maxMS:mxS.M, maxV:mx.V, maxVS:mxS.V, maxN:mx.N, maxNS:mxS.N, nodeDisp};
 }
 
+/* ---------- determinacy ---------- */
+function hasHorizontalLoad(){
+  return state.loads.some(l=>{
+    if(l.type==='moment') return false;
+    if(l.dir==='left'||l.dir==='right') return true;
+    return false; });
+}
+function determinacy(){
+  const R=restraintsFrom(state.supports);
+  let r=0, ry=0; Object.values(R).forEach(d=>{ r+=d.length; ry+=d.filter(x=>x!==0).length; });
+  const m=state.members.length, j=state.nodes.length;
+  const full=3*m+r-3*j;
+  const beamMode=isBeam() && !hasHorizontalLoad();
+  const n = beamMode ? ry-2 : full;
+  return {n, full, beamMode, r, ry, m, j};
+}
+
+/* ---------- force method ---------- */
+function fmCandidates(det){
+  const R=restraintsFrom(state.supports), out=[];
+  Object.entries(R).forEach(([n,dofs])=>dofs.forEach(d=>{ if(det.beamMode&&d===0) return; out.push({n:+n,d,key:n+':'+d}); }));
+  return out;
+}
+function fmPrimary(sel){
+  const R=restraintsFrom(state.supports), out={};
+  Object.entries(R).forEach(([n,dofs])=>{ out[n]=dofs.filter(d=>!sel.includes(n+':'+d)); });
+  return out;
+}
+function fmStable(sel){ return !solve({restraints:fmPrimary(sel), EL:[], settle:{}}).unstable; }
+function fmAutoPick(det,cands){
+  const b=(()=>{ let mn=Infinity,mx=-Infinity; state.nodes.forEach(([x])=>{mn=Math.min(mn,x);mx=Math.max(mx,x);}); return {mn,mx}; })();
+  const X=c=>state.nodes[c.n][0], Y=c=>state.nodes[c.n][1];
+  let order;
+  if(isBeam()){
+    const interior=c=>X(c)>b.mn+1e-9&&X(c)<b.mx-1e-9;
+    const rank=c=> c.d===1 ? (interior(c)?0:1) : c.d===2 ? 2 : 3;
+    order=cands.slice().sort((p,q)=> rank(p)-rank(q) || (rank(p)===0 ? X(p)-X(q) : X(q)-X(p)));
+  } else {
+    order=cands.slice().sort((p,q)=> X(q)-X(p) || Y(q)-Y(p) || p.d-q.d);
+  }
+  const sel=[];
+  for(const c of order){ if(sel.length>=det.n) break; if(fmStable([...sel,c.key])) sel.push(c.key); }
+  return sel.length===det.n ? sel : null;
+}
+function solveSmall(A,b){
+  const n=b.length, M=A.map((r,i)=>[...r,b[i]]);
+  for(let k=0;k<n;k++){ let p=k; for(let i=k+1;i<n;i++) if(Math.abs(M[i][k])>Math.abs(M[p][k])) p=i;
+    [M[k],M[p]]=[M[p],M[k]]; if(Math.abs(M[k][k])<1e-30) return null;
+    for(let i=k+1;i<n;i++){ const f=M[i][k]/M[k][k]; for(let j=k;j<=n;j++) M[i][j]-=f*M[k][j]; } }
+  const x=new Array(n).fill(0);
+  for(let i=n-1;i>=0;i--){ let s=M[i][n]; for(let j=i+1;j<n;j++) s-=M[i][j]*x[j]; x[i]=s/M[i][i]; }
+  return x;
+}
+function forceMethod(){
+  const det=determinacy();
+  const out={det};
+  if(state.result && state.result.unstable){ out.error='unstable'; return out; }
+  if(det.n<=0){ out.error='determinate'; return out; }
+  const sig=JSON.stringify(restraintsFrom(state.supports))+det.beamMode;
+  if(sig!==state.fm.sig){ state.fm.sig=sig; state.fm.sel=null; }
+  const cands=fmCandidates(det); out.cands=cands;
+  let sel=state.fm.sel;
+  const keys=cands.map(c=>c.key);
+  if(!sel || !sel.every(k=>keys.includes(k))){ sel=fmAutoPick(det,cands); state.fm.sel=sel; }
+  else if(sel.length===det.n && !fmStable(sel)){ out.sel=sel; out.cands=cands; out.error='primary'; return out; }
+  out.sel=sel||[];
+  if(!sel){ out.error='nopick'; return out; }
+  if(sel.length!==det.n){ out.error='count'; return out; }
+  const prim=fmPrimary(sel); out.prim=prim;
+  const EL=expandLoads();
+  const P0=solve({restraints:prim, EL});
+  if(P0.unstable){ out.error='primary'; return out; }
+  const reds=sel.map(k=>{ const [n,d]=k.split(':').map(Number); return {n,d,key:k}; });
+  const U=reds.map(rd=>solve({restraints:prim, EL, loadScale:0, settle:{}, unit:{n:rd.n,d:rd.d,val:1}}));
+  const D0=reds.map(rd=>P0.u[3*rd.n+rd.d]);
+  const F=reds.map(ri=>U.map(Uj=>Uj.u[3*ri.n+ri.d]));
+  const pres=reds.map(rd=> rd.d===1 ? -(state.settle[rd.n]||0)/1000 : 0);
+  const X=solveSmall(F, pres.map((p,i)=>p-D0[i]));
+  if(!X){ out.error='singular'; return out; }
+  const fin=P0.elSamples.map((arr,e)=>arr.map((s,k)=>({...s, M:s.M+U.reduce((a,Uj,j)=>a+X[j]*Uj.elSamples[e][k].M,0), V:s.V+U.reduce((a,Uj,j)=>a+X[j]*Uj.elSamples[e][k].V,0), N:s.N+U.reduce((a,Uj,j)=>a+X[j]*Uj.elSamples[e][k].N,0)})));
+  const EI=state.E*1e6*state.I*1e-8;
+  Object.assign(out,{prim,reds,P0,U,D0,F,pres,X,fin,EI,EL});
+  return out;
+}
+
+/* ---------- slope-deflection values (clockwise positive) ---------- */
+function memberFEM(m){
+  const r=state.result; if(!r||r.unstable) return [0,0];
+  const sub=r.EL.filter(l=>l.m===m).map(l=>({...l,m:0}));
+  const [a,b]=state.members[m];
+  const keep={nodes:state.nodes, members:state.members};
+  state.nodes=[state.nodes[a],state.nodes[b]]; state.members=[[0,1]];
+  let res; try{ res=solve({restraints:{0:[0,1,2],1:[0,1,2]}, EL:sub, settle:{}}); } finally { state.nodes=keep.nodes; state.members=keep.members; }
+  if(!res||res.unstable) return [0,0];
+  const e0=res.els.find(e=>e.t0<1e-9), e1=res.els.find(e=>e.t1>1-1e-9);
+  return [-e0.f[2], -e1.f[5]];
+}
+function slopeDeflection(){
+  const r=state.result; if(!r||r.unstable) return null;
+  const EI=state.E*1e6*state.I*1e-8;
+  const theta=state.nodes.map((_,n)=>-r.u[3*n+2]);
+  const members=state.members.map(([a,b],m)=>{
+    const e0=r.els.find(e=>e.m===m&&e.t0<1e-9), e1=r.els.find(e=>e.m===m&&e.t1>1-1e-9);
+    const L=memberLen(m), c=(state.nodes[b][0]-state.nodes[a][0])/L, s=(state.nodes[b][1]-state.nodes[a][1])/L;
+    const va=-r.u[3*a]*s+r.u[3*a+1]*c, vb=-r.u[3*b]*s+r.u[3*b+1]*c;
+    const psi=-(vb-va)/L;
+    const [fa,fb]=memberFEM(m);
+    return {m,a,b,L,psi,FEMab:fa,FEMba:fb,Mab:-e0.f[2],Mba:-e1.f[5]};
+  });
+  return {EI,theta,members};
+}
+
 /* ---------- canvas setup ---------- */
 let C={};
 function readColors(){ const cs=getComputedStyle(document.documentElement);
   ['paper','panel','ink','muted','line','grid','deform','load','moment','shear','axialT','axialC','react'].forEach(k=>C[k]=cs.getPropertyValue('--'+k).trim()); }
 function alpha(hex,a){ const h=hex.replace('#',''); const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
-const cv=$('#cv'), ctx=cv.getContext('2d'), wrap=$('#wrap'), tip=$('#tip');
+const cv=$('#cv'), wrap=$('#wrap'), tip=$('#tip'); let ctx=cv.getContext('2d');
 let W=0, Hh=0, dpr=1, view={k:1,ox:0,oy:0}, hits=[];
 const toS=(x,y)=>[view.ox+x*view.k, view.oy-y*view.k];
 const fromS=(sx,sy)=>[(sx-view.ox)/view.k, (view.oy-sy)/view.k];
@@ -545,13 +757,16 @@ function drawSupport(type,sx,sy,n){
   if(type==='free') return;
   let ang=0;
   if(type==='fixed'){ const [ax,ay]=memberAway(n); if(Math.abs(ax)>Math.abs(ay)+1e-6) ang=ax>0?-Math.PI/2:Math.PI/2; else ang=(ay>1e-6)?Math.PI:0; }
-  else if(type==='sideroller'){ const [ax]=memberAway(n); ang=ax>=0?-Math.PI/2:Math.PI/2; }
+  else if(type==='sideroller'||type==='guideside'){ const [ax]=memberAway(n); ang=ax>=0?-Math.PI/2:Math.PI/2; }
   ctx.save(); ctx.translate(sx,sy); ctx.rotate(ang);
   ctx.strokeStyle=C.ink; ctx.fillStyle=C.paper; ctx.lineWidth=1.6; ctx.lineJoin='round';
   const hatch=y0=>{ ctx.beginPath(); ctx.moveTo(-18,y0); ctx.lineTo(18,y0); ctx.stroke(); ctx.lineWidth=1; for(let x=-15;x<=18;x+=6){ ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x-5,y0+6); ctx.stroke(); } ctx.lineWidth=1.6; };
   if(type==='pin'){ ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-11,17); ctx.lineTo(11,17); ctx.closePath(); ctx.fill(); ctx.stroke(); hatch(17); }
   else if(type==='roller'||type==='sideroller'){ ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(-10,13); ctx.lineTo(10,13); ctx.closePath(); ctx.fill(); ctx.stroke();
     [-5,5].forEach(x=>{ ctx.beginPath(); ctx.arc(x,17,3.5,0,Math.PI*2); ctx.fill(); ctx.stroke(); }); hatch(21); }
+  else if(type==='guide'||type==='guideside'){ ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-13,0); ctx.lineTo(13,0); ctx.stroke(); ctx.lineWidth=1.6;
+    [-7,7].forEach(x=>{ ctx.beginPath(); ctx.arc(x,5,3.5,0,Math.PI*2); ctx.fill(); ctx.stroke(); }); hatch(9); }
+  else if(type==='rotlock'){ ctx.strokeRect(-6,-6,12,12); }
   else if(type==='fixed'){ ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(-17,0); ctx.lineTo(17,0); ctx.stroke(); ctx.lineWidth=1; for(let x=-14;x<=17;x+=6){ ctx.beginPath(); ctx.moveTo(x,1); ctx.lineTo(x-6,9); ctx.stroke(); } }
   ctx.restore();
 }
@@ -645,12 +860,12 @@ function drawDims(Da){
 
 /* ---------- main drawing ---------- */
 function draw(){
-  if(!W) return;
+  if(!W||!state.runs.length) return;
   readColors();
   ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,Hh);
   computeView(); hits=[];
   const r=state.result, stable=r&&!r.unstable;
-  const {D}=dispFactor(), Da=D*anim;
+  const {D}=dispFactor(), Da=state.showBent?D*anim:0;
   const diagOn=stable&&state.diagram!=='none', fade=diagOn?0.22:1;
 
   // grid
@@ -672,7 +887,7 @@ function draw(){
 
   // bent shape
   const defPos=s=>toS(s.x0+s.dx*Da, s.y0+s.dy*Da);
-  if(stable){
+  if(stable && state.showBent){
     ctx.globalAlpha=fade; ctx.strokeStyle=C.deform; ctx.lineWidth=3.5; ctx.lineJoin='round'; ctx.lineCap='round';
     r.byMember.forEach(list=>{ ctx.beginPath(); list.forEach((s,i)=>{ const [x,y]=defPos(s); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); });
     ctx.globalAlpha=1;
@@ -688,6 +903,12 @@ function draw(){
   // supports, joints
   const nodeS=state.nodes.map((p,n)=>{ const d=stable?r.nodeDisp[n]:[0,0]; return toS(p[0]+d[0]*Da, p[1]+d[1]*Da); });
   state.nodes.forEach((p,n)=>drawSupport(state.supports[n]||'free', nodeS[n][0], nodeS[n][1], n));
+  state.nodes.forEach((p,n)=>{ const t=state.supports[n], mm=state.settle[n];
+    if(!t||!mm||!SUP[t].dofs.includes(1)) return;
+    const [x,y]=nodeS[n], [ox,oy]=toS(p[0],p[1]);
+    if(Math.abs(y-oy)>3){ ctx.save(); ctx.setLineDash([3,3]); ctx.strokeStyle=C.deform; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(ox-16,oy); ctx.lineTo(ox+16,oy); ctx.stroke(); ctx.restore(); }
+    label(`${mm>0?'sinks':'lifts'} ${fmt(Math.abs(mm),1)} mm`, x-12, y+44, C.deform, 'right', 12.5, 700);
+  });
   state.nodes.forEach((p,n)=>{
     const [x,y]=nodeS[n];
     ctx.beginPath(); ctx.arc(x,y,4.5,0,Math.PI*2); ctx.fillStyle=C.paper; ctx.fill(); ctx.strokeStyle=stable&&!diagOn?C.deform:C.ink; ctx.lineWidth=2; ctx.stroke();
@@ -708,7 +929,7 @@ function draw(){
         arrow(x,y0,x,y1,C.react,1.6,8); label(fmt(Math.abs(re.Ry))+' kN',x+8,y0+(up?6:-6),C.react,'left',12,600); }
       if(Math.abs(re.Rx)>1e-6){ const right=re.Rx>0, yy=y+off-8, x0=x+(right?-62:62), x1=x+(right?-24:24);
         arrow(x0,yy,x1,yy,C.react,1.6,8); label(fmt(Math.abs(re.Rx))+' kN',x0+(right?-4:4),yy-12,C.react,right?'right':'left',12,600); }
-      if(re.type==='fixed'&&Math.abs(re.Mz)>1e-6) label(fmt(Math.abs(re.Mz))+' kNm',x+24,y+20,C.react,'left',12,600);
+      if(re.dofs.includes(2)&&Math.abs(re.Mz)>1e-6) label(fmt(Math.abs(re.Mz))+' kNm',x+24,y+20,C.react,'left',12,600);
     });
     ctx.globalAlpha=1;
   }
@@ -825,7 +1046,7 @@ function drawProbe(Da){
   ];
   setFont(12.5,600);
   let w=0; lines.forEach(([a,bb])=>{ w=Math.max(w, bb===true? ctx.measureText(a).width : ctx.measureText(a).width+ctx.measureText(bb).width+18); });
-  w+=20; const h=lines.length*18+12;
+  w+=20+22; const h=lines.length*18+12;
   // pick a spot that covers as little of the drawing as possible (inside a frame, or a corner)
   const bb=structSpan(), [bx0,by0]=toS(bb.minx,bb.maxy), [bx1,by1]=toS(bb.maxx,bb.miny);
   const cands=[[(bx0+bx1)/2-w/2,(by0+by1)/2-h/2+20],[W-w-14,12],[14,40],[W-w-14,Hh-h-12],[14,Hh-h-12]];
@@ -851,7 +1072,10 @@ function drawProbe(Da){
   ctx.textBaseline='middle';
   lines.forEach(([a,bb],i)=>{
     const y=cy+15+i*18;
-    if(bb===true){ setFont(13,700); ctx.fillStyle=C.paper; ctx.textAlign='left'; ctx.fillText(a,cx+10,y); return; }
+    if(bb===true){ setFont(13,700); ctx.fillStyle=C.paper; ctx.textAlign='left'; ctx.fillText(a,cx+10,y);
+      const bx=cx+w-14, by=y; ctx.strokeStyle=alpha(C.paper,0.8); ctx.lineWidth=1.8; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(bx-4.5,by-4.5); ctx.lineTo(bx+4.5,by+4.5); ctx.moveTo(bx+4.5,by-4.5); ctx.lineTo(bx-4.5,by+4.5); ctx.stroke();
+      hits.push({kind:'probeClose',x:bx,y:by}); return; }
     setFont(12.5,500); ctx.fillStyle=alpha(C.paper,0.75); ctx.textAlign='left'; ctx.fillText(a,cx+10,y);
     setFont(12.5,700); ctx.fillStyle=C.paper; ctx.textAlign='right'; ctx.fillText(bb,cx+w-10,y);
   });
@@ -918,6 +1142,8 @@ cv.addEventListener('pointerdown',e=>{
     else drag={id:h.id, offx:p.x-h.px, offy:p.y-h.py};
     cv.setPointerCapture(e.pointerId); tip.style.display='none'; cv.style.cursor='grabbing'; setHL(h.id); e.preventDefault(); return;
   }
+  const pc=hits.find(x=>x.kind==='probeClose' && Math.hypot(p.x-x.x,p.y-x.y)<11);
+  if(pc){ state.probe.show=false; updateProbeOut(); draw(); e.preventDefault(); return; }
   const pb=hits.find(x=>x.kind==='probe' && Math.hypot(p.x-x.x,p.y-x.y)<14);
   if(pb){ drag={probe:true}; cv.setPointerCapture(e.pointerId); tip.style.display='none'; e.preventDefault(); return; }
   const n=hitNode(p); if(n){ downNode={n:n.n,x:p.x,y:p.y}; e.preventDefault(); return; }
@@ -926,12 +1152,12 @@ cv.addEventListener('pointerdown',e=>{
 let downEmpty=null;
 function nearestOnStructure(p,maxD){
   const r=state.result; if(!r||r.unstable) return null;
-  const {D}=dispFactor(), Da=D*anim; let best=null, bd=maxD;
+  const {D}=dispFactor(), Da=state.showBent?D*anim:0; let best=null, bd=maxD;
   r.samples.forEach(s=>{ const [x,y]=toS(s.x0+s.dx*Da, s.y0+s.dy*Da), d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d;best=s;} });
   if(!best) return null;
   return fromMember(best.m, clamp(best.dist/memberLen(best.m),0,1));
 }
-function setProbe(q){ if(!q) return; state.probe.run=q.run; state.probe.s=r2(q.s); state.probe.show=true; renderProbe(); draw(); }
+function setProbe(q){ if(!q) return; state.probe.run=q.run; state.probe.s=r2(q.s); state.probe.show=true; renderProbe(); draw(); showTab('probe'); }
 cv.addEventListener('pointermove',e=>{
   const p=pt(e);
   if(drag && drag.probe){ const q=nearestOnStructure(p,Infinity); if(q){ state.probe.run=q.run; state.probe.s=r2(q.s); syncProbe(); draw(); } return; }
@@ -951,6 +1177,7 @@ cv.addEventListener('pointermove',e=>{
   const h=hitLoad(p);
   setHL(h?h.id:null);
   const overProbe=hits.some(x=>x.kind==='probe' && Math.hypot(p.x-x.x,p.y-x.y)<14);
+  if(hits.some(x=>x.kind==='probeClose' && Math.hypot(p.x-x.x,p.y-x.y)<11)){ cv.style.cursor='pointer'; tip.style.display='none'; return; }
   cv.style.cursor = h||overProbe ? 'grab' : hitNode(p) ? 'pointer' : nearestOnStructure(p,16) ? 'crosshair' : 'default';
   if(h) tip.style.display='none'; else showTip(p);
 });
@@ -973,7 +1200,7 @@ function locText(s){
 }
 function showTip(p){
   const r=state.result; if(!r||r.unstable){ tip.style.display='none'; return; }
-  const {D}=dispFactor(), Da=D*anim; let best=null, bd=16;
+  const {D}=dispFactor(), Da=state.showBent?D*anim:0; let best=null, bd=16;
   r.samples.forEach(s=>{ const [x,y]=toS(s.x0+s.dx*Da, s.y0+s.dy*Da), d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d;best=s;} });
   if(!best){ tip.style.display='none'; return; }
   const where=locText(best); 
@@ -1012,7 +1239,7 @@ function makeField({label,unit,min,max,step,value,hardMin=min,hardMax=max,dec=2,
 /* ---------- presets bar ---------- */
 function renderPresets(){
   const nav=$('#presets'); nav.innerHTML='';
-  PRESETS.forEach(p=>{
+  PRESETS.filter(p=>p.page===state.page).forEach(p=>{
     const g=p.kind==='beam' ? (()=>{ const nodes=[[0,0]]; let x=0; p.spans.forEach(s=>{x+=s;nodes.push([x,0]);}); return {nodes,members:p.spans.map((_,i)=>[i,i+1])}; })() : p.gen(p.W,p.H);
     let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
     g.nodes.forEach(([x,y])=>{minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y);});
@@ -1052,7 +1279,7 @@ function renderSize(){
       rebuildGeometry(false); renderSize(); renderSupports(); renderLoads(); renderProbe(); recompute();
     };
     const rem=btns.querySelector('#remSpan'); rem.disabled=state.spans.length<2;
-    rem.onclick=()=>{ if(state.spans.length<2) return; delete state.supports[state.spans.length]; state.spans.pop();
+    rem.onclick=()=>{ if(state.spans.length<2) return; delete state.supports[state.spans.length]; delete state.settle[state.spans.length]; state.spans.pop();
       rebuildGeometry(false); renderSize(); renderSupports(); renderLoads(); renderProbe(); recompute(); };
     updateSizeNote();
   } else {
@@ -1070,12 +1297,25 @@ function updateSizeNote(){ const n=$('#sizeNote'); if(n) n.textContent=`Total le
 function renderSupports(){
   const box=$('#sups'); box.innerHTML='';
   state.nodes.forEach((_,n)=>{
-    const lab=document.createElement('label');
-    lab.innerHTML=`<span>${letter(n)}</span><select aria-label="Support at joint ${letter(n)}">${Object.entries(SUP).map(([k,v])=>`<option value="${k}" ${(state.supports[n]||'free')===k?'selected':''}>${v.label}</option>`).join('')}</select>`;
-    lab.querySelector('select').onchange=e=>{ const v=e.target.value; if(v==='free') delete state.supports[n]; else state.supports[n]=v; recompute(); };
-    box.appendChild(lab);
+    const t=state.supports[n]||'free';
+    const row=document.createElement('div'); row.className='suprow';
+    row.innerHTML=`<span class="jl">${letter(n)}</span>
+      <select aria-label="Support at joint ${letter(n)}">${Object.entries(SUP).map(([k,v])=>`<option value="${k}" ${t===k?'selected':''}>${v.label}</option>`).join('')}</select>`;
+    row.querySelector('select').onchange=e=>{ const v=e.target.value; if(v==='free') delete state.supports[n]; else state.supports[n]=v; renderSupports(); recompute(); };
+    box.appendChild(row);
+  });
+  renderSettle();
+}
+function renderSettle(){
+  const box=$('#settleBox'); box.innerHTML='';
+  const nodes=state.nodes.map((_,n)=>n).filter(n=>{ const t=state.supports[n]; return t && SUP[t].dofs.includes(1); });
+  if(!nodes.length){ box.innerHTML='<p class="empty">No supports that resist vertical movement.</p>'; return; }
+  nodes.forEach(n=>{
+    box.appendChild(makeField({label:`Support ${letter(n)} settles`, unit:'mm', min:-20, max:50, step:0.5, hardMin:-500, hardMax:500, value:state.settle[n]||0,
+      onChange:v=>{ if(v) state.settle[n]=v; else delete state.settle[n]; recompute(); }}));
   });
 }
+$('#clearSettle').onclick=()=>{ state.settle={}; renderSettle(); recompute(); };
 
 /* ---------- loads ---------- */
 const TITLES={point:'Point load',udl:'Distributed load',moment:'Moment'};
@@ -1237,7 +1477,7 @@ function renderReactions(){
   if(!r||r.unstable){ box.innerHTML='<p class="empty">No reactions while the structure can move freely.</p>'; return; }
   if(!r.reactions.length){ box.innerHTML='<p class="empty">No supports.</p>'; return; }
   box.innerHTML=`<table class="reac"><tr><th>Joint</th><th>Horizontal</th><th>Vertical</th><th>Moment</th></tr>`+
-    r.reactions.map(re=>`<tr><td>${letter(re.n)}</td><td>${fmt(re.Rx)} kN</td><td>${fmt(re.Ry)} kN</td><td>${re.type==='fixed'?fmt(re.Mz)+' kNm':'–'}</td></tr>`).join('')+
+    r.reactions.map(re=>`<tr><td>${letter(re.n)}</td><td>${fmt(re.Rx)} kN</td><td>${fmt(re.Ry)} kN</td><td>${re.dofs.includes(2)?fmt(re.Mz)+' kNm':'–'}</td></tr>`).join('')+
     `</table><p class="note" style="margin-top:6px">Positive means right, up, or anticlockwise.</p>`;
 }
 function updateReadout(){
@@ -1256,7 +1496,7 @@ function updateReadout(){
 function updateLegend(){
   const r=state.result, {D}=dispFactor();
   let h='<span><i class="dash"></i>Original</span>';
-  if(r&&!r.unstable) h+=`<span><i></i>Bent shape${D?`, drawn ×${Math.round(D).toLocaleString()}`:''}</span>`;
+  if(r&&!r.unstable&&state.showBent) h+=`<span><i></i>Bent shape${D?`, drawn ×${Math.round(D).toLocaleString()}`:''}</span>`;
   if(r&&!r.unstable&&state.diagram!=='none'){
     const nm={M:`Bending moment, drawn on the ${state.bmSide} side`,V:'Shear force',N:'Axial force, blue tension, red compression'}[state.diagram];
     const col={M:'var(--moment)',V:'var(--shear)',N:'var(--axialT)'}[state.diagram];
@@ -1265,6 +1505,18 @@ function updateLegend(){
   $('#legend').innerHTML=h;
 }
 
+
+/* ---------- side panel tabs ---------- */
+const tabBtns=[...document.querySelectorAll('.tabs [role=tab]')];
+function showTab(name,focus){
+  tabBtns.forEach(b=>{ const on=b.dataset.tab===name; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; $('#tab-'+b.dataset.tab).hidden=!on; if(on&&focus) b.focus(); });
+  document.querySelector('.panel').scrollTop=0;
+}
+tabBtns.forEach((b,i)=>{
+  b.onclick=()=>showTab(b.dataset.tab);
+  b.onkeydown=e=>{ if(e.key==='ArrowRight'||e.key==='ArrowLeft'){ const n=(i+(e.key==='ArrowRight'?1:-1)+tabBtns.length)%tabBtns.length; showTab(tabBtns[n].dataset.tab,true); e.preventDefault(); } };
+});
+
 /* ---------- toolbar ---------- */
 document.querySelectorAll('#diag button').forEach(b=>b.onclick=()=>{
   state.diagram=b.dataset.d;
@@ -1272,21 +1524,25 @@ document.querySelectorAll('#diag button').forEach(b=>b.onclick=()=>{
   $('#sideWrap').hidden=state.diagram!=='M';
   updateLegend(); draw();
 });
-$('#bmSide').onchange=e=>{ state.bmSide=e.target.value; updateLegend(); draw(); };
+$('#bmSide').onchange=e=>{ state.bmSide=e.target.value; updateLegend(); if(state.view==='fm') renderFM(); else draw(); };
 $('#exag').oninput=e=>{ state.scaleMul=10**(+e.target.value); updateReadout(); draw(); };
 $('#fit').onclick=()=>{ fitScale(); $('#exag').value=0; state.scaleMul=1; updateReadout(); startSpring(); };
+$('#bent').onclick=e=>{ state.showBent=!state.showBent; e.currentTarget.setAttribute('aria-pressed',state.showBent?'true':'false');
+  $('#exag').disabled=!state.showBent; $('#fit').disabled=!state.showBent; $('#wobble').disabled=!state.showBent;
+  if(!state.showBent && wobbleOn) $('#wobble').click();
+  updateLegend(); draw(); };
 $('#dims').onclick=e=>{ state.showDims=!state.showDims; e.currentTarget.setAttribute('aria-pressed',state.showDims?'true':'false'); draw(); };
 $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria-pressed',wobbleOn?'true':'false');
   if(wobbleOn){ wobbleT0=performance.now(); loop(); } else { anim=1; cancelAnimationFrame(rafId); draw(); } };
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); draw(); }
+function recompute(){ state.result=solve(); if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); renderSD(); if(state.view==='fm') renderFM(); else draw(); }
 function loadPreset(id){
   const p=PRESETS.find(x=>x.id===id);
   state.preset=id; state.kind=p.kind;
   if(p.kind==='beam') state.spans=p.spans.slice(); else { state.W=p.W; state.H=p.H; }
-  state.supports={...p.supports}; state.loads=[]; state.runs=[]; state.result=null;
+  state.supports={...p.supports}; state.settle={...(p.settle||{})}; state.fm.sel=null; state.loads=[]; state.runs=[]; state.result=null;
   rebuildGeometry(false);
   state.loads=p.loads.map(d=>{
     const id=uid++;
@@ -1302,12 +1558,284 @@ function loadPreset(id){
   if(!wobbleOn){ anim=0; startSpring(); }
 }
 
+
+/* ---------- mini diagrams for the force method ---------- */
+const SUBS='₀₁₂₃₄₅₆₇₈₉';
+const sub=n=>String(n).split('').map(c=>SUBS[+c]).join('');
+function redName(rd){ const L=letter(rd.n); return rd.d===0?`${L}x`:rd.d===1?`${L}y`:`M${L}`; }
+function redHTML(rd){ const L=letter(rd.n); return rd.d===0?`${L}<sub>x</sub>`:rd.d===1?`${L}<sub>y</sub>`:`M<sub>${L}</sub>`; }
+function redLong(rd){ const L=letter(rd.n); return rd.d===0?`horizontal reaction at ${L}`:rd.d===1?`vertical reaction at ${L}`:`moment at ${L}`; }
+function redUnit(rd,force){ return rd.d===2 ? (force?'kNm':'rad') : (force?'kN':'m'); }
+
+function withTarget(canvas,fn){
+  const rect=canvas.getBoundingClientRect(); const w=rect.width, h=rect.height; if(!w||!h) return;
+  canvas.width=Math.round(w*dpr); canvas.height=Math.round(h*dpr);
+  const keep={ctx,view:{...view},W,Hh,hits};
+  ctx=canvas.getContext('2d'); W=w; Hh=h; hits=[];
+  ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
+  try{ fn(w,h); } finally { ctx=keep.ctx; view=keep.view; W=keep.W; Hh=keep.Hh; hits=keep.hits; }
+}
+function fitMini(w,h){
+  const b=structSpan(), padX=64, padT=54, padB=54;
+  const aw=w-2*padX, ah=h-padT-padB;
+  let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,120);
+  view.k=k; view.ox=padX+(aw-b.bw*k)/2-b.minx*k; view.oy=padT+ah/2+(b.miny+b.bh/2)*k;
+}
+// opt: {restr, EL, res (for bent shape), samples (elSamples with M), marks:[{n,d,text,unit,col}], diagCol}
+function renderMini(canvas,opt){
+  withTarget(canvas,(w,h)=>{
+    readColors(); fitMini(w,h);
+    const members=()=>state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+    const bent = opt.res && !opt.res.unstable && opt.res.maxDisp>1e-12;
+    const D = bent ? 0.13*structSpan().span/opt.res.maxDisp : 0;
+    // moment diagram (optional)
+    const labels=[];
+    if(opt.samples && opt.diag){
+      const K=opt.diag, raw=s=>K==='V'?s.V:K==='N'?s.N:s.M;
+      let maxAbs=0; opt.samples.forEach(a=>a.forEach(s=>maxAbs=Math.max(maxAbs,Math.abs(raw(s)))));
+      if(maxAbs>1e-9){
+        const sc=Math.min(46,0.2*h)/maxAbs, col=K==='V'?C.shear:C.moment;
+        const val=s=>K==='V'?s.V:K==='N'?s.N:(state.bmSide==='tension'?-s.M:s.M);
+        const colOf=v=>K==='N'?(v>=0?C.axialT:C.axialC):col;
+        opt.samples.forEach(arr=>{
+          if(arr.length<2) return;
+          const col=colOf(arr.reduce((a,s)=>a+s.N,0)/arr.length);
+          ctx.beginPath(); arr.forEach((s,i)=>{ const [x,y]=toS(s.x0,s.y0); i?ctx.lineTo(x,y):ctx.moveTo(x,y); });
+          for(let i=arr.length-1;i>=0;i--){ const s=arr[i], [x,y]=toS(s.x0,s.y0), o=val(s)*sc; ctx.lineTo(x+s.nx*o,y-s.ny*o); }
+          ctx.closePath(); ctx.fillStyle=alpha(col,0.25); ctx.fill();
+          ctx.beginPath(); arr.forEach((s,i)=>{ const [x,y]=toS(s.x0,s.y0), o=val(s)*sc; i?ctx.lineTo(x+s.nx*o,y-s.ny*o):ctx.moveTo(x+s.nx*o,y-s.ny*o); });
+          ctx.strokeStyle=col; ctx.lineWidth=1.8; ctx.stroke();
+        });
+        const add=(s,exact)=>{ const v=val(s); if(Math.abs(v)<=0.05*maxAbs) return; const o=v*sc, sg=Math.sign(o)||1, [x,y]=toS(s.x0,s.y0);
+          const lx=clamp(x+s.nx*(o+sg*14),30,w-30), ly=clamp(y-s.ny*(o+sg*14),12,h-12);
+          if(labels.some(L=>Math.hypot(L.x-lx,L.y-ly)<40)) return; const rv=exact??raw(s); const tt=K==='V'?fmt(rv):K==='N'?`${fmt(Math.abs(rv))} ${rv>=0?'T':'C'}`:fmt(isBeam()?rv:Math.abs(rv)); if(labels.some(L=>L.m===s.m&&L.t===tt)) return; labels.push({m:s.m,x:lx,y:ly,t:K==='V'?fmt(rv):K==='N'?`${fmt(Math.abs(rv))} ${rv>=0?'T':'C'}`:fmt(isBeam()?rv:Math.abs(rv)),col:colOf(rv)}); };
+        const byM={}; opt.samples.forEach(arr=>arr.forEach(s=>{ (byM[s.m]=byM[s.m]||[]).push(s); }));
+        // refine interior peaks with a parabola through neighbouring samples (exact for uniform loads)
+        const peaks={};
+        opt.samples.forEach(arr=>{ for(let k=1;k<arr.length-1;k++){ const a0=raw(arr[k-1]), a1=raw(arr[k]), a2=raw(arr[k+1]);
+          if((a1>=a0&&a1>=a2)||(a1<=a0&&a1<=a2)){ const den=a0-2*a1+a2; const v=Math.abs(den)>1e-12 ? a1-(a2-a0)**2/(8*den) : a1;
+            (peaks[arr[k].m]=peaks[arr[k].m]||[]).push({s:arr[k],v}); } } });
+        Object.entries(byM).forEach(([m,list])=>{
+          const cands=[...list.map(s=>({s,v:raw(s)})), ...(peaks[m]||[])];
+          let hi=cands[0], lo=cands[0]; cands.forEach(c=>{ if(c.v>hi.v) hi=c; if(c.v<lo.v) lo=c; });
+          add(hi.s,hi.v); add(lo.s,lo.v); });
+        opt.samples.forEach(arr=>{ add(arr[0]); add(arr[arr.length-1]); });
+      }
+    }
+    if(bent){
+      ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=C.muted; ctx.lineWidth=1.4; members(); ctx.restore();
+    } else { ctx.strokeStyle=C.ink; ctx.lineWidth=2.2; ctx.lineCap='round'; members(); }
+    // supports
+    Object.entries(opt.restr||{}).forEach(([n,d])=>{ const [x,y]=toS(...state.nodes[n]); drawSupport(typeFromDofs(d),x,y,+n); });
+    state.nodes.forEach((p,n)=>{ const [x,y]=toS(...p); ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle=C.ink; ctx.fill();
+      const [ax,ay]=memberAway(n), L=Math.hypot(ax,ay)||1; label(letter(n), x+(ax/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?10:0), y-(ay/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?8:0), C.muted,'center',12,700); });
+    // loads
+    if(opt.EL){
+      let wmax=0; opt.EL.forEach(l=>{ if(l.type==='udl') wmax=Math.max(wmax,l.wa,l.wb); });
+      opt.EL.forEach(l=>{
+        const d=DIRS[l.dir]||[0,-1], ds=[d[0],-d[1]];
+        if(l.type==='udl'){
+          const [a,b]=state.members[l.m], A=toS(...state.nodes[a]), B=toS(...state.nodes[b]);
+          const len=Math.hypot(B[0]-A[0],B[1]-A[1])*(l.b-l.a), cnt=Math.max(1,Math.round(len/16)), tails=[];
+          for(let i=0;i<=cnt;i++){ const f=l.a+(l.b-l.a)*i/cnt, wv=l.wa+(l.wb-l.wa)*i/cnt, px=A[0]+(B[0]-A[0])*f, py=A[1]+(B[1]-A[1])*f;
+            const ln=wmax>0?3+20*wv/wmax:3, tp=[px-ds[0]*2,py-ds[1]*2], tl=[tp[0]-ds[0]*ln,tp[1]-ds[1]*ln];
+            if(wv>0.04*wmax) arrow(tl[0],tl[1],tp[0],tp[1],C.load,1.1,5); tails.push(tl); }
+          ctx.strokeStyle=C.load; ctx.lineWidth=1.3; ctx.beginPath(); tails.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke();
+        } else if(l.type==='point'){
+          const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
+          const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
+          arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,C.load,2,8);
+          label(fmt(l.mag,0)+' kN',px-ds[0]*38-(ds[0]?ds[0]*12:0),py-ds[1]*38,C.load,'center',11.5,700);
+        } else {
+          const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
+          const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
+          ctx.strokeStyle=C.load; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(px,py,12,0.2*Math.PI,1.7*Math.PI); ctx.stroke();
+        }
+      });
+    }
+    // redundant / unit markers
+    (opt.marks||[]).forEach(mk=>{
+      const [x,y]=toS(...state.nodes[mk.n]), col=mk.col||C.deform;
+      ctx.save(); if(mk.dashed) ctx.setLineDash([4,3]);
+      if(mk.d===1){ arrow(x,y+46,x,y+7,col,2.2,8); ctx.restore(); label(mk.text,x+8,y+40,col,'left',13,700); }
+      else if(mk.d===0){ arrow(x-48,y,x-7,y,col,2.2,8); ctx.restore(); label(mk.text,x-50,y-12,col,'left',13,700); }
+      else { ctx.strokeStyle=col; ctx.lineWidth=2.2; ctx.beginPath(); const a0=-0.25*Math.PI, a1=a0-1.4*Math.PI; ctx.arc(x,y,17,a0,a1,true); ctx.stroke(); ctx.restore();
+        const ex=x+17*Math.cos(a1), ey=y+17*Math.sin(a1); arrow(ex-Math.sin(a1)*-6,ey+Math.cos(a1)*-6,ex+Math.sin(a1)*4,ey-Math.cos(a1)*4,col,2.2,8);
+        label(mk.text,x+20,y-20,col,'left',13,700); }
+    });
+    // bent shape, drawn on top
+    if(bent){
+      ctx.strokeStyle=C.deform; ctx.lineWidth=3; ctx.lineJoin='round'; ctx.lineCap='round';
+      opt.res.byMember.forEach(list=>{ ctx.beginPath(); list.forEach((s,i)=>{ const [x,y]=toS(s.x0+s.dx*D,s.y0+s.dy*D); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); });
+      // movement at the redundant locations
+      const seen={};
+      (opt.deltas||[]).forEach(dl=>{ const stack=(seen[dl.n]=(seen[dl.n]||0)+1)-1;
+        const p=state.nodes[dl.n], [ox,oy]=toS(p[0],p[1]), u=opt.res.nodeDisp[dl.n], [dx,dy]=toS(p[0]+u[0]*D,p[1]+u[1]*D);
+        ctx.beginPath(); ctx.arc(dx,dy,4.5,0,Math.PI*2); ctx.fillStyle=C.deform; ctx.fill(); ctx.strokeStyle=C.paper; ctx.lineWidth=1.5; ctx.stroke();
+        if(dl.d!==2 && Math.hypot(dx-ox,dy-oy)>8){ ctx.save(); ctx.strokeStyle=C.deform; ctx.lineWidth=1.2; ctx.setLineDash([2,3]); ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(dx,dy); ctx.stroke(); ctx.restore(); }
+        const right = dx < w-150;
+        pill(dl.text, clamp(dx+(right?1:-1)*(16+ctx.measureText(dl.text).width/2), 60, w-60), clamp(dy + (dy<oy?-1:1)*(14+stack*24), 14, h-14), C.deform, 12);
+      });
+    }
+    labels.forEach(L=>pill(L.t,L.x,L.y,L.col,11.5));
+  });
+}
+
+/* ---------- pages ---------- */
+const INTRO={
+  det:`<p><b>Statically determinate</b> structures can be solved with equilibrium alone: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0 and ΣM = 0 give every reaction. So the reactions and bending moments don't depend on the material or the section, and a support that settles only tilts the structure without bending it. Try changing E or I, or settling a support, and watch the reactions stay the same.</p>`,
+  ind:`<p><b>Statically indeterminate</b> structures have more unknown reactions than equilibrium equations, so you also need <b>compatibility</b>: how the structure deflects. That's why stiffness and support settlement change the forces here. Switch to the <b>Force method</b> view to see every diagram you'd draw by hand, and check slope-deflection values in the Results tab.</p>`
+};
+function updateIntro(){
+  const det=determinacy(), r=state.result, unstable=r&&r.unstable;
+  let cls='ok', head, smallTxt, link='';
+  const formula = det.beamMode ? `${det.ry} vertical and moment reactions − 2 = ${det.n}` : `3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = ${det.full}`;
+  if(unstable){ cls='bad'; head='Unstable'; smallTxt='It can move freely, so it can\'t carry load.'; }
+  else if(det.n<=0){ head='Statically determinate'; smallTxt=formula; if(state.page==='ind') link='<a href="#determinate" data-keep>Open on the Determinate page</a>'; }
+  else { cls='ind'; head=`Indeterminate to degree ${det.n}`; smallTxt=formula+(det.beamMode&&det.full!==det.n?` (${det.full} if horizontal reactions count)`:''); if(state.page==='det') link='<a href="#indeterminate" data-keep>Open on the Indeterminate page</a>'; }
+  $('#intro').innerHTML=`<div class="badge ${cls}"><b>${head}</b><small>${smallTxt}</small>${link}</div>${INTRO[state.page]}`;
+  $('#intro').querySelectorAll('[data-keep]').forEach(a=>a.onclick=e=>{ e.preventDefault(); setPage(a.getAttribute('href')==='#indeterminate'?'ind':'det',true); });
+}
+function setPage(page,keep){
+  state.page=page;
+  if(location.hash!==(page==='ind'?'#indeterminate':'#determinate')) history.replaceState(null,'',page==='ind'?'#indeterminate':'#determinate');
+  document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
+  $('#viewSeg').hidden=page!=='ind';
+  $('#sdSec').hidden=page!=='ind';
+  if(page!=='ind') setView('play');
+  renderPresets();
+  if(!keep) loadPreset(PRESETS.find(p=>p.page===page).id);
+  else { document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===state.preset?'true':'false')); state.fm.sel=null; recompute(); }
+}
+document.querySelectorAll('.pages a').forEach(a=>a.onclick=e=>{ e.preventDefault(); if(a.dataset.page!==state.page) setPage(a.dataset.page,false); });
+window.addEventListener('hashchange',()=>{ const p=location.hash==='#indeterminate'?'ind':'det'; if(p!==state.page) setPage(p,false); });
+
+function setView(v){
+  state.view=v;
+  document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
+  const fm=v==='fm';
+  $('#wrap').hidden=fm; $('#fmView').hidden=!fm;
+  ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=fm);
+  $('#exag').closest('.tool').hidden=fm;
+  $('#fmM').hidden=!fm; $('#fmV').hidden=!fm; $('#fmN').hidden=!fm||isBeam();
+  $('#sideWrap').hidden = fm ? !state.fm.showM : state.diagram!=='M';
+  if(fm) renderFM(); else resize();
+}
+document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
+$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; renderFM(); };
+$('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); renderFM(); };
+$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); renderFM(); };
+
+/* ---------- force method view ---------- */
+function fmtEI(v,dec=2){ const a=Math.abs(v); return (v<0?'−':'')+a.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
+function sgn(v){ return v<0?' − ':' + '; }
+function dispTxt(v,d){ return d===2 ? `${fmt(v*1000,3)} mrad` : `${fmt(v*1000,3)} mm`; }
+function renderFM(){
+  $('#fmN').hidden = state.view!=='fm' || isBeam();
+  const box=$('#fmView'); if(box.hidden) return;
+  const R=forceMethod(), det=R.det;
+  const cards=[];
+  const degreeCard=()=>{
+    let html=`<div class="card wide"><h3><span class="step">1</span>Degree of indeterminacy and redundants</h3>`;
+    html+= det.beamMode
+      ? `<p>For a beam with only vertical loads we count the vertical reactions and moments, and subtract the 2 equilibrium equations that involve them (ΣF<sub>y</sub> = 0 and ΣM = 0).</p><div class="eq">n = ${det.ry} − 2 = <b>${det.n}</b></div>`
+      : `<p>For a frame with rigid joints, each member has 3 unknown end forces, each joint gives 3 equilibrium equations, and r is the number of reactions.</p><div class="eq">n = 3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = <b>${det.full}</b></div>`;
+    if(R.error==='unstable') return html+`<p class="status bad">The structure is unstable. Add or change a support first.</p></div>`;
+    if(R.error==='determinate') return html+`<p class="status ok">This structure is statically determinate, so equilibrium alone solves it and the force method isn't needed. Pick an indeterminate structure, or add a support.</p></div>`;
+    html+=`<p>Choose <b>${det.n}</b> redundant${det.n>1?'s':''}: reactions to remove so that what's left (the <b>primary structure</b>) is determinate and stable. Different choices give the same final answer.</p><div class="chips">`;
+    (R.cands||[]).forEach(c=>{ const on=R.sel.includes(c.key); const i=R.sel.indexOf(c.key);
+      html+=`<button class="chip" data-key="${c.key}" aria-pressed="${on}">${on?`X${sub(i+1)} = `:''}${redHTML(c)}</button>`; });
+    html+=`</div><button class="btn small" id="fmAuto">Choose for me</button>`;
+    if(R.error==='count') html+=`<p class="status bad">Pick ${det.n} redundant${det.n>1?'s':''} (you have ${R.sel.length}).</p>`;
+    else if(R.error==='primary') html+=`<p class="status bad">With those removed the structure can move freely. Choose a different set.</p>`;
+    else if(R.error==='nopick') html+=`<p class="status bad">This structure has a closed loop, so some redundants must be internal forces (cut a member), which this view can't show yet. The slope-deflection values in the Results tab still work here.</p>`;
+    else if(R.error==='singular') html+=`<p class="status bad">These redundants don't give independent equations. Try another set.</p>`;
+    else html+=`<p class="status ok">Primary structure is stable. Redundants: ${R.reds.map((rd,i)=>`X${sub(i+1)} = ${redHTML(rd)} (${redLong(rd)})`).join(', ')}.</p>`;
+    return html+'</div>';
+  };
+  cards.push(degreeCard());
+  const ok=!R.error;
+  if(ok){
+    const reds=R.reds, n=reds.length, EI=R.EI;
+    // step 2 primary
+    cards.push(`<div class="card"><h3><span class="step">2</span>Primary structure</h3><p>Remove the redundants. They become unknown forces X acting on a structure you can already solve.</p><canvas class="mini" id="fmPrim"></canvas></div>`);
+    // step 3 M0
+    let d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i)}<sub></sub>${''}${sub(i+1)}${sub(0)}<small>${redLong(rd)}, ${rd.d===2?'anticlockwise':rd.d===1?'up':'right'} positive</small></td><td>${fmtEI(R.D0[i]*EI)}/EI<small>${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
+    d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i+1)}${sub(0)} at ${redName(rd)}<small>${rd.d===2?'rotation, anticlockwise positive':'deflection, '+(rd.d===1?'up':'right')+' positive'}</small></td><td>${fmtEI(R.D0[i]*EI)} / EI<small>= ${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
+    cards.push(`<div class="card"><h3><span class="step">3</span>Real loads on the primary structure</h3><p>With the redundants gone, the real loads bend the primary structure, and each redundant's location moves by Δ. By virtual work, Δ${sub(1)}${sub(0)} = ∫ M${sub(0)}·m${sub(1)} / EI dx.</p><canvas class="mini" id="fmM0"></canvas><table class="vals">${d0rows}</table></div>`);
+    // unit cases
+    reds.forEach((rd,j)=>{
+      const rows=reds.map((ri,i)=>`<tr><td>δ${sub(i+1)}${sub(j+1)}<small>at ${redName(ri)} due to X${sub(j+1)} = 1</small></td><td>${fmtEI(R.F[i][j]*EI)} / EI<small>= ${rd.d===2||ri.d===2?fmt(R.F[i][j]*1000,5)+(ri.d===2?' mrad':' mm')+(rd.d===2?' per kNm':' per kN'):fmt(R.F[i][j]*1000,5)+' mm per kN'}</small></td></tr>`).join('');
+      cards.push(`<div class="card"><h3><span class="step">${4+j}</span>Unit load X${sub(j+1)} = 1 (m${sub(j+1)})</h3><p>Now apply only a unit ${rd.d===2?'moment':'force'} where ${redName(rd)} acts. It bends the structure the other way; the movement it causes is δ. By virtual work, δ${sub(1)}${sub(j+1)} = ∫ m${sub(1)}·m${sub(j+1)} / EI dx.</p><canvas class="mini" id="fmU${j}"></canvas><table class="vals">${rows}</table></div>`);
+    });
+    // compatibility
+    const step=4+n;
+    let eq='';
+    reds.forEach((ri,i)=>{
+      const presTxt = R.pres[i]!==0 ? `${fmt(R.pres[i]*1000,2)} mm (support ${letter(ri.n)} settles ${fmt(Math.abs(R.pres[i])*1000,2)} mm)` : '0';
+      eq+=`Δ${sub(i+1)}${sub(0)}${reds.map((_,j)=>` + δ${sub(i+1)}${sub(j+1)}X${sub(j+1)}`).join('')} = ${presTxt}<br>`;
+    });
+    let eqEI='';
+    reds.forEach((ri,i)=>{
+      eqEI+=`${fmtEI(R.D0[i]*EI)}${reds.map((_,j)=>`${sgn(R.F[i][j])}${fmtEI(Math.abs(R.F[i][j]*EI))}·X${sub(j+1)}`).join('')} = ${R.pres[i]!==0?`EI × (${fmt(R.pres[i],4)}) = ${fmtEI(R.pres[i]*EI)}`:'0'}<br>`;
+    });
+    const main=state.result;
+    const xs=reds.map((rd,i)=>{ const re=main.reactions.find(x=>x.n===rd.n), full=re?[re.Rx,re.Ry,re.Mz][rd.d]:NaN, good=Math.abs(full-R.X[i])<1e-3*Math.max(1,Math.abs(full));
+      return `<tr><td>X${sub(i+1)} = ${redHTML(rd)}<small>${R.X[i]>=0?(rd.d===2?'anticlockwise':rd.d===1?'acts up':'acts right'):(rd.d===2?'clockwise':rd.d===1?'acts down':'acts left')}</small></td><td>${fmt(R.X[i],3)} ${redUnit(rd,true)}<small>${good?'matches the full analysis ✓':'full analysis: '+fmt(full,3)}</small></td></tr>`; }).join('');
+    cards.push(`<div class="card wide"><h3><span class="step">${step}</span>Compatibility equations</h3><p>The real structure can't move at the redundants (or moves by exactly the settlement), so the movements from the real loads plus each X must add up to that.</p>
+      <div class="eq">${eq}</div><p>Multiplying through by EI = ${Math.round(EI).toLocaleString()} kNm²:</p><div class="eq">${eqEI}</div><table class="vals">${xs}</table></div>`);
+    cards.push(`<div class="card wide"><h3><span class="step">${step+1}</span>Final result</h3><p>Superpose: M = M${sub(0)}${reds.map((_,j)=>` + X${sub(j+1)}·m${sub(j+1)}`).join('')}. With the X values in place the real supports don't move (apart from any settlement), as the bent shape shows.</p><canvas class="mini" id="fmFin" style="height:260px"></canvas>
+      ${state.fm.showM?`<h4 class="sub">Bending moment (kNm)</h4><canvas class="mini" id="fmFinM" style="height:240px"></canvas>`:''}
+      ${state.fm.showV?`<h4 class="sub">Shear force (kN)</h4><canvas class="mini" id="fmFinV" style="height:240px"></canvas>`:''}
+      ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (kN), blue tension (T), red compression (C)</h4><canvas class="mini" id="fmFinN" style="height:240px"></canvas>`:''}
+      ${!state.fm.showM&&!state.fm.showV&&!(state.fm.showN&&!isBeam())?`<p class="note">Use <b>Moment diagram</b>, <b>Shear diagram</b>${isBeam()?'':' or <b>Axial diagram</b>'} in the toolbar to add the final diagrams here.</p>`:''}</div>`);
+  }
+  box.innerHTML=`<div class="fm-grid">${cards.join('')}</div>`;
+  box.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ const k=c.dataset.key; let sel=(state.fm.sel||[]).slice(); sel=sel.includes(k)?sel.filter(x=>x!==k):[...sel,k]; state.fm.sel=sel; renderFM(); });
+  const auto=$('#fmAuto'); if(auto) auto.onclick=()=>{ state.fm.sel=null; renderFM(); };
+  if(ok){
+    const reds=R.reds;
+    renderMini($('#fmPrim'),{restr:R.prim, EL:R.EL, marks:reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`X${sub(i+1)}`,dashed:true}))});
+    renderMini($('#fmM0'),{restr:R.prim, EL:R.EL, res:R.P0, samples:R.P0.elSamples,
+      deltas:reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`Δ${sub(i+1)}${sub(0)} = ${dispTxt(R.D0[i],rd.d)}`}))});
+    reds.forEach((rd,j)=>renderMini($(`#fmU${j}`),{restr:R.prim, res:R.U[j], samples:R.U[j].elSamples, diagCol:C.shear, marks:[{n:rd.n,d:rd.d,text:`X${sub(j+1)} = 1`}],
+      deltas:[{n:rd.n,d:rd.d,text:`δ${sub(j+1)}${sub(j+1)} = ${dispTxt(R.F[j][j],rd.d)}`}]}));
+    const realR=restraintsFrom(state.supports), xmarks=reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`${redName(rd)} = ${fmt(R.X[i],2)}`,col:C.deform}));
+    renderMini($('#fmFin'),{restr:realR, EL:R.EL, res:state.result, marks:xmarks});
+    if(state.fm.showM) renderMini($('#fmFinM'),{restr:realR, samples:R.fin, diag:'M'});
+    if(state.fm.showV) renderMini($('#fmFinV'),{restr:realR, samples:R.fin, diag:'V'});
+    if(state.fm.showN&&!isBeam()) renderMini($('#fmFinN'),{restr:realR, samples:R.fin, diag:'N'});
+  }
+}
+new ResizeObserver(()=>{ if(!$('#fmView').hidden) renderFM(); }).observe($('#fmView'));
+
+/* ---------- slope-deflection table ---------- */
+function renderSD(){
+  if(state.page!=='ind') return;
+  const box=$('#sd'), sd=slopeDeflection();
+  if(!sd){ box.innerHTML='<p class="empty">No values while the structure can move freely.</p>'; return; }
+  const EI=sd.EI, nm=(a,b)=>letter(a)+letter(b);
+  let h=`<p class="note">Clockwise positive, as used in M<sub>AB</sub> = (2EI/L)(2θ<sub>A</sub> + θ<sub>B</sub> − 3ψ) + FEM<sub>AB</sub>.</p>`;
+  h+=`<table class="sdt"><tr><th>Joint</th><th>θ (mrad)</th><th>θ × EI</th></tr>`+
+    state.nodes.map((_,n)=>`<tr><td>${letter(n)}</td><td>${fmt(sd.theta[n]*1000,3)}</td><td>${fmt(sd.theta[n]*EI,2)}</td></tr>`).join('')+`</table>`;
+  h+=`<table class="sdt" style="margin-top:10px"><tr><th>Member</th><th>FEM near</th><th>FEM far</th><th>M near</th><th>M far</th></tr>`+
+    sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.FEMab,2)}</td><td>${fmt(m.FEMba,2)}</td><td>${fmt(m.Mab,2)}</td><td>${fmt(m.Mba,2)}</td></tr>`).join('')+`</table>`;
+  h+=`<p class="note" style="margin-top:6px">All moments in kNm. "Near" is the first joint of the member name (M<sub>AB</sub>), "far" the second (M<sub>BA</sub>).</p>`;
+  h+=`<div class="sdeq">`+sd.members.map(m=>{
+    const k=`2EI/${fmt(m.L,2)}`, A=letter(m.a), B=letter(m.b), ps=Math.abs(m.psi)>1e-9?` − 3ψ<sub>${A}${B}</sub>`:'';
+    return `M<sub>${A}${B}</sub> = (${k})(2θ<sub>${A}</sub> + θ<sub>${B}</sub>${ps})${sgn(m.FEMab)}${fmt(Math.abs(m.FEMab),2)}<br>M<sub>${B}${A}</sub> = (${k})(2θ<sub>${B}</sub> + θ<sub>${A}</sub>${ps})${sgn(m.FEMba)}${fmt(Math.abs(m.FEMba),2)}`;
+  }).join('<br>')+`</div>`;
+  const psis=sd.members.filter(m=>Math.abs(m.psi)>1e-9);
+  if(psis.length) h+=`<p class="note">Chord rotations: ${psis.map(m=>`ψ<sub>${nm(m.a,m.b)}</sub> = ${fmt(m.psi*1000,3)} mrad`).join(', ')} (from settlement or sway).</p>`;
+  box.innerHTML=h;
+}
+
 readColors();
 renderPresets();
 renderMaterial();
 new ResizeObserver(resize).observe(wrap);
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>draw());
-loadPreset('cont');
+setPage(location.hash==='#indeterminate'?'ind':'det',false);
 })();
 </script>
 </body></html>
