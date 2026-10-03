@@ -35,16 +35,18 @@ body{background:var(--paper);color:var(--ink);font-family:var(--font);font-size:
 button,select,input{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--deform);outline-offset:2px}
 
-.app{display:grid;grid-template-rows:auto auto auto 1fr;height:100%}
-header{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:14px 20px 4px}
+.app{display:flex;flex-direction:column;height:100%;min-height:0}
+.app > header,.app > .intro{flex:0 0 auto}
+.app > .work{flex:1 1 auto;min-height:0}
+header{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;padding:10px 20px}
 .pages{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
 .pages a{padding:6px 14px;border-radius:7px;text-decoration:none;color:var(--muted);font-weight:600;font-size:15px}
 .pages a:hover{color:var(--ink)}
 .pages a[aria-current="page"]{background:var(--ink);color:var(--paper)}
-.intro{display:flex;gap:16px;align-items:flex-start;padding:6px 20px 4px;max-width:1200px}
+.intro{padding:0 20px 10px;max-width:1100px}
 .intro p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;max-width:78ch}
 .intro p b{color:var(--ink);font-weight:600}
-.badge{flex:0 0 auto;display:inline-flex;flex-direction:column;gap:1px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font-size:13px;min-width:200px}
+.badge{display:inline-flex;flex-direction:column;gap:0;padding:4px 12px;border-radius:10px;border:1px solid var(--line);background:var(--panel);font-size:13px;line-height:1.3}
 .badge b{font-family:var(--cond);font-size:16px}
 .badge.ok b{color:var(--shear)} .badge.ind b{color:var(--deform)} .badge.bad b{color:var(--load)}
 .badge small{color:var(--muted);font-size:12px}
@@ -52,14 +54,36 @@ header{display:flex;align-items:center;gap:22px;flex-wrap:wrap;padding:14px 20px
 h1{font-family:var(--cond);font-weight:700;font-size:26px;letter-spacing:-.01em;margin:0}
 header p{margin:0;color:var(--muted)}
 
-.presets{display:flex;gap:8px;overflow-x:auto;padding:8px 20px 12px;scrollbar-width:thin}
+.pick{position:relative}
+.pickbtn{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:5px 12px 5px 8px;cursor:pointer;min-width:230px;text-align:left}
+.pickbtn:hover{border-color:var(--muted)}
+.pk-ic svg{width:48px;height:27px;display:block}
+.pk-tx{display:flex;flex-direction:column;line-height:1.15;flex:1}
+.pk-tx small{font-size:11px;color:var(--muted)}
+.pk-tx span{font-weight:600;font-size:15px}
+.chev{width:12px;height:8px;color:var(--muted);transition:transform .15s}
+.pickbtn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.pop{position:absolute;top:calc(100% + 6px);left:0;z-index:30;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;grid-template-columns:repeat(3,minmax(120px,1fr));gap:8px;box-shadow:0 12px 32px rgba(0,0,0,.25);width:max-content;max-width:min(560px,calc(100vw - 40px))}
+.iconbtn:disabled{opacity:.4;cursor:default;transform:none}
+.preset{position:relative}
+.preset.edited::after,.pickbtn.edited .pk-tx small::after{content:"Edited";position:absolute;top:6px;right:6px;font-size:10px;font-weight:700;letter-spacing:.03em;color:var(--deform);background:color-mix(in srgb,var(--deform) 14%,transparent);padding:1px 6px;border-radius:999px}
+.pickbtn.edited .pk-tx small::after{position:static;margin-left:6px}
+.about{width:30px;height:30px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-weight:700;font-size:15px;cursor:pointer;color:var(--muted);margin-left:-8px}
+.about:hover,.about[aria-expanded="true"]{color:var(--paper);background:var(--deform);border-color:var(--deform)}
 .preset{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px 6px;border:1px solid var(--line);background:transparent;border-radius:8px;cursor:pointer;min-width:96px}
 .preset svg{width:72px;height:40px;display:block}
 .preset span{font-size:13px;font-weight:500;white-space:nowrap}
 .preset:hover{border-color:var(--muted)}
 .preset[aria-pressed="true"]{background:var(--panel);border-color:var(--ink);box-shadow:inset 0 -3px 0 var(--deform)}
 
-.work{display:grid;grid-template-columns:minmax(0,1fr) 350px;min-height:0;border-top:1px solid var(--line)}
+.work{display:grid;grid-template-columns:minmax(0,1fr) 350px;min-height:0;border-top:1px solid var(--line);position:relative}
+.work.collapsed{grid-template-columns:minmax(0,1fr) 0}
+.work.collapsed .panel{display:none}
+.ptoggle{position:absolute;top:50%;right:350px;transform:translate(50%,-50%);z-index:5;width:22px;height:56px;border-radius:11px;border:1px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;display:grid;place-items:center;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.ptoggle:hover{color:var(--ink);border-color:var(--muted)}
+.ptoggle svg{width:9px;height:14px;transition:transform .15s}
+.work.collapsed .ptoggle{right:0;transform:translate(0,-50%);border-radius:11px 0 0 11px;border-right:0;width:26px}
+.work.collapsed .ptoggle svg{transform:rotate(180deg)}
 .stage{display:flex;flex-direction:column;min-height:0;min-width:0}
 .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;border-bottom:1px solid var(--line)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -148,7 +172,7 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 .probe-out td:last-child{text-align:right;font-family:var(--cond);font-weight:700;font-size:16px}
 .probe-out small{display:block;font-family:var(--font);font-weight:400;font-size:12px;color:var(--muted)}
 .fmview{flex:1;overflow-y:auto;min-height:0;padding:18px 20px 40px}
-.fm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:16px;max-width:1200px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;min-width:0}
 .card.wide{grid-column:1/-1}
 .card h3{margin:0 0 4px;font-family:var(--cond);font-size:19px;font-weight:700;display:flex;gap:10px;align-items:baseline}
@@ -175,15 +199,82 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 .spanbtns{display:flex;gap:8px;margin-top:4px}
 
 @media (max-width:860px){
-  .intro{flex-direction:column}
   .fm-grid{grid-template-columns:1fr}
   .app{height:auto}
   .work{grid-template-columns:1fr}
+  .ptoggle{display:none}
+  .work.collapsed .panel{display:block}
   .wrap{flex:none;height:64vh;min-height:400px}
   .panel{border-left:0;border-top:1px solid var(--line)}
   header{padding:12px 14px 4px}
-  .presets{padding:8px 14px 10px}
+  .pop{grid-template-columns:repeat(2,minmax(120px,1fr))}
+  .pickbtn{min-width:0}
 }
+
+/* ---------- polish ---------- */
+:root{--pload:var(--load);--dload:var(--load);--mload:var(--load);--r:10px;--shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06);--ease:cubic-bezier(.2,.7,.2,1)}
+:root[data-theme="dark"],:root:not([data-theme="light"]){--shadow:0 1px 2px rgba(0,0,0,.3),0 6px 18px rgba(0,0,0,.25)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.06)}}
+:root[data-theme="light"]{--paper:#EEF1EC;--panel:#F8F9F6;--field:#FFFFFF;--ink:#18232E;--muted:#5F6D78;--line:#CFD7D0;--grid:#E0E6DF;--deform:#2B55D6;--load:#D2361F;--moment:#B0720A;--shear:#0F7A6A;--axialT:#2B55D6;--axialC:#D2361F;--react:#4F5F6C}
+button,.btn,.seg button,.chip,.preset,.pickbtn,.tabs button,.iconbtn,.about,.ptoggle{transition:background-color .15s var(--ease),border-color .15s var(--ease),color .15s var(--ease),box-shadow .15s var(--ease),transform .08s var(--ease)}
+.btn:active,.seg button:active,.chip:active,.preset:active,.pickbtn:active,.iconbtn:active{transform:scale(.97)}
+.btn,.pickbtn,.badge,.seg,.iconbtn{border-radius:var(--r)}
+.toolbar{gap:8px 10px;background:color-mix(in srgb,var(--panel) 55%,transparent)}
+.seg{box-shadow:var(--shadow)}
+.btn{box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.spacer{flex:1}
+header .spacer{min-width:8px}
+.iconbtn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--panel);padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px;color:var(--ink)}
+.iconbtn:hover{border-color:var(--muted)}
+.iconbtn svg{width:18px;height:18px}
+.iconbtn[aria-expanded="true"]{border-color:var(--deform);color:var(--deform)}
+.settings .pop{left:auto;right:0}
+.pop{animation:popIn .16s var(--ease);transform-origin:top left}
+.settings .pop{transform-origin:top right}
+@keyframes popIn{from{opacity:0;transform:translateY(-6px) scale(.98)}to{opacity:1;transform:none}}
+.tabpanel{animation:fadeIn .2s var(--ease)}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{box-shadow:var(--shadow);transition:border-color .2s var(--ease)}
+.card:hover{border-color:color-mix(in srgb,var(--muted) 45%,var(--line))}
+.load{border-left:4px solid var(--lc,var(--load))}
+.load.hl{box-shadow:0 0 0 2px var(--lc,var(--load))}
+.lsw{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--lc,var(--load));margin-right:8px;vertical-align:1px}
+.shapes button[aria-pressed="true"]{background:var(--lc,var(--load))}
+/* sliders */
+input[type=range]{-webkit-appearance:none;appearance:none;height:22px;background:transparent;cursor:pointer;--p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:999px;background:linear-gradient(to right,var(--deform) 0 var(--p),color-mix(in srgb,var(--muted) 30%,transparent) var(--p) 100%)}
+input[type=range]::-moz-range-track{height:6px;border-radius:999px;background:color-mix(in srgb,var(--muted) 30%,transparent)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:999px;background:var(--deform)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--field);border:2px solid var(--deform);margin-top:-6px;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .12s var(--ease)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--field);border:2px solid var(--deform);box-shadow:0 1px 4px rgba(0,0,0,.25)}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
+input[type=range]:focus-visible{outline:none}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color-mix(in srgb,var(--deform) 30%,transparent)}
+/* panel collapse animation */
+.work{transition:grid-template-columns .28s var(--ease)}
+.work.collapsed .panel{display:block;visibility:hidden;overflow:hidden}
+.panel{transition:visibility 0s linear}
+/* settings */
+.setpop{display:block;width:410px;max-width:calc(100vw - 24px);padding:14px 16px}
+.setpop h4{margin:4px 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.setpop .seg{display:flex;box-shadow:none;margin-bottom:12px}
+.setpop .seg button{flex:1;padding:7px 6px;font-size:13.5px}
+.setpop .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.crow{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:8px;margin:6px 0}
+.crow span{font-size:13.5px}
+.sws{display:flex;gap:4px;flex-wrap:nowrap;align-items:center}
+.sw{width:20px;height:20px;border-radius:6px;border:2px solid transparent;cursor:pointer;padding:0;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.sw[aria-pressed="true"]{border-color:var(--ink);transform:scale(1.08)}
+.sw.auto{background:conic-gradient(var(--load),var(--deform),var(--moment),var(--shear),var(--load));}
+.sws input[type=color]{width:22px;height:22px;border:0;padding:0;background:none;cursor:pointer;border-radius:6px}
+.tgl{display:flex;align-items:center;gap:10px;font-size:13.5px;margin:10px 0 4px;cursor:pointer}
+.tgl input{width:34px;height:20px;appearance:none;-webkit-appearance:none;background:color-mix(in srgb,var(--muted) 35%,transparent);border-radius:999px;position:relative;cursor:pointer;transition:background .15s var(--ease);margin:0}
+.tgl input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--field);box-shadow:0 1px 3px rgba(0,0,0,.3);transition:transform .15s var(--ease)}
+.tgl input:checked{background:var(--deform)}
+.tgl input:checked::after{transform:translateX(14px)}
+.setfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
+@media (max-width:1500px){ .iconbtn span{display:none} .iconbtn{padding:7px 9px} h1{font-size:22px} header{gap:10px 14px} .pickbtn{min-width:200px} }
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -194,9 +285,29 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
       <a href="#determinate" data-page="det">Determinate</a>
       <a href="#indeterminate" data-page="ind">Indeterminate</a>
     </nav>
+    <div class="pick">
+      <button class="pickbtn" id="presetBtn" aria-haspopup="true" aria-expanded="false" aria-controls="presets">
+        <span class="pk-ic" id="presetIcon"></span><span class="pk-tx"><small>Structure</small><span id="presetName"></span></span>
+        <svg class="chev" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1.5l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="pop" id="presets" role="menu" aria-label="Choose a structure" hidden></div>
+    </div>
+    <button class="iconbtn reset" id="resetBtn" disabled title="Nothing to reset yet" aria-label="Reset this structure to its original setup">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Reset</span>
+    </button>
+    <div id="badge"></div>
+    <button class="about" id="aboutBtn" aria-expanded="false" aria-controls="intro" aria-label="What does determinate or indeterminate mean?" title="What does this mean?">?</button>
+    <div class="spacer"></div>
+    <div class="pick settings">
+      <button class="iconbtn" id="setBtn" aria-haspopup="true" aria-expanded="false" aria-controls="setPop" title="Settings: units, colours and theme" aria-label="Settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <span>Settings</span>
+      </button>
+      <div class="pop setpop" id="setPop" role="dialog" aria-label="Settings" hidden></div>
+    </div>
   </header>
-  <div class="intro" id="intro"></div>
-  <nav class="presets" id="presets" aria-label="Choose a structure"></nav>
+  <div class="intro" id="intro" hidden></div>
   <main class="work">
     <section class="stage">
       <div class="toolbar">
@@ -234,7 +345,10 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
       </div>
       <div class="fmview" id="fmView" hidden></div>
     </section>
-    <aside class="panel">
+    <button class="ptoggle" id="panelToggle" aria-expanded="true" aria-controls="sidePanel" title="Hide the side panel" aria-label="Hide the side panel">
+      <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M3 2l5 6-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <aside class="panel" id="sidePanel">
       <div class="tabs" role="tablist" aria-label="Side panel">
         <button role="tab" id="t-edit" aria-controls="tab-edit" aria-selected="true" data-tab="edit">Edit</button>
         <button role="tab" id="t-probe" aria-controls="tab-probe" aria-selected="false" tabindex="-1" data-tab="probe">Check a point</button>
@@ -341,10 +455,26 @@ const PRESETS = [
 const state = {
   preset:null, kind:'beam', spans:[8], W:8, H:4,
   nodes:[], members:[], runs:[], runOf:[], supports:{}, loads:[],
-  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, showBent:true,
+  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', units:'si', eachColor:false, theme:'auto', colors:{}, showBent:true,
   settle:{}, diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
 };
 const isBeam = () => state.kind==='beam';
+
+/* ---------- units: everything is stored in SI and converted for display ---------- */
+const FT=3.280839895, KIP=0.2248089431;
+const UNITSYS={
+  si:{len:['m',1], force:['kN',1], dist:['kN/m',1], moment:['kNm',1], defl:['mm',1000], settle:['mm',1], E:['GPa',1], I:['cm⁴',1], EI:['kNm²',1]},
+  us:{len:['ft',FT], force:['kip',KIP], dist:['kip/ft',KIP/FT], moment:['kip·ft',KIP*FT], defl:['in',39.37007874], settle:['in',0.0393700787], E:['ksi',145.0377377], I:['in⁴',0.0240250961], EI:['kip·ft²',KIP*FT*FT]}
+};
+const STEPS={si:{len:0.05,force:0.5,dist:0.5,moment:0.5,settle:0.5,E:1,I:10}, us:{len:0.1,force:0.1,dist:0.05,moment:0.5,settle:0.02,E:100,I:1}};
+const PALETTE=['#E4572E','#2E86AB','#E09F1F','#7B2CBF','#139A8A','#D7263D','#4361EE','#6A994E'];
+function loadColor(l){
+  if(state.eachColor){ const i=state.loads.findIndex(x=>x.id===l.id); return PALETTE[(i<0?0:i)%PALETTE.length]; }
+  return l.type==='point'?C.pload : l.type==='udl'?C.dload : C.mload;
+}
+function uc(v,k){ return v*UNITSYS[state.units][k][1]; }
+function uu(k){ return UNITSYS[state.units][k][0]; }
+function q(v,k,d=1){ const extra=(state.units==='us'&&(k==='defl'||k==='settle'||k==='dist'))?1:0; return `${fmt(uc(v,k),d+extra)} ${uu(k)}`; }
 
 /* ---------- geometry & runs ---------- */
 function genGeometry(){
@@ -690,7 +820,7 @@ function slopeDeflection(){
 /* ---------- canvas setup ---------- */
 let C={};
 function readColors(){ const cs=getComputedStyle(document.documentElement);
-  ['paper','panel','ink','muted','line','grid','deform','load','moment','shear','axialT','axialC','react'].forEach(k=>C[k]=cs.getPropertyValue('--'+k).trim()); }
+  ['paper','panel','ink','muted','line','grid','deform','load','moment','shear','axialT','axialC','react','pload','dload','mload'].forEach(k=>C[k]=cs.getPropertyValue('--'+k).trim()); }
 function alpha(hex,a){ const h=hex.replace('#',''); const n=parseInt(h.length===3?h.split('').map(c=>c+c).join(''):h,16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
 const cv=$('#cv'), wrap=$('#wrap'), tip=$('#tip'); let ctx=cv.getContext('2d');
 let W=0, Hh=0, dpr=1, view={k:1,ox:0,oy:0}, hits=[];
@@ -707,11 +837,13 @@ function computeView(){
   const padL=Math.min(isBeam()?(state.showDims?110:80):110, W*0.15), padR=Math.min(isBeam()?80:(state.showDims?150:110), W*0.17);
   const padT=Math.min(state.diagram!=='none'?130:110, Hh*0.26), padB=state.showDims?Math.min(isBeam()?200:160, Hh*0.36):120;
   const aw=Math.max(50,W-padL-padR), ah=Math.max(50,Hh-padT-padB);
-  let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,180);
+  let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,600);
   view.k=k; view.ox=padL+(aw-b.bw*k)/2-b.minx*k;
   view.oy=padT+ah/2+(b.miny+b.bh/2)*k;
 }
 
+let diagK=1, diagT0=0;
+function animateDiag(){ const t=(performance.now()-diagT0)/280; diagK=t>=1?1:1-Math.pow(1-t,3); draw(); if(t<1) requestAnimationFrame(animateDiag); }
 let anim=1, spring=null, wobbleOn=false, wobbleT0=0, rafId=0;
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function startSpring(){ if(reduceMotion){ anim=1; draw(); return; } spring=performance.now(); loop(); }
@@ -809,7 +941,7 @@ function chain(points,fixedCoord,horizontal,off,col,caption){
   for(let i=0;i<points.length-1;i++){
     const [x1,y1]=horizontal?toS(points[i],fixedCoord):toS(fixedCoord,points[i]);
     const [x2,y2]=horizontal?toS(points[i+1],fixedCoord):toS(fixedCoord,points[i+1]);
-    const nar=dimLine(x1,y1,x2,y2,horizontal?0:1,horizontal?1:0,off,(points[i+1]-points[i]).toFixed(2)+' m',col,flip);
+    const nar=dimLine(x1,y1,x2,y2,horizontal?0:1,horizontal?1:0,off,q(points[i+1]-points[i],'len',2),col,flip);
     flip = nar ? !flip : false;
   }
   if(caption && horizontal){ const [x,y]=toS(points[0],fixedCoord); label(caption,x-14,y+off,C.muted,'right',12,600); }
@@ -830,7 +962,6 @@ function drawDims(Da){
     state.loads.forEach(l=>{ if(l.type==='udl'){ if(l.mag>0||l.mag2>0){ pts.push(x0+l.sa, x0+l.sb); } } else pts.push(x0+l.s); });
     const lp=uniqSorted(pts);
     let off=offB;
-    if(lp.length>joints.length){ chain(lp,b.miny,true,off,lcol,'Loads'); off+=30; }
     if(joints.length>1){ chain(joints,b.miny,true,off,col,joints.length>2?'Spans':'Span'); off+=30; }
     if(joints.length>2) chain([joints[0],joints[joints.length-1]],b.miny,true,off,col,'Total');
     return;
@@ -838,24 +969,7 @@ function drawDims(Da){
   if(joints.length>1){ chain(joints,b.miny,true,offB,col); if(joints.length>2) chain([joints[0],joints[joints.length-1]],b.miny,true,offB+28,col); }
   const ys=uniqSorted(state.nodes.map(n=>n[1]));
   if(ys.length>1){ chain(ys,b.maxx,false,offR,col); if(ys.length>2) chain([ys[0],ys[ys.length-1]],b.maxx,false,offR+28,col); }
-  // load positions along each member, drawn on the inside of the frame
-  if(!r) return;
-  const cx=(b.minx+b.maxx)/2, cy=(b.miny+b.maxy)/2;
-  state.members.forEach((mb,mi)=>{
-    const ts=[0,1];
-    r.EL.forEach(l=>{ if(l.m!==mi||!(l.mag>0)) return; if(l.type==='udl') ts.push(l.a,l.b); else ts.push(l.t); });
-    const u=uniqSorted(ts.map(t=>clamp(t,0,1))); if(u.length<=2) return;
-    const [a,bn]=mb, A=state.nodes[a], B=state.nodes[bn], ML=memberLen(mi);
-    const sa=toS(...A), sb=toS(...B), sl=Math.hypot(sb[0]-sa[0],sb[1]-sa[1])||1;
-    let nx=(sb[1]-sa[1])/sl, ny=-(sb[0]-sa[0])/sl;
-    const [mx,my]=toS((A[0]+B[0])/2,(A[1]+B[1])/2), [tx,ty]=toS(cx,cy);
-    if(nx*(tx-mx)+ny*(ty-my)<0){ nx=-nx; ny=-ny; }
-    let flip=false;
-    for(let i=0;i<u.length-1;i++){
-      const p1=[sa[0]+(sb[0]-sa[0])*u[i], sa[1]+(sb[1]-sa[1])*u[i]], p2=[sa[0]+(sb[0]-sa[0])*u[i+1], sa[1]+(sb[1]-sa[1])*u[i+1]];
-      const nar=dimLine(p1[0],p1[1],p2[0],p2[1],nx,ny,34,((u[i+1]-u[i])*ML).toFixed(2)+' m',lcol,flip); flip=nar?!flip:false;
-    }
-  });
+
 }
 
 /* ---------- main drawing ---------- */
@@ -889,8 +1003,9 @@ function draw(){
   const defPos=s=>toS(s.x0+s.dx*Da, s.y0+s.dy*Da);
   if(stable && state.showBent){
     ctx.globalAlpha=fade; ctx.strokeStyle=C.deform; ctx.lineWidth=3.5; ctx.lineJoin='round'; ctx.lineCap='round';
+    if(!diagOn){ ctx.shadowColor=alpha(C.deform,0.35); ctx.shadowBlur=8; ctx.shadowOffsetY=2; }
     r.byMember.forEach(list=>{ ctx.beginPath(); list.forEach((s,i)=>{ const [x,y]=defPos(s); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke(); });
-    ctx.globalAlpha=1;
+    ctx.shadowBlur=0; ctx.shadowOffsetY=0; ctx.globalAlpha=1;
   } else {
     ctx.strokeStyle=C.ink; ctx.lineWidth=3;
     state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
@@ -907,7 +1022,7 @@ function draw(){
     if(!t||!mm||!SUP[t].dofs.includes(1)) return;
     const [x,y]=nodeS[n], [ox,oy]=toS(p[0],p[1]);
     if(Math.abs(y-oy)>3){ ctx.save(); ctx.setLineDash([3,3]); ctx.strokeStyle=C.deform; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(ox-16,oy); ctx.lineTo(ox+16,oy); ctx.stroke(); ctx.restore(); }
-    label(`${mm>0?'sinks':'lifts'} ${fmt(Math.abs(mm),1)} mm`, x-12, y+44, C.deform, 'right', 12.5, 700);
+    label(`${mm>0?'sinks':'lifts'} ${q(Math.abs(mm),'settle',1)}`, x-12, y+44, C.deform, 'right', 12.5, 700);
   });
   state.nodes.forEach((p,n)=>{
     const [x,y]=nodeS[n];
@@ -926,10 +1041,10 @@ function draw(){
     r.reactions.forEach(re=>{
       const [x,y]=toS(...state.nodes[re.n]), off=re.type==='fixed'?34:44;
       if(Math.abs(re.Ry)>1e-6){ const up=re.Ry>0, y0=y+(up?off+30:-off-30), y1=y+(up?off:-off);
-        arrow(x,y0,x,y1,C.react,1.6,8); label(fmt(Math.abs(re.Ry))+' kN',x+8,y0+(up?6:-6),C.react,'left',12,600); }
+        arrow(x,y0,x,y1,C.react,1.6,8); label(q(Math.abs(re.Ry),'force'),x+8,y0+(up?6:-6),C.react,'left',12,600); }
       if(Math.abs(re.Rx)>1e-6){ const right=re.Rx>0, yy=y+off-8, x0=x+(right?-62:62), x1=x+(right?-24:24);
-        arrow(x0,yy,x1,yy,C.react,1.6,8); label(fmt(Math.abs(re.Rx))+' kN',x0+(right?-4:4),yy-12,C.react,right?'right':'left',12,600); }
-      if(re.dofs.includes(2)&&Math.abs(re.Mz)>1e-6) label(fmt(Math.abs(re.Mz))+' kNm',x+24,y+20,C.react,'left',12,600);
+        arrow(x0,yy,x1,yy,C.react,1.6,8); label(q(Math.abs(re.Rx),'force'),x0+(right?-4:4),yy-12,C.react,right?'right':'left',12,600); }
+      if(re.dofs.includes(2)&&Math.abs(re.Mz)>1e-6) label(q(Math.abs(re.Mz),'moment'),x+24,y+20,C.react,'left',12,600);
     });
     ctx.globalAlpha=1;
   }
@@ -943,8 +1058,8 @@ function draw(){
     const hl=state.hl===l.id;
     ctx.globalAlpha=hl?1:fade;
     const zero = l.type==='udl' ? (l.mag===0&&l.mag2===0) : l.mag===0;
-    const col=zero?alpha(C.load,0.45):C.load, wmul=hl?1.5:1;
-    if(hl){ ctx.shadowColor=alpha(C.load,0.6); ctx.shadowBlur=10; }
+    const base=loadColor(l), col=zero?alpha(base,0.45):base, wmul=hl?1.5:1;
+    if(hl){ ctx.shadowColor=alpha(base,0.6); ctx.shadowBlur=10; }
     if(l.type==='udl'){
       const pieces=EL.filter(e=>e.id===l.id); if(!pieces.length){ ctx.shadowBlur=0; return; }
       const key=pieces[0].m, idx=udlStack[key]=(udlStack[key]||0)+1;
@@ -974,12 +1089,12 @@ function draw(){
       const side=ds[0]?26:0;
       if(Math.abs(l.mag-l.mag2)<1e-9){
         const mm=toMember(l.run,(l.sa+l.sb)/2), [px,py]=memberPos(mm.m,mm.t,Da), lo=3+extra+lenFor(l.mag)+13;
-        label(fmt(l.mag,1)+' kN/m', px-ds[0]*(lo+side), py-ds[1]*lo, col,'center',13,700);
+        label(q(l.mag,'dist'), px-ds[0]*(lo+side), py-ds[1]*lo, col,'center',13,700);
       } else {
         [[l.sa,l.mag,true],[l.sb,l.mag2,false]].forEach(([s,w,first])=>{
           if(!(w>0)) return;
           const mm=toMember(l.run,s,first), [px,py]=memberPos(mm.m,mm.t,Da), lo=3+extra+lenFor(w)+13;
-          label(fmt(w,1)+' kN/m', px-ds[0]*(lo+side), py-ds[1]*lo, col, ds[0]?'center':(first?'left':'right'),13,700);
+          label(q(w,'dist'), px-ds[0]*(lo+side), py-ds[1]*lo, col, ds[0]?'center':(first?'left':'right'),13,700);
         });
       }
     } else if(l.type==='point'){
@@ -988,7 +1103,7 @@ function draw(){
       const tp=[px-ds[0]*4, py-ds[1]*4], tl=[tp[0]-ds[0]*54, tp[1]-ds[1]*54];
       arrow(tl[0],tl[1],tp[0],tp[1],col,2.6*wmul,11);
       ctx.shadowBlur=0;
-      label(fmt(l.mag,1)+' kN', tl[0]-ds[0]*12+(ds[0]!==0?-ds[0]*18:0), tl[1]-ds[1]*12, col,'center',13,700);
+      label(q(l.mag,'force'), tl[0]-ds[0]*12+(ds[0]!==0?-ds[0]*18:0), tl[1]-ds[1]*12, col,'center',13,700);
       hits.push({kind:'load',id:l.id,x1:tl[0],y1:tl[1],x2:tp[0],y2:tp[1],px,py,tol:14});
     } else {
       const pc=EL.find(e=>e.id===l.id); if(!pc){ ctx.shadowBlur=0; return; }
@@ -1001,20 +1116,14 @@ function draw(){
       const ex=px+R*Math.cos(a1), ey=py+R*Math.sin(a1), tx=ccw?Math.sin(a1):-Math.sin(a1), ty=ccw?-Math.cos(a1):Math.cos(a1);
       arrow(ex-tx*6,ey-ty*6,ex+tx*4,ey+ty*4,col,2.4*wmul,10);
       ctx.shadowBlur=0;
-      label(fmt(l.mag,1)+' kNm', px, py-R-14, col,'center',13,700);
+      label(q(l.mag,'moment'), px, py-R-14, col,'center',13,700);
       hits.push({kind:'load',id:l.id,x1:px,y1:py,x2:px,y2:py,px,py,tol:26});
     }
   });
   ctx.globalAlpha=1; ctx.shadowBlur=0;
 
-  if(stable && state.probe.show) drawProbe(Da);
+  if(stable && state.probe.show && state.tab==='probe') drawProbe(Da);
 
-  // largest movement marker
-  if(stable && !diagOn && r.maxDispS && r.maxDisp>1e-12 && Math.abs(Da)>0){
-    const [x,y]=defPos(r.maxDispS);
-    ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fillStyle=C.deform; ctx.fill(); ctx.strokeStyle=C.paper; ctx.lineWidth=2; ctx.stroke();
-    label(fmt(r.maxDisp*1000,1)+' mm', x+10, y+18, C.deform,'left',14,700);
-  }
   diagLabels.forEach(L=>pill(L.text,clamp(L.x,46,W-46),clamp(L.y,46,Hh-14),L.col,12.5));
 }
 
@@ -1038,30 +1147,30 @@ function probeValues(){
 function drawProbe(Da){
   const pv=probeValues(); if(!pv) return;
   const [px,py]=memberPos(pv.m,pv.t,Da), v=pv.after, b=pv.before;
-  const two=(k,d,u)=>Math.abs(b[k]-v[k])>1e-6 ? `${fmt(b[k],d)} → ${fmt(v[k],d)} ${u}` : `${fmt(v[k],d)} ${u}`;
+  const two=(k,d,kind)=>Math.abs(b[k]-v[k])>1e-6 ? `${fmt(uc(b[k],kind),d)} → ${fmt(uc(v[k],kind),d)} ${uu(kind)}` : q(v[k],kind,d);
   const lines=[
-    [`Point P, ${pv.s.toFixed(2)} m from ${runStartLetter(state.probe.run)}`, true],
-    ['Bending moment', two('M',1,'kNm')], ['Shear force', two('V',1,'kN')], ['Axial force', two('N',1,'kN')],
-    ['Deflection', `${fmt(Math.hypot(v.dx,v.dy)*1000,2)} mm`],
+    [`Point P, ${q(pv.s,'len',2)} from ${runStartLetter(state.probe.run)}`, true],
+    ['Bending moment', two('M',1,'moment')], ['Shear force', two('V',1,'force')], ['Axial force', two('N',1,'force')],
+    ['Deflection', q(Math.hypot(v.dx,v.dy),'defl',2)],
   ];
   setFont(12.5,600);
   let w=0; lines.forEach(([a,bb])=>{ w=Math.max(w, bb===true? ctx.measureText(a).width : ctx.measureText(a).width+ctx.measureText(bb).width+18); });
   w+=20+22; const h=lines.length*18+12;
-  // pick a spot that covers as little of the drawing as possible (inside a frame, or a corner)
-  const bb=structSpan(), [bx0,by0]=toS(bb.minx,bb.maxy), [bx1,by1]=toS(bb.maxx,bb.miny);
-  const cands=[[(bx0+bx1)/2-w/2,(by0+by1)/2-h/2+20],[W-w-14,12],[14,40],[W-w-14,Hh-h-12],[14,Hh-h-12]];
+  // place the card right next to P, on whichever side covers the least
   const r=state.result, pts=r&&!r.unstable?r.samples.map(s=>toS(s.x0+s.dx*Da,s.y0+s.dy*Da)):[];
-  let cx=cands[1][0], cy=cands[1][1], best=Infinity;
-  cands.forEach(([x,y],i)=>{
-    if(x<4||y<4||x+w>W-4||y+h>Hh-4) return;
+  const gap=22, cands=[[px-w/2,py-h-gap],[px-w/2,py+gap],[px+gap,py-h/2],[px-w-gap,py-h/2]];
+  let cx=0, cy=0, best=Infinity;
+  cands.forEach(([x0,y0],i)=>{
+    const x=clamp(x0,8,W-w-8), y=clamp(y0,8,Hh-h-8);
     const inR=(qx,qy,m)=>qx>x-m&&qx<x+w+m&&qy>y-m&&qy<y+h+m;
-    let cost=pts.filter(q=>inR(q[0],q[1],14)).length + 5*hits.filter(q=>q.kind==='load'?inR(q.x1,q.y1,10):inR(q.x,q.y,10)).length;
-    if(i>0){ const ox=Math.max(0,Math.min(x+w,bx1+60)-Math.max(x,bx0-60)), oy=Math.max(0,Math.min(y+h,by1+90)-Math.max(y,by0-60)); cost+=ox*oy/2000; }
-    if(cost<best-1e-9){ best=cost; cx=x; cy=y; }
+    if(inR(px,py,10)) return;
+    const cost=pts.filter(q=>inR(q[0],q[1],8)).length*3 + 2*hits.filter(q=>q.kind==='load'?inR(q.x1,q.y1,4):inR(q.x,q.y,10)).length + i*0.5;
+    if(cost<best){ best=cost; cx=x; cy=y; }
   });
-  // leader
-  ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle=C.muted; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(clamp(px,cx,cx+w), py<cy ? cy : cy+h); ctx.stroke(); ctx.restore();
+  if(best===Infinity){ cx=clamp(px-w/2,8,W-w-8); cy=clamp(py-h-gap,8,Hh-h-8); }
+  // short connector to the nearest edge of the card
+  ctx.save(); ctx.strokeStyle=alpha(C.ink,0.6); ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(clamp(px,cx+10,cx+w-10), clamp(py,cy+6,cy+h-6)); ctx.stroke(); ctx.restore();
   // marker
   ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.stroke();
   ctx.beginPath(); ctx.moveTo(px-12,py); ctx.lineTo(px+12,py); ctx.moveTo(px,py-12); ctx.lineTo(px,py+12); ctx.lineWidth=1.2; ctx.stroke();
@@ -1084,7 +1193,7 @@ function drawDiagram(r){
   const key=state.diagram;
   const maxAbs=key==='M'?r.maxM:key==='V'?r.maxV:r.maxN;
   if(!(maxAbs>1e-9)) return [];
-  const sc=70/maxAbs;
+  const sc=70/maxAbs*diagK;
   const val=s=>key==='M'?(state.bmSide==='tension'?-s.M:s.M):key==='V'?s.V:s.N; // offset value (moment drawn on tension side)
   const colFor=v=>key==='M'?C.moment:key==='V'?C.shear:(v>=0?C.axialT:C.axialC);
   r.elSamples.forEach(arr=>{
@@ -1101,9 +1210,9 @@ function drawDiagram(r){
   // labels: peak of each member plus its end values
   const out=[];
   const text=s=>{
-    if(key==='M') return (isBeam()?fmt(s.M):fmt(Math.abs(s.M)))+' kNm';
-    if(key==='V') return fmt(s.V)+' kN';
-    return fmt(Math.abs(s.N))+' kN '+(s.N>=0?'T':'C');
+    if(key==='M') return q(isBeam()?s.M:Math.abs(s.M),'moment');
+    if(key==='V') return q(s.V,'force');
+    return q(Math.abs(s.N),'force')+' '+(s.N>=0?'T':'C');
   };
   const add=s=>{
     const v=val(s); if(Math.abs(v)<=0.04*maxAbs) return;
@@ -1195,8 +1304,8 @@ cv.addEventListener('pointerup',e=>{
 cv.addEventListener('pointerleave',()=>{ tip.style.display='none'; if(!drag) setHL(null); });
 function locText(s){
   if(!s) return '';
-  if(isBeam()) return `at ${(s.x0-structSpan().minx).toFixed(2)} m from A`;
-  const [a,b]=state.members[s.m]; return `on ${letter(a)}–${letter(b)}, ${s.dist.toFixed(2)} m from ${letter(a)}`;
+  if(isBeam()) return `at ${q(s.x0-structSpan().minx,'len',2)} from A`;
+  const [a,b]=state.members[s.m]; return `on ${letter(a)}–${letter(b)}, ${q(s.dist,'len',2)} from ${letter(a)}`;
 }
 function showTip(p){
   const r=state.result; if(!r||r.unstable){ tip.style.display='none'; return; }
@@ -1204,7 +1313,7 @@ function showTip(p){
   r.samples.forEach(s=>{ const [x,y]=toS(s.x0+s.dx*Da, s.y0+s.dy*Da), d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d;best=s;} });
   if(!best){ tip.style.display='none'; return; }
   const where=locText(best); 
-  tip.innerHTML=`${where.charAt(0).toUpperCase()+where.slice(1)}<br>Moves <b>${fmt(Math.hypot(best.dx,best.dy)*1000,2)} mm</b><br>Moment <b>${fmt(best.M)} kNm</b><br>Shear <b>${fmt(best.V)} kN</b>, axial <b>${fmt(best.N)} kN</b>`;
+  tip.innerHTML=`${where.charAt(0).toUpperCase()+where.slice(1)}<br>Moves <b>${q(Math.hypot(best.dx,best.dy),'defl',2)}</b><br>Moment <b>${q(best.M,'moment')}</b><br>Shear <b>${q(best.V,'force')}</b>, axial <b>${q(best.N,'force')}</b>`;
   tip.style.display='block';
   const tw=tip.offsetWidth, th=tip.offsetHeight;
   tip.style.left=clamp(p.x+14,4,W-tw-4)+'px'; tip.style.top=clamp(p.y-th-12,4,Hh-th-4)+'px';
@@ -1217,21 +1326,24 @@ function setHL(id){
 
 /* ---------- typed + slider fields ---------- */
 const showNum=(v,dec)=>String(parseFloat((+v).toFixed(dec)));
-function makeField({label,unit,min,max,step,value,hardMin=min,hardMax=max,dec=2,onChange}){
+function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,dec=2,onChange}){
   const w=document.createElement('div'); w.className='f';
   const id='f'+(uid++);
+  const fac=()=>kind?UNITSYS[state.units][kind][1]:1, D=v=>v*fac(), S=v=>v/fac();
+  if(kind){ unit=uu(kind); step=STEPS[state.units][kind]??step; }
   w.innerHTML=`<div class="fh"><label for="${id}"></label><span class="num"><input id="${id}" type="number" inputmode="decimal"><span></span></span></div><input type="range">`;
   w.querySelector('label').textContent=label; w.querySelector('.num span').textContent=unit;
   const num=w.querySelector('input[type=number]'), rng=w.querySelector('input[type=range]');
   rng.setAttribute('aria-label',label);
-  const cfg={min,max,step,hardMin,hardMax}; let cur=value;
-  const apply=()=>{ rng.min=cfg.min; rng.max=cfg.max; rng.step=cfg.step; num.min=cfg.hardMin; num.max=cfg.hardMax; num.step=cfg.step; };
-  apply(); rng.value=value; num.value=showNum(value,dec);
-  rng.addEventListener('input',()=>{ cur=+rng.value; num.value=showNum(cur,dec); onChange(cur); });
-  num.addEventListener('input',()=>{ const v=parseFloat(num.value); if(!isFinite(v)) return; cur=clamp(v,cfg.hardMin,cfg.hardMax); rng.value=cur; onChange(cur); });
-  num.addEventListener('change',()=>{ num.value=showNum(cur,dec); });
+  const cfg={min,max,hardMin,hardMax}; let cur=value;
+  const apply=()=>{ rng.min=D(cfg.min); rng.max=D(cfg.max); rng.step=step; num.min=D(cfg.hardMin); num.max=D(cfg.hardMax); num.step=step; paint(); };
+  const paint=()=>{ const lo=+rng.min, hi=+rng.max, p=hi>lo?clamp((+rng.value-lo)/(hi-lo),0,1)*100:0; rng.style.setProperty('--p',p+'%'); };
+  apply(); rng.value=D(value); num.value=showNum(D(value),dec); paint();
+  rng.addEventListener('input',()=>{ cur=S(+rng.value); num.value=showNum(D(cur),dec); paint(); onChange(cur); });
+  num.addEventListener('input',()=>{ const v=parseFloat(num.value); if(!isFinite(v)) return; cur=clamp(S(v),cfg.hardMin,cfg.hardMax); rng.value=D(cur); paint(); onChange(cur); });
+  num.addEventListener('change',()=>{ num.value=showNum(D(cur),dec); });
   num.addEventListener('keydown',e=>{ if(e.key==='Enter') num.blur(); });
-  w.set=(v,opts)=>{ if(opts) Object.assign(cfg,opts); apply(); cur=v; rng.value=v; if(document.activeElement!==num) num.value=showNum(v,dec); };
+  w.set=(v,opts)=>{ if(opts) Object.assign(cfg,opts); apply(); cur=v; rng.value=D(v); paint(); if(document.activeElement!==num) num.value=showNum(D(v),dec); };
   w.setLabel=t=>{ w.querySelector('label').textContent=t; rng.setAttribute('aria-label',t); };
   return w;
 }
@@ -1266,7 +1378,7 @@ function renderSize(){
   const box=$('#size'); box.innerHTML=''; sizeFields=[];
   if(isBeam()){
     state.spans.forEach((s,i)=>{
-      const f=makeField({label:`Span ${letter(i)}–${letter(i+1)}`, unit:'m', min:0.5, max:20, step:0.1, hardMin:0.2, hardMax:100, value:s,
+      const f=makeField({label:`Span ${letter(i)}–${letter(i+1)}`, kind:'len', min:0.5, max:20, step:0.1, hardMin:0.2, hardMax:100, value:s,
         onChange:v=>{ state.spans[i]=v; rebuildGeometry(true); updateSizeNote(); state.loads.forEach(syncLoadRow); syncProbe(); recompute(); }});
       box.appendChild(f); sizeFields.push(f);
     });
@@ -1285,13 +1397,13 @@ function renderSize(){
   } else {
     const p=PRESETS.find(x=>x.id===state.preset);
     const wl = p.id==='bay2'?'Total width':'Width', hl = p.id==='storey2'?'Storey height':'Height';
-    box.appendChild(makeField({label:wl, unit:'m', min:2, max:24, step:0.1, hardMin:1, hardMax:100, value:state.W,
+    box.appendChild(makeField({label:wl, kind:'len', min:2, max:24, step:0.1, hardMin:1, hardMax:100, value:state.W,
       onChange:v=>{ state.W=v; rebuildGeometry(true); state.loads.forEach(syncLoadRow); syncProbe(); recompute(); }}));
-    box.appendChild(makeField({label:hl, unit:'m', min:2, max:10, step:0.1, hardMin:1, hardMax:50, value:state.H,
+    box.appendChild(makeField({label:hl, kind:'len', min:2, max:10, step:0.1, hardMin:1, hardMax:50, value:state.H,
       onChange:v=>{ state.H=v; rebuildGeometry(true); state.loads.forEach(syncLoadRow); syncProbe(); recompute(); }}));
   }
 }
-function updateSizeNote(){ const n=$('#sizeNote'); if(n) n.textContent=`Total length ${state.spans.reduce((a,b)=>a+b,0).toFixed(2)} m. New spans get a roller at the far end.`; }
+function updateSizeNote(){ const n=$('#sizeNote'); if(n) n.textContent=`Total length ${q(state.spans.reduce((a,b)=>a+b,0),'len',2)}. New spans get a roller at the far end.`; }
 
 /* ---------- supports ---------- */
 function renderSupports(){
@@ -1311,7 +1423,7 @@ function renderSettle(){
   const nodes=state.nodes.map((_,n)=>n).filter(n=>{ const t=state.supports[n]; return t && SUP[t].dofs.includes(1); });
   if(!nodes.length){ box.innerHTML='<p class="empty">No supports that resist vertical movement.</p>'; return; }
   nodes.forEach(n=>{
-    box.appendChild(makeField({label:`Support ${letter(n)} settles`, unit:'mm', min:-20, max:50, step:0.5, hardMin:-500, hardMax:500, value:state.settle[n]||0,
+    box.appendChild(makeField({label:`Support ${letter(n)} settles`, kind:'settle', min:-20, max:50, step:0.5, hardMin:-500, hardMax:500, value:state.settle[n]||0,
       onChange:v=>{ if(v) state.settle[n]=v; else delete state.settle[n]; recompute(); }}));
   });
 }
@@ -1319,7 +1431,7 @@ $('#clearSettle').onclick=()=>{ state.settle={}; renderSettle(); recompute(); };
 
 /* ---------- loads ---------- */
 const TITLES={point:'Point load',udl:'Distributed load',moment:'Moment'};
-const UNITS={point:'kN',udl:'kN/m',moment:'kNm'};
+const LKIND={point:'force',udl:'dist',moment:'moment'};
 const MAXES={point:100,udl:40,moment:100};
 function renderLoads(){
   const box=$('#loads'); box.innerHTML='';
@@ -1327,20 +1439,21 @@ function renderLoads(){
   state.loads.forEach((l,i)=>{
     const R=state.runs[l.run], from=runStartLetter(l.run);
     const row=document.createElement('div'); row.className='load'+(state.hl===l.id?' hl':''); row.dataset.id=l.id;
+    row.style.setProperty('--lc', state.eachColor ? loadColor(l) : `var(--${l.type==='point'?'pload':l.type==='udl'?'dload':'mload'})`);
     const sameType=state.loads.filter(x=>x.type===l.type), num=sameType.length>1?' '+(sameType.indexOf(l)+1):'';
     const dirOpts=l.type==='moment' ? '<option value="cw">Clockwise</option><option value="ccw">Anticlockwise</option>'
       : Object.keys(DIRS).map(k=>`<option value="${k}">${DIR_LABEL[k]}</option>`).join('');
     const runOpts=state.runs.map((r,k)=>`<option value="${k}">${r.name}</option>`).join('');
-    row.innerHTML=`<div class="lh"><span class="lt">${TITLES[l.type]}${num}</span><button class="link" data-del>Remove</button></div>
+    row.innerHTML=`<div class="lh"><span class="lt"><i class="lsw"></i>${TITLES[l.type]}${num}</span><button class="link" data-del>Remove</button></div>
       <div class="row2" ${state.runs.length>1?'':'style="grid-template-columns:1fr"'}>
         ${state.runs.length>1?`<div><span class="lbl">Along</span><select data-k="run" aria-label="Along members">${runOpts}</select></div>`:''}
         <div><span class="lbl">Direction</span><select data-k="dir" aria-label="Direction">${dirOpts}</select></div>
       </div>`;
     const f={};
     if(l.type==='udl'){
-      f.sa=makeField({label:`Starts at (from ${from})`, unit:'m', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.sa,
+      f.sa=makeField({label:`Starts at (from ${from})`, kind:'len', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.sa,
         onChange:v=>{ const L=state.runs[l.run].len; l.sa=clamp(v,0,L-0.01); if(l.sb<l.sa+0.01) l.sb=r2(Math.min(L,l.sa+0.01)); syncLoadRow(l); recompute(); }});
-      f.sb=makeField({label:`Ends at (from ${from})`, unit:'m', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.sb,
+      f.sb=makeField({label:`Ends at (from ${from})`, kind:'len', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.sb,
         onChange:v=>{ const L=state.runs[l.run].len; l.sb=clamp(v,0.01,L); if(l.sa>l.sb-0.01) l.sa=r2(Math.max(0,l.sb-0.01)); syncLoadRow(l); recompute(); }});
       const shapes=[['uniform','Uniform','M2 4h26v8H2z'],['rise','Rising','M2 12L28 2v10z'],['fall','Falling','M2 2l26 10H2z'],['custom','Custom','M2 6l26-4v10H2z']];
       const sh=document.createElement('div'); sh.className='shapes'; sh.setAttribute('role','group'); sh.setAttribute('aria-label','Load shape');
@@ -1352,7 +1465,7 @@ function renderLoads(){
         l.shape=k; renderLoads(); recompute();
       });
       row.append(sh,f.sa,f.sb);
-      const U=UNITS.udl, mk=(lab,val,cb)=>makeField({label:lab, unit:U, min:0, max:MAXES.udl, step:0.5, hardMax:100000, value:val, onChange:v=>{ cb(v); syncLoadRow(l); recompute(); }});
+      const mk=(lab,val,cb)=>makeField({label:lab, kind:'dist', min:0, max:MAXES.udl, step:0.5, hardMax:100000, value:val, onChange:v=>{ cb(v); syncLoadRow(l); recompute(); }});
       if(l.shape==='uniform') f.w1=mk('Intensity',l.mag,v=>{l.mag=l.mag2=v;});
       else if(l.shape==='rise') f.w2=mk(`Peak (at the end)`,l.mag2,v=>{l.mag2=v; l.mag=0;});
       else if(l.shape==='fall') f.w1=mk(`Peak (at the start)`,l.mag,v=>{l.mag=v; l.mag2=0;});
@@ -1360,12 +1473,12 @@ function renderLoads(){
       if(f.w1) row.appendChild(f.w1); if(f.w2) row.appendChild(f.w2);
       const note=document.createElement('p'); note.className='note'; note.dataset.o='cover'; row.appendChild(note); f.note=note;
     } else {
-      f.s=makeField({label:`Distance from ${from}`, unit:'m', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.s,
+      f.s=makeField({label:`Distance from ${from}`, kind:'len', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.s,
         onChange:v=>{ l.s=v; recompute(); }});
       row.appendChild(f.s);
     }
     if(l.type!=='udl'){
-      f.mag=makeField({label:'Size', unit:UNITS[l.type], min:0, max:MAXES[l.type], step:0.5, hardMax:100000, dec:2, value:l.mag,
+      f.mag=makeField({label:'Size', kind:LKIND[l.type], min:0, max:MAXES[l.type], step:0.5, hardMax:100000, dec:2, value:l.mag,
         onChange:v=>{ l.mag=v; recompute(); }});
       row.appendChild(f.mag);
     }
@@ -1388,7 +1501,7 @@ function syncLoadRow(l){
   if(l.type==='udl'){
     f.sa.set(l.sa,{max:L,hardMax:L}); f.sb.set(l.sb,{max:L,hardMax:L});
     const covered=l.sb-l.sa;
-    f.note.textContent=`Covers ${covered.toFixed(2)} m of ${L.toFixed(2)} m. Total load ${((l.mag+l.mag2)/2*covered).toFixed(1)} kN.`;
+    f.note.textContent=`Covers ${q(covered,'len',2)} of ${q(L,'len',2)}. Total load ${q((l.mag+l.mag2)/2*covered,'force',1)}.`;
     if(f.w1) f.w1.set(l.mag); if(f.w2) f.w2.set(l.mag2);
   } else { f.s.set(l.s,{max:L,hardMax:L}); f.mag.set(l.mag); }
 }
@@ -1420,7 +1533,7 @@ function renderProbe(){
     sel.onchange=e=>{ pr.run=+e.target.value; pr.s=r2(state.runs[pr.run].len/2); pr.show=true; renderProbe(); draw(); };
     box.appendChild(w);
   }
-  probeField=makeField({label:`Distance from ${runStartLetter(pr.run)}`, unit:'m', min:0, max:R.len, step:0.01, hardMax:R.len, value:pr.s,
+  probeField=makeField({label:`Distance from ${runStartLetter(pr.run)}`, kind:'len', min:0, max:R.len, step:0.01, hardMax:R.len, value:pr.s,
     onChange:v=>{ pr.s=v; pr.show=true; updateProbeOut(); draw(); }});
   box.appendChild(probeField);
   const out=document.createElement('div'); out.id='probeOut'; box.appendChild(out);
@@ -1433,16 +1546,16 @@ function updateProbeOut(){
   const pv=probeValues();
   if(!pv){ out.innerHTML='<p class="empty">Values appear once the structure is stable.</p>'; return; }
   const a=pv.before, v=pv.after, horiz=state.runs[state.probe.run].cls==='h';
-  const val=(k,d,u)=>Math.abs(a[k]-v[k])>1e-6 ? `${fmt(a[k],d)} → ${fmt(v[k],d)} ${u}<small>jumps here: just before → just after</small>` : `${fmt(v[k],d)} ${u}`;
+  const val=(k,d,kind)=>Math.abs(a[k]-v[k])>1e-6 ? `${fmt(uc(a[k],kind),d)} → ${fmt(uc(v[k],kind),d)} ${uu(kind)}<small>jumps here: just before → just after</small>` : q(v[k],kind,d);
   const sense=(x,pos,neg)=>Math.abs(x)<5e-7?'':(x>0?pos:neg);
   const Mnote = horiz && Math.abs(v.M)>1e-6 ? `<small>${v.M>0?'sagging':'hogging'}</small>` : '';
   const Nnote = Math.abs(v.N)>1e-6 ? `<small>${v.N>0?'tension':'compression'}</small>` : '';
   out.innerHTML=`<table class="probe-out">
-    <tr><td>Bending moment</td><td>${val('M',2,'kNm')}${Math.abs(a.M-v.M)>1e-6?'':Mnote}</td></tr>
-    <tr><td>Shear force</td><td>${val('V',2,'kN')}</td></tr>
-    <tr><td>Axial force</td><td>${val('N',2,'kN')}${Math.abs(a.N-v.N)>1e-6?'':Nnote}</td></tr>
-    <tr><td>Vertical deflection</td><td>${fmt(Math.abs(v.dy)*1000,3)} mm<small>${sense(v.dy,'up','down')}</small></td></tr>
-    <tr><td>Horizontal deflection</td><td>${fmt(Math.abs(v.dx)*1000,3)} mm<small>${sense(v.dx,'right','left')}</small></td></tr>
+    <tr><td>Bending moment</td><td>${val('M',2,'moment')}${Math.abs(a.M-v.M)>1e-6?'':Mnote}</td></tr>
+    <tr><td>Shear force</td><td>${val('V',2,'force')}</td></tr>
+    <tr><td>Axial force</td><td>${val('N',2,'force')}${Math.abs(a.N-v.N)>1e-6?'':Nnote}</td></tr>
+    <tr><td>Vertical deflection</td><td>${q(Math.abs(v.dy),'defl',3)}<small>${sense(v.dy,'up','down')}</small></td></tr>
+    <tr><td>Horizontal deflection</td><td>${q(Math.abs(v.dx),'defl',3)}<small>${sense(v.dx,'right','left')}</small></td></tr>
     <tr><td>Rotation (slope)</td><td>${fmt(v.rot*1000,3)} mrad<small>${fmt(v.rot*180/Math.PI,3)}°, ${sense(v.rot,'anticlockwise','clockwise')||'none'}</small></td></tr>
   </table>`;
 }
@@ -1451,25 +1564,26 @@ $('#probeToggle').onclick=()=>{ state.probe.show=!state.probe.show; updateProbeO
 /* ---------- material ---------- */
 let eField=null, iField=null;
 function renderMaterial(){
-  const sel=$('#mat'); sel.innerHTML=Object.entries(MATERIALS).map(([k,v])=>`<option value="${k}">${v.label}${v.E?` (${v.E} GPa)`:''}</option>`).join('');
+  const sel=$('#mat'); sel.innerHTML=Object.entries(MATERIALS).map(([k,v])=>`<option value="${k}">${v.label}${v.E?` (${q(v.E,'E',0)})`:''}</option>`).join('');
   sel.value=state.mat;
   sel.onchange=e=>{ state.mat=e.target.value; if(MATERIALS[state.mat].E){ state.E=MATERIALS[state.mat].E; eField.set(state.E); } updateEI(); recompute(); };
   const box=$('#matFields'); box.innerHTML='';
-  eField=makeField({label:'Stiffness of material (E)', unit:'GPa', min:1, max:250, step:1, hardMin:0.1, hardMax:1000, value:state.E,
+  eField=makeField({label:'Stiffness of material (E)', kind:'E', min:1, max:250, step:1, hardMin:0.1, hardMax:1000, value:state.E,
     onChange:v=>{ state.E=v; const m=Object.entries(MATERIALS).find(([k,x])=>x.E===v); state.mat=m?m[0]:'custom'; sel.value=state.mat; updateEI(); recompute(); }});
   box.appendChild(eField);
   // section I: slider is logarithmic, box is the real value
   iField=document.createElement('div'); iField.className='f';
-  iField.innerHTML=`<div class="fh"><label for="iNum">Section stiffness (I)</label><span class="num"><input id="iNum" type="number" inputmode="decimal" min="1" max="10000000"><span>cm⁴</span></span></div><input type="range" min="2" max="5.5" step="0.01" aria-label="Section stiffness">`;
+  iField.innerHTML=`<div class="fh"><label for="iNum">Section stiffness (I)</label><span class="num"><input id="iNum" type="number" inputmode="decimal" min="1" max="10000000"><span>${uu('I')}</span></span></div><input type="range" min="2" max="5.5" step="0.01" aria-label="Section stiffness">`;
   const num=iField.querySelector('input[type=number]'), rng=iField.querySelector('input[type=range]');
-  rng.value=Math.log10(state.I); num.value=state.I;
-  rng.oninput=()=>{ state.I=Math.round(10**(+rng.value)/10)*10; num.value=state.I; updateEI(); recompute(); };
-  num.oninput=()=>{ const v=parseFloat(num.value); if(!(v>0)) return; state.I=clamp(v,1,1e7); rng.value=Math.log10(state.I); updateEI(); recompute(); };
-  num.onchange=()=>{ num.value=state.I; };
+  rng.value=Math.log10(state.I); num.value=showNum(uc(state.I,'I'),1);
+  const paintI=()=>rng.style.setProperty('--p',((+rng.value-2)/3.5*100)+'%'); paintI(); rng.addEventListener('input',paintI); num.addEventListener('input',paintI);
+  rng.oninput=()=>{ state.I=Math.round(10**(+rng.value)/10)*10; num.value=showNum(uc(state.I,'I'),1); updateEI(); recompute(); };
+  num.oninput=()=>{ const v=parseFloat(num.value); if(!(v>0)) return; state.I=clamp(v/uc(1,'I'),1,1e7); rng.value=Math.log10(state.I); updateEI(); recompute(); };
+  num.onchange=()=>{ num.value=showNum(uc(state.I,'I'),1); };
   box.appendChild(iField);
   updateEI();
 }
-function updateEI(){ const EI=state.E*1e6*state.I*1e-8; $('#eiNote').textContent=`Bending stiffness EI = ${Math.round(EI).toLocaleString()} kNm². Doubling EI halves the deflection.`; }
+function updateEI(){ const EI=state.E*1e6*state.I*1e-8; $('#eiNote').textContent=`Bending stiffness EI = ${Math.round(uc(EI,'EI')).toLocaleString()} ${uu('EI')}. Doubling EI halves the deflection.`; }
 
 /* ---------- results & reactions ---------- */
 function renderReactions(){
@@ -1477,7 +1591,7 @@ function renderReactions(){
   if(!r||r.unstable){ box.innerHTML='<p class="empty">No reactions while the structure can move freely.</p>'; return; }
   if(!r.reactions.length){ box.innerHTML='<p class="empty">No supports.</p>'; return; }
   box.innerHTML=`<table class="reac"><tr><th>Joint</th><th>Horizontal</th><th>Vertical</th><th>Moment</th></tr>`+
-    r.reactions.map(re=>`<tr><td>${letter(re.n)}</td><td>${fmt(re.Rx)} kN</td><td>${fmt(re.Ry)} kN</td><td>${re.dofs.includes(2)?fmt(re.Mz)+' kNm':'–'}</td></tr>`).join('')+
+    r.reactions.map(re=>`<tr><td>${letter(re.n)}</td><td>${q(re.Rx,'force')}</td><td>${q(re.Ry,'force')}</td><td>${re.dofs.includes(2)?q(re.Mz,'moment'):'–'}</td></tr>`).join('')+
     `</table><p class="note" style="margin-top:6px">Positive means right, up, or anticlockwise.</p>`;
 }
 function updateReadout(){
@@ -1489,7 +1603,7 @@ function updateReadout(){
   ban.style.display='none';
   const {D,capped}=dispFactor();
   const row=(name,val,s)=>`<tr><td>${name}</td><td><b>${val}</b>${s?`<small>${locText(s)}</small>`:''}</td></tr>`;
-  ro.innerHTML=`<table class="res">${row('Biggest movement',fmt(r.maxDisp*1000,2)+' mm',r.maxDispS)}${row('Biggest bending moment',fmt(r.maxM)+' kNm',r.maxM>1e-9&&r.maxMS)}${row('Biggest shear force',fmt(r.maxV)+' kN',r.maxV>1e-9&&r.maxVS)}${row('Biggest axial force',fmt(r.maxN)+' kN',r.maxN>1e-9&&r.maxNS)}</table>`;
+  ro.innerHTML=`<table class="res">${row('Biggest movement',q(r.maxDisp,'defl',2),r.maxDispS)}${row('Biggest bending moment',q(r.maxM,'moment'),r.maxM>1e-9&&r.maxMS)}${row('Biggest shear force',q(r.maxV,'force'),r.maxV>1e-9&&r.maxVS)}${row('Biggest axial force',q(r.maxN,'force'),r.maxN>1e-9&&r.maxNS)}</table>`;
   $('#exagOut').textContent=D?'×'+Math.round(D).toLocaleString()+(capped?' max':''):'×0';
   updateLegend();
 }
@@ -1511,6 +1625,9 @@ const tabBtns=[...document.querySelectorAll('.tabs [role=tab]')];
 function showTab(name,focus){
   tabBtns.forEach(b=>{ const on=b.dataset.tab===name; b.setAttribute('aria-selected',on); b.tabIndex=on?0:-1; $('#tab-'+b.dataset.tab).hidden=!on; if(on&&focus) b.focus(); });
   document.querySelector('.panel').scrollTop=0;
+  const was=state.tab; state.tab=name;
+  if(name==='probe' && was!=='probe'){ state.probe.show=true; updateProbeOut(); }
+  if(was!==name && state.view!=='fm') draw();
 }
 tabBtns.forEach((b,i)=>{
   b.onclick=()=>showTab(b.dataset.tab);
@@ -1521,6 +1638,7 @@ tabBtns.forEach((b,i)=>{
 document.querySelectorAll('#diag button').forEach(b=>b.onclick=()=>{
   state.diagram=b.dataset.d;
   document.querySelectorAll('#diag button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+  if(!reduceMotion && state.diagram!=='none'){ diagK=0; diagT0=performance.now(); requestAnimationFrame(animateDiag); }
   $('#sideWrap').hidden=state.diagram!=='M';
   updateLegend(); draw();
 });
@@ -1530,32 +1648,79 @@ $('#fit').onclick=()=>{ fitScale(); $('#exag').value=0; state.scaleMul=1; update
 $('#bent').onclick=e=>{ state.showBent=!state.showBent; e.currentTarget.setAttribute('aria-pressed',state.showBent?'true':'false');
   $('#exag').disabled=!state.showBent; $('#fit').disabled=!state.showBent; $('#wobble').disabled=!state.showBent;
   if(!state.showBent && wobbleOn) $('#wobble').click();
-  updateLegend(); draw(); };
+  updateLegend(); if(state.showBent && !wobbleOn){ anim=0; startSpring(); } else draw(); };
 $('#dims').onclick=e=>{ state.showDims=!state.showDims; e.currentTarget.setAttribute('aria-pressed',state.showDims?'true':'false'); draw(); };
 $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria-pressed',wobbleOn?'true':'false');
   if(wobbleOn){ wobbleT0=performance.now(); loop(); } else { anim=1; cancelAnimationFrame(rafId); draw(); } };
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); renderSD(); if(state.view==='fm') renderFM(); else draw(); }
-function loadPreset(id){
-  const p=PRESETS.find(x=>x.id===id);
-  state.preset=id; state.kind=p.kind;
+function recompute(){ state.result=solve(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); renderSD(); if(state.view==='fm') renderFM(); else draw(); }
+/* ---------- saved structures: every preset remembers its edits ---------- */
+const SAVE_KEY='bfp-structures';
+let saved={}, defaults={}, lastPreset={}, saveTimer=0;
+try{ const raw=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}'); saved=raw.saved||{}; lastPreset=raw.last||{}; }catch(e){}
+function snapshot(){
+  return JSON.parse(JSON.stringify({kind:state.kind, spans:state.spans, W:state.W, H:state.H, supports:state.supports, settle:state.settle,
+    loads:state.loads, mat:state.mat, E:state.E, I:state.I}));
+}
+const cmpKey=sn=>JSON.stringify({...sn, loads:sn.loads.map(({id,...rest})=>rest)});
+function isModified(id){ return !!(saved[id] && defaults[id] && cmpKey(saved[id])!==cmpKey(defaults[id])); }
+function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ try{ localStorage.setItem(SAVE_KEY,JSON.stringify({saved,last:lastPreset})); }catch(e){} },250); }
+function rememberCurrent(){
+  if(!state.preset || !state.runs.length) return;
+  saved[state.preset]=snapshot(); persist(); updateEditedMarks();
+}
+function updateEditedMarks(){
+  document.querySelectorAll('.preset').forEach(b=>b.classList.toggle('edited',isModified(b.dataset.id)));
+  const mod=isModified(state.preset);
+  $('#presetBtn').classList.toggle('edited',mod);
+  const r=$('#resetBtn'); if(r){ r.disabled=!mod; r.title=mod?'Reset this structure to its original setup':'Nothing to reset yet'; }
+}
+function applyDefaults(p){
+  state.kind=p.kind;
   if(p.kind==='beam') state.spans=p.spans.slice(); else { state.W=p.W; state.H=p.H; }
-  state.supports={...p.supports}; state.settle={...(p.settle||{})}; state.fm.sel=null; state.loads=[]; state.runs=[]; state.result=null;
+  state.supports={...p.supports}; state.settle={...(p.settle||{})}; state.loads=[]; state.runs=[];
+  state.mat='steel'; state.E=200; state.I=8000;
   rebuildGeometry(false);
   state.loads=p.loads.map(d=>{
     const id=uid++;
     if(d.type==='udl'){ const a=fromMember(d.m,d.ta), b=fromMember(d.m2??d.m,d.tb); return {id,type:'udl',run:a.run,sa:r2(Math.min(a.s,b.s)),sb:r2(Math.max(a.s,b.s)),mag:d.mag,mag2:d.mag2??d.mag,shape:d.shape||'uniform',dir:d.dir}; }
     const q=fromMember(d.m,d.t); return {id,type:d.type,run:q.run,s:r2(q.s),mag:d.mag,dir:d.dir};
   });
+}
+function applySnapshot(sn){
+  state.kind=sn.kind;
+  if(sn.kind==='beam') state.spans=sn.spans.slice(); else { state.W=sn.W; state.H=sn.H; }
+  state.supports={...sn.supports}; state.settle={...sn.settle}; state.runs=[];
+  state.mat=sn.mat; state.E=sn.E; state.I=sn.I;
+  state.loads=[];
+  rebuildGeometry(false);
+  state.loads=sn.loads.map(l=>({...l}));
+  state.loads.forEach(l=>{ if(l.id>=uid) uid=l.id+1; });
+  clampLoads();
+}
+function loadPreset(id, opts={}){
+  if(!opts.noSave) rememberCurrent();
+  const p=PRESETS.find(x=>x.id===id);
+  state.preset=id; state.fm.sel=null; state.result=null;
+  applyDefaults(p); defaults[id]=snapshot();
+  if(saved[id] && !opts.fresh){ try{ applySnapshot(saved[id]); }catch(e){ delete saved[id]; applyDefaults(p); } }
+  lastPreset[p.page]=id; persist();
   state.baseScale=null; state.scaleMul=1; $('#exag').value=0; state.hl=null;
   state.probe.run=defaultRun(); state.probe.s=r2(state.runs[state.probe.run].len/2); state.probe.show=true;
   renderProbe();
   document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false'));
-  renderSize(); renderSupports(); renderLoads();
+  updatePresetBtn();
+  renderSize(); renderSupports(); renderLoads(); renderMaterial();
   recompute();
   if(!wobbleOn){ anim=0; startSpring(); }
+}
+function resetPreset(){
+  const id=state.preset; if(!id) return;
+  delete saved[id]; persist();
+  loadPreset(id,{noSave:true,fresh:true});
+  rememberCurrent();
 }
 
 
@@ -1565,7 +1730,7 @@ const sub=n=>String(n).split('').map(c=>SUBS[+c]).join('');
 function redName(rd){ const L=letter(rd.n); return rd.d===0?`${L}x`:rd.d===1?`${L}y`:`M${L}`; }
 function redHTML(rd){ const L=letter(rd.n); return rd.d===0?`${L}<sub>x</sub>`:rd.d===1?`${L}<sub>y</sub>`:`M<sub>${L}</sub>`; }
 function redLong(rd){ const L=letter(rd.n); return rd.d===0?`horizontal reaction at ${L}`:rd.d===1?`vertical reaction at ${L}`:`moment at ${L}`; }
-function redUnit(rd,force){ return rd.d===2 ? (force?'kNm':'rad') : (force?'kN':'m'); }
+function redUnit(rd,force){ return rd.d===2 ? (force?uu('moment'):'rad') : (force?uu('force'):uu('len')); }
 
 function withTarget(canvas,fn){
   const rect=canvas.getBoundingClientRect(); const w=rect.width, h=rect.height; if(!w||!h) return;
@@ -1575,8 +1740,9 @@ function withTarget(canvas,fn){
   ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
   try{ fn(w,h); } finally { ctx=keep.ctx; view=keep.view; W=keep.W; Hh=keep.Hh; hits=keep.hits; }
 }
-function fitMini(w,h){
+function fitMini(w,h,extra){
   const b=structSpan(), padX=64, padT=54, padB=54;
+  if(extra&&extra.length){ extra.forEach(([x,y])=>{ b.minx=Math.min(b.minx,x); b.maxx=Math.max(b.maxx,x); b.miny=Math.min(b.miny,y); b.maxy=Math.max(b.maxy,y); }); b.bw=b.maxx-b.minx; b.bh=b.maxy-b.miny; }
   const aw=w-2*padX, ah=h-padT-padB;
   let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,120);
   view.k=k; view.ox=padX+(aw-b.bw*k)/2-b.minx*k; view.oy=padT+ah/2+(b.miny+b.bh/2)*k;
@@ -1584,10 +1750,12 @@ function fitMini(w,h){
 // opt: {restr, EL, res (for bent shape), samples (elSamples with M), marks:[{n,d,text,unit,col}], diagCol}
 function renderMini(canvas,opt){
   withTarget(canvas,(w,h)=>{
-    readColors(); fitMini(w,h);
-    const members=()=>state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+    readColors();
     const bent = opt.res && !opt.res.unstable && opt.res.maxDisp>1e-12;
-    const D = bent ? 0.13*structSpan().span/opt.res.maxDisp : 0;
+    const D = bent ? 0.12*structSpan().span/opt.res.maxDisp : 0;
+    // fit the view around the original AND the bent shape so nothing is cut off
+    fitMini(w,h, bent ? opt.res.samples.map(s=>[s.x0+s.dx*D, s.y0+s.dy*D]) : null);
+    const members=()=>state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
     // moment diagram (optional)
     const labels=[];
     if(opt.samples && opt.diag){
@@ -1608,7 +1776,7 @@ function renderMini(canvas,opt){
         });
         const add=(s,exact)=>{ const v=val(s); if(Math.abs(v)<=0.05*maxAbs) return; const o=v*sc, sg=Math.sign(o)||1, [x,y]=toS(s.x0,s.y0);
           const lx=clamp(x+s.nx*(o+sg*14),30,w-30), ly=clamp(y-s.ny*(o+sg*14),12,h-12);
-          if(labels.some(L=>Math.hypot(L.x-lx,L.y-ly)<40)) return; const rv=exact??raw(s); const tt=K==='V'?fmt(rv):K==='N'?`${fmt(Math.abs(rv))} ${rv>=0?'T':'C'}`:fmt(isBeam()?rv:Math.abs(rv)); if(labels.some(L=>L.m===s.m&&L.t===tt)) return; labels.push({m:s.m,x:lx,y:ly,t:K==='V'?fmt(rv):K==='N'?`${fmt(Math.abs(rv))} ${rv>=0?'T':'C'}`:fmt(isBeam()?rv:Math.abs(rv)),col:colOf(rv)}); };
+          if(labels.some(L=>Math.hypot(L.x-lx,L.y-ly)<40)) return; const rv=exact??raw(s); const tt=K==='V'?fmt(uc(rv,'force')):K==='N'?`${fmt(uc(Math.abs(rv),'force'))} ${rv>=0?'T':'C'}`:fmt(uc(isBeam()?rv:Math.abs(rv),'moment')); if(labels.some(L=>L.m===s.m&&L.t===tt)) return; labels.push({m:s.m,x:lx,y:ly,t:K==='V'?fmt(uc(rv,'force')):K==='N'?`${fmt(uc(Math.abs(rv),'force'))} ${rv>=0?'T':'C'}`:fmt(uc(isBeam()?rv:Math.abs(rv),'moment')),col:colOf(rv)}); };
         const byM={}; opt.samples.forEach(arr=>arr.forEach(s=>{ (byM[s.m]=byM[s.m]||[]).push(s); }));
         // refine interior peaks with a parabola through neighbouring samples (exact for uniform loads)
         const peaks={};
@@ -1633,23 +1801,23 @@ function renderMini(canvas,opt){
     if(opt.EL){
       let wmax=0; opt.EL.forEach(l=>{ if(l.type==='udl') wmax=Math.max(wmax,l.wa,l.wb); });
       opt.EL.forEach(l=>{
-        const d=DIRS[l.dir]||[0,-1], ds=[d[0],-d[1]];
+        const d=DIRS[l.dir]||[0,-1], ds=[d[0],-d[1]], src=state.loads.find(x=>x.id===l.id), LC=src?loadColor(src):C.load;
         if(l.type==='udl'){
           const [a,b]=state.members[l.m], A=toS(...state.nodes[a]), B=toS(...state.nodes[b]);
           const len=Math.hypot(B[0]-A[0],B[1]-A[1])*(l.b-l.a), cnt=Math.max(1,Math.round(len/16)), tails=[];
           for(let i=0;i<=cnt;i++){ const f=l.a+(l.b-l.a)*i/cnt, wv=l.wa+(l.wb-l.wa)*i/cnt, px=A[0]+(B[0]-A[0])*f, py=A[1]+(B[1]-A[1])*f;
             const ln=wmax>0?3+20*wv/wmax:3, tp=[px-ds[0]*2,py-ds[1]*2], tl=[tp[0]-ds[0]*ln,tp[1]-ds[1]*ln];
-            if(wv>0.04*wmax) arrow(tl[0],tl[1],tp[0],tp[1],C.load,1.1,5); tails.push(tl); }
-          ctx.strokeStyle=C.load; ctx.lineWidth=1.3; ctx.beginPath(); tails.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke();
+            if(wv>0.04*wmax) arrow(tl[0],tl[1],tp[0],tp[1],LC,1.1,5); tails.push(tl); }
+          ctx.strokeStyle=LC; ctx.lineWidth=1.3; ctx.beginPath(); tails.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])); ctx.stroke();
         } else if(l.type==='point'){
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
-          arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,C.load,2,8);
-          label(fmt(l.mag,0)+' kN',px-ds[0]*38-(ds[0]?ds[0]*12:0),py-ds[1]*38,C.load,'center',11.5,700);
+          arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,LC,2,8);
+          label(q(l.mag,'force',0),px-ds[0]*38-(ds[0]?ds[0]*12:0),py-ds[1]*38,LC,'center',11.5,700);
         } else {
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
-          ctx.strokeStyle=C.load; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(px,py,12,0.2*Math.PI,1.7*Math.PI); ctx.stroke();
+          ctx.strokeStyle=LC; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(px,py,12,0.2*Math.PI,1.7*Math.PI); ctx.stroke();
         }
       });
     }
@@ -1693,8 +1861,9 @@ function updateIntro(){
   if(unstable){ cls='bad'; head='Unstable'; smallTxt='It can move freely, so it can\'t carry load.'; }
   else if(det.n<=0){ head='Statically determinate'; smallTxt=formula; if(state.page==='ind') link='<a href="#determinate" data-keep>Open on the Determinate page</a>'; }
   else { cls='ind'; head=`Indeterminate to degree ${det.n}`; smallTxt=formula+(det.beamMode&&det.full!==det.n?` (${det.full} if horizontal reactions count)`:''); if(state.page==='det') link='<a href="#indeterminate" data-keep>Open on the Indeterminate page</a>'; }
-  $('#intro').innerHTML=`<div class="badge ${cls}"><b>${head}</b><small>${smallTxt}</small>${link}</div>${INTRO[state.page]}`;
-  $('#intro').querySelectorAll('[data-keep]').forEach(a=>a.onclick=e=>{ e.preventDefault(); setPage(a.getAttribute('href')==='#indeterminate'?'ind':'det',true); });
+  $('#badge').innerHTML=`<div class="badge ${cls}"><b>${head}</b><small>${smallTxt}</small>${link}</div>`;
+  $('#intro').innerHTML=INTRO[state.page];
+  $('#badge').querySelectorAll('[data-keep]').forEach(a=>a.onclick=e=>{ e.preventDefault(); setPage(a.getAttribute('href')==='#indeterminate'?'ind':'det',true); });
 }
 function setPage(page,keep){
   state.page=page;
@@ -1704,8 +1873,8 @@ function setPage(page,keep){
   $('#sdSec').hidden=page!=='ind';
   if(page!=='ind') setView('play');
   renderPresets();
-  if(!keep) loadPreset(PRESETS.find(p=>p.page===page).id);
-  else { document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===state.preset?'true':'false')); state.fm.sel=null; recompute(); }
+  if(!keep){ const last=lastPreset[page]; loadPreset(PRESETS.some(p=>p.id===last&&p.page===page)?last:PRESETS.find(p=>p.page===page).id); }
+  else { document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===state.preset?'true':'false')); updatePresetBtn(); state.fm.sel=null; recompute(); }
 }
 document.querySelectorAll('.pages a').forEach(a=>a.onclick=e=>{ e.preventDefault(); if(a.dataset.page!==state.page) setPage(a.dataset.page,false); });
 window.addEventListener('hashchange',()=>{ const p=location.hash==='#indeterminate'?'ind':'det'; if(p!==state.page) setPage(p,false); });
@@ -1729,7 +1898,7 @@ $('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttrib
 /* ---------- force method view ---------- */
 function fmtEI(v,dec=2){ const a=Math.abs(v); return (v<0?'−':'')+a.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
 function sgn(v){ return v<0?' − ':' + '; }
-function dispTxt(v,d){ return d===2 ? `${fmt(v*1000,3)} mrad` : `${fmt(v*1000,3)} mm`; }
+function dispTxt(v,d){ return d===2 ? `${fmt(v*1000,3)} mrad` : q(v,'defl',3); }
 function renderFM(){
   $('#fmN').hidden = state.view!=='fm' || isBeam();
   const box=$('#fmView'); if(box.hidden) return;
@@ -1756,38 +1925,43 @@ function renderFM(){
   cards.push(degreeCard());
   const ok=!R.error;
   if(ok){
-    const reds=R.reds, n=reds.length, EI=R.EI;
+    const reds=R.reds, n=reds.length;
+    // convert everything to the display unit system so the EI-form numbers are consistent
+    const Lf=uc(1,'len'), Ff=uc(1,'force'), Mf=uc(1,'moment'), EI=uc(R.EI,'EI');
+    const rot=rd=>rd.d===2;
+    const D0=reds.map((rd,i)=>R.D0[i]*(rot(rd)?1:Lf));
+    const Fd=reds.map((ri,i)=>reds.map((rj,j)=>R.F[i][j]*(rot(ri)?1:Lf)/(rot(rj)?Mf:Ff)));
+    const presD=R.pres.map(p=>p*Lf), Xd=reds.map((rd,i)=>R.X[i]*(rot(rd)?Mf:Ff));
     // step 2 primary
     cards.push(`<div class="card"><h3><span class="step">2</span>Primary structure</h3><p>Remove the redundants. They become unknown forces X acting on a structure you can already solve.</p><canvas class="mini" id="fmPrim"></canvas></div>`);
     // step 3 M0
-    let d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i)}<sub></sub>${''}${sub(i+1)}${sub(0)}<small>${redLong(rd)}, ${rd.d===2?'anticlockwise':rd.d===1?'up':'right'} positive</small></td><td>${fmtEI(R.D0[i]*EI)}/EI<small>${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
-    d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i+1)}${sub(0)} at ${redName(rd)}<small>${rd.d===2?'rotation, anticlockwise positive':'deflection, '+(rd.d===1?'up':'right')+' positive'}</small></td><td>${fmtEI(R.D0[i]*EI)} / EI<small>= ${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
+    let d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i+1)}${sub(0)} at ${redName(rd)}<small>${rd.d===2?'rotation, anticlockwise positive':'deflection, '+(rd.d===1?'up':'right')+' positive'}</small></td><td>${fmtEI(D0[i]*EI)} / EI<small>= ${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
     cards.push(`<div class="card"><h3><span class="step">3</span>Real loads on the primary structure</h3><p>With the redundants gone, the real loads bend the primary structure, and each redundant's location moves by Δ. By virtual work, Δ${sub(1)}${sub(0)} = ∫ M${sub(0)}·m${sub(1)} / EI dx.</p><canvas class="mini" id="fmM0"></canvas><table class="vals">${d0rows}</table></div>`);
     // unit cases
     reds.forEach((rd,j)=>{
-      const rows=reds.map((ri,i)=>`<tr><td>δ${sub(i+1)}${sub(j+1)}<small>at ${redName(ri)} due to X${sub(j+1)} = 1</small></td><td>${fmtEI(R.F[i][j]*EI)} / EI<small>= ${rd.d===2||ri.d===2?fmt(R.F[i][j]*1000,5)+(ri.d===2?' mrad':' mm')+(rd.d===2?' per kNm':' per kN'):fmt(R.F[i][j]*1000,5)+' mm per kN'}</small></td></tr>`).join('');
+      const rows=reds.map((ri,i)=>`<tr><td>δ${sub(i+1)}${sub(j+1)}<small>at ${redName(ri)} due to X${sub(j+1)} = 1</small></td><td>${fmtEI(Fd[i][j]*EI)} / EI<small>= ${ri.d===2?fmt(R.F[i][j]*1000/(rd.d===2?Mf:Ff),5)+' mrad':fmt(uc(R.F[i][j],'defl')/(rd.d===2?Mf:Ff),5)+' '+uu('defl')} per ${rd.d===2?uu('moment'):uu('force')}</small></td></tr>`).join('');
       cards.push(`<div class="card"><h3><span class="step">${4+j}</span>Unit load X${sub(j+1)} = 1 (m${sub(j+1)})</h3><p>Now apply only a unit ${rd.d===2?'moment':'force'} where ${redName(rd)} acts. It bends the structure the other way; the movement it causes is δ. By virtual work, δ${sub(1)}${sub(j+1)} = ∫ m${sub(1)}·m${sub(j+1)} / EI dx.</p><canvas class="mini" id="fmU${j}"></canvas><table class="vals">${rows}</table></div>`);
     });
     // compatibility
     const step=4+n;
     let eq='';
     reds.forEach((ri,i)=>{
-      const presTxt = R.pres[i]!==0 ? `${fmt(R.pres[i]*1000,2)} mm (support ${letter(ri.n)} settles ${fmt(Math.abs(R.pres[i])*1000,2)} mm)` : '0';
+      const presTxt = R.pres[i]!==0 ? `${q(R.pres[i],'defl',2)} (support ${letter(ri.n)} settles ${q(Math.abs(R.pres[i]),'defl',2)})` : '0';
       eq+=`Δ${sub(i+1)}${sub(0)}${reds.map((_,j)=>` + δ${sub(i+1)}${sub(j+1)}X${sub(j+1)}`).join('')} = ${presTxt}<br>`;
     });
     let eqEI='';
     reds.forEach((ri,i)=>{
-      eqEI+=`${fmtEI(R.D0[i]*EI)}${reds.map((_,j)=>`${sgn(R.F[i][j])}${fmtEI(Math.abs(R.F[i][j]*EI))}·X${sub(j+1)}`).join('')} = ${R.pres[i]!==0?`EI × (${fmt(R.pres[i],4)}) = ${fmtEI(R.pres[i]*EI)}`:'0'}<br>`;
+      eqEI+=`${fmtEI(D0[i]*EI)}${reds.map((_,j)=>`${sgn(Fd[i][j])}${fmtEI(Math.abs(Fd[i][j]*EI))}·X${sub(j+1)}`).join('')} = ${presD[i]!==0?`EI × (${fmt(presD[i],4)} ${uu('len')}) = ${fmtEI(presD[i]*EI)}`:'0'}<br>`;
     });
     const main=state.result;
     const xs=reds.map((rd,i)=>{ const re=main.reactions.find(x=>x.n===rd.n), full=re?[re.Rx,re.Ry,re.Mz][rd.d]:NaN, good=Math.abs(full-R.X[i])<1e-3*Math.max(1,Math.abs(full));
-      return `<tr><td>X${sub(i+1)} = ${redHTML(rd)}<small>${R.X[i]>=0?(rd.d===2?'anticlockwise':rd.d===1?'acts up':'acts right'):(rd.d===2?'clockwise':rd.d===1?'acts down':'acts left')}</small></td><td>${fmt(R.X[i],3)} ${redUnit(rd,true)}<small>${good?'matches the full analysis ✓':'full analysis: '+fmt(full,3)}</small></td></tr>`; }).join('');
+      return `<tr><td>X${sub(i+1)} = ${redHTML(rd)}<small>${R.X[i]>=0?(rd.d===2?'anticlockwise':rd.d===1?'acts up':'acts right'):(rd.d===2?'clockwise':rd.d===1?'acts down':'acts left')}</small></td><td>${fmt(Xd[i],3)} ${redUnit(rd,true)}<small>${good?'matches the full analysis ✓':'full analysis: '+fmt(uc(full,rd.d===2?'moment':'force'),3)}</small></td></tr>`; }).join('');
     cards.push(`<div class="card wide"><h3><span class="step">${step}</span>Compatibility equations</h3><p>The real structure can't move at the redundants (or moves by exactly the settlement), so the movements from the real loads plus each X must add up to that.</p>
-      <div class="eq">${eq}</div><p>Multiplying through by EI = ${Math.round(EI).toLocaleString()} kNm²:</p><div class="eq">${eqEI}</div><table class="vals">${xs}</table></div>`);
+      <div class="eq">${eq}</div><p>Multiplying through by EI = ${Math.round(EI).toLocaleString()} ${uu('EI')} (lengths in ${uu('len')}, forces in ${uu('force')}):</p><div class="eq">${eqEI}</div><table class="vals">${xs}</table></div>`);
     cards.push(`<div class="card wide"><h3><span class="step">${step+1}</span>Final result</h3><p>Superpose: M = M${sub(0)}${reds.map((_,j)=>` + X${sub(j+1)}·m${sub(j+1)}`).join('')}. With the X values in place the real supports don't move (apart from any settlement), as the bent shape shows.</p><canvas class="mini" id="fmFin" style="height:260px"></canvas>
-      ${state.fm.showM?`<h4 class="sub">Bending moment (kNm)</h4><canvas class="mini" id="fmFinM" style="height:240px"></canvas>`:''}
-      ${state.fm.showV?`<h4 class="sub">Shear force (kN)</h4><canvas class="mini" id="fmFinV" style="height:240px"></canvas>`:''}
-      ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (kN), blue tension (T), red compression (C)</h4><canvas class="mini" id="fmFinN" style="height:240px"></canvas>`:''}
+      ${state.fm.showM?`<h4 class="sub">Bending moment (${uu('moment')})</h4><canvas class="mini" id="fmFinM" style="height:240px"></canvas>`:''}
+      ${state.fm.showV?`<h4 class="sub">Shear force (${uu('force')})</h4><canvas class="mini" id="fmFinV" style="height:240px"></canvas>`:''}
+      ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (${uu('force')}), tension (T) and compression (C)</h4><canvas class="mini" id="fmFinN" style="height:240px"></canvas>`:''}
       ${!state.fm.showM&&!state.fm.showV&&!(state.fm.showN&&!isBeam())?`<p class="note">Use <b>Moment diagram</b>, <b>Shear diagram</b>${isBeam()?'':' or <b>Axial diagram</b>'} in the toolbar to add the final diagrams here.</p>`:''}</div>`);
   }
   box.innerHTML=`<div class="fm-grid">${cards.join('')}</div>`;
@@ -1800,7 +1974,7 @@ function renderFM(){
       deltas:reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`Δ${sub(i+1)}${sub(0)} = ${dispTxt(R.D0[i],rd.d)}`}))});
     reds.forEach((rd,j)=>renderMini($(`#fmU${j}`),{restr:R.prim, res:R.U[j], samples:R.U[j].elSamples, diagCol:C.shear, marks:[{n:rd.n,d:rd.d,text:`X${sub(j+1)} = 1`}],
       deltas:[{n:rd.n,d:rd.d,text:`δ${sub(j+1)}${sub(j+1)} = ${dispTxt(R.F[j][j],rd.d)}`}]}));
-    const realR=restraintsFrom(state.supports), xmarks=reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`${redName(rd)} = ${fmt(R.X[i],2)}`,col:C.deform}));
+    const realR=restraintsFrom(state.supports), xmarks=reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`${redName(rd)} = ${q(R.X[i],rd.d===2?'moment':'force',2)}`,col:C.deform}));
     renderMini($('#fmFin'),{restr:realR, EL:R.EL, res:state.result, marks:xmarks});
     if(state.fm.showM) renderMini($('#fmFinM'),{restr:realR, samples:R.fin, diag:'M'});
     if(state.fm.showV) renderMini($('#fmFinV'),{restr:realR, samples:R.fin, diag:'V'});
@@ -1814,22 +1988,98 @@ function renderSD(){
   if(state.page!=='ind') return;
   const box=$('#sd'), sd=slopeDeflection();
   if(!sd){ box.innerHTML='<p class="empty">No values while the structure can move freely.</p>'; return; }
-  const EI=sd.EI, nm=(a,b)=>letter(a)+letter(b);
+  const EI=uc(sd.EI,'EI'), M=v=>fmt(uc(v,'moment'),2), nm=(a,b)=>letter(a)+letter(b);
   let h=`<p class="note">Clockwise positive, as used in M<sub>AB</sub> = (2EI/L)(2θ<sub>A</sub> + θ<sub>B</sub> − 3ψ) + FEM<sub>AB</sub>.</p>`;
-  h+=`<table class="sdt"><tr><th>Joint</th><th>θ (mrad)</th><th>θ × EI</th></tr>`+
+  h+=`<table class="sdt"><tr><th>Joint</th><th>θ (mrad)</th><th>θ × EI (${uu('EI')})</th></tr>`+
     state.nodes.map((_,n)=>`<tr><td>${letter(n)}</td><td>${fmt(sd.theta[n]*1000,3)}</td><td>${fmt(sd.theta[n]*EI,2)}</td></tr>`).join('')+`</table>`;
   h+=`<table class="sdt" style="margin-top:10px"><tr><th>Member</th><th>FEM near</th><th>FEM far</th><th>M near</th><th>M far</th></tr>`+
-    sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.FEMab,2)}</td><td>${fmt(m.FEMba,2)}</td><td>${fmt(m.Mab,2)}</td><td>${fmt(m.Mba,2)}</td></tr>`).join('')+`</table>`;
-  h+=`<p class="note" style="margin-top:6px">All moments in kNm. "Near" is the first joint of the member name (M<sub>AB</sub>), "far" the second (M<sub>BA</sub>).</p>`;
+    sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${M(m.FEMab)}</td><td>${M(m.FEMba)}</td><td>${M(m.Mab)}</td><td>${M(m.Mba)}</td></tr>`).join('')+`</table>`;
+  h+=`<p class="note" style="margin-top:6px">All moments in ${uu('moment')}. "Near" is the first joint of the member name (M<sub>AB</sub>), "far" the second (M<sub>BA</sub>).</p>`;
   h+=`<div class="sdeq">`+sd.members.map(m=>{
-    const k=`2EI/${fmt(m.L,2)}`, A=letter(m.a), B=letter(m.b), ps=Math.abs(m.psi)>1e-9?` − 3ψ<sub>${A}${B}</sub>`:'';
-    return `M<sub>${A}${B}</sub> = (${k})(2θ<sub>${A}</sub> + θ<sub>${B}</sub>${ps})${sgn(m.FEMab)}${fmt(Math.abs(m.FEMab),2)}<br>M<sub>${B}${A}</sub> = (${k})(2θ<sub>${B}</sub> + θ<sub>${A}</sub>${ps})${sgn(m.FEMba)}${fmt(Math.abs(m.FEMba),2)}`;
+    const k=`2EI/${fmt(uc(m.L,'len'),2)}`, A=letter(m.a), B=letter(m.b), ps=Math.abs(m.psi)>1e-9?` − 3ψ<sub>${A}${B}</sub>`:'';
+    return `M<sub>${A}${B}</sub> = (${k})(2θ<sub>${A}</sub> + θ<sub>${B}</sub>${ps})${sgn(m.FEMab)}${M(Math.abs(m.FEMab))}<br>M<sub>${B}${A}</sub> = (${k})(2θ<sub>${B}</sub> + θ<sub>${A}</sub>${ps})${sgn(m.FEMba)}${M(Math.abs(m.FEMba))}`;
   }).join('<br>')+`</div>`;
   const psis=sd.members.filter(m=>Math.abs(m.psi)>1e-9);
   if(psis.length) h+=`<p class="note">Chord rotations: ${psis.map(m=>`ψ<sub>${nm(m.a,m.b)}</sub> = ${fmt(m.psi*1000,3)} mrad`).join(', ')} (from settlement or sway).</p>`;
   box.innerHTML=h;
 }
 
+/* ---------- structure dropdown & about ---------- */
+function presetSVG(p){ const b=document.querySelector(`.preset[data-id="${p.id}"] svg`); return b?b.outerHTML:''; }
+function updatePresetBtn(){
+  const p=PRESETS.find(x=>x.id===state.preset);
+  $('#presetName').textContent = p ? p.name : 'Choose…'; updateEditedMarks();
+  $('#presetIcon').innerHTML = p && p.page===state.page ? presetSVG(p) : '';
+}
+function openPresets(open){
+  const pop=$('#presets'), btn=$('#presetBtn');
+  pop.hidden=!open; btn.setAttribute('aria-expanded',open);
+  if(open){ const cur=pop.querySelector('[aria-pressed="true"]')||pop.querySelector('.preset'); if(cur) cur.focus(); }
+}
+$('#presetBtn').onclick=()=>openPresets($('#presets').hidden);
+$('#resetBtn').onclick=()=>resetPreset();
+$('#presets').addEventListener('click',e=>{ if(e.target.closest('.preset')) { openPresets(false); $('#presetBtn').focus(); } });
+document.addEventListener('pointerdown',e=>{ if(!$('#presets').hidden && !e.target.closest('.pick')) openPresets(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#presets').hidden){ openPresets(false); $('#presetBtn').focus(); } });
+$('#aboutBtn').onclick=e=>{ const open=$('#intro').hidden; $('#intro').hidden=!open; e.currentTarget.setAttribute('aria-expanded',open); resize(); };
+
+$('#panelToggle').onclick=e=>{
+  const w=document.querySelector('.work'), closed=!w.classList.contains('collapsed');
+  w.classList.toggle('collapsed',closed);
+  const b=e.currentTarget; b.setAttribute('aria-expanded',!closed);
+  const t=closed?'Show the side panel':'Hide the side panel'; b.title=t; b.setAttribute('aria-label',t);
+  resize(); if(state.view==='fm') renderFM();
+};
+
+/* ---------- settings: units, theme, colours ---------- */
+const COLOR_KEYS=[['pload','Point loads'],['dload','Distributed loads'],['mload','Moments'],['react','Reactions'],['deform','Bent shape'],['moment','Bending moment'],['shear','Shear force']];
+const SWATCHES=['#D2361F','#E09F1F','#6A994E','#139A8A','#2E86AB','#4361EE','#7B2CBF','#5F6D78'];
+function loadSettings(){
+  try{ const s=JSON.parse(localStorage.getItem('bfp-settings')||'{}');
+    if(s.units==='si'||s.units==='us') state.units=s.units;
+    if(['auto','light','dark'].includes(s.theme)) state.theme=s.theme;
+    if(s.colors&&typeof s.colors==='object') state.colors=s.colors;
+    state.eachColor=!!s.eachColor; }catch(e){}
+  applyTheme(); applyColors();
+}
+function saveSettings(){ try{ localStorage.setItem('bfp-settings',JSON.stringify({units:state.units,theme:state.theme,colors:state.colors,eachColor:state.eachColor})); }catch(e){} }
+function applyTheme(){ if(state.theme==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=state.theme; }
+function applyColors(){ const st=document.documentElement.style; COLOR_KEYS.forEach(([k])=>{ if(state.colors[k]) st.setProperty('--'+k,state.colors[k]); else st.removeProperty('--'+k); }); }
+function refreshAll(){
+  saveSettings(); readColors();
+  renderSize(); renderSupports(); renderLoads(); renderProbe(); renderMaterial();
+  recompute(); updateLegend(); if(state.view==='fm') renderFM();
+}
+function renderSettings(){
+  const pop=$('#setPop');
+  const seg=(name,opts,cur)=>`<div class="seg" role="group" aria-label="${name}">${opts.map(([v,t])=>`<button data-${name}="${v}" aria-pressed="${cur===v}">${t}</button>`).join('')}</div>`;
+  let h=`<h4>Units</h4>${seg('units',[['si','SI (kN, m)'],['us','US (kip, ft)']],state.units)}`;
+  h+=`<h4>Theme</h4>${seg('theme',[['auto','Auto'],['light','Light'],['dark','Dark']],state.theme)}`;
+  h+=`<h4>Colours</h4>`;
+  COLOR_KEYS.forEach(([k,lab])=>{
+    const cur=state.colors[k]||'', dis=state.eachColor&&['pload','dload','mload'].includes(k);
+    h+=`<div class="crow" ${dis?'style="opacity:.4;pointer-events:none"':''}><span>${lab}</span><div class="sws">
+      <button class="sw auto" data-ck="${k}" data-c="" aria-pressed="${!cur}" title="Theme default" aria-label="${lab}: theme default"></button>
+      ${SWATCHES.map(c=>`<button class="sw" style="background:${c}" data-ck="${k}" data-c="${c}" aria-pressed="${cur.toLowerCase()===c.toLowerCase()}" aria-label="${lab}: ${c}"></button>`).join('')}
+      <input type="color" data-ck="${k}" value="${cur||'#888888'}" aria-label="${lab}: custom colour" title="Custom colour"></div></div>`;
+  });
+  h+=`<label class="tgl"><input type="checkbox" id="eachTgl" ${state.eachColor?'checked':''}> Give each load its own colour</label>`;
+  h+=`<div class="setfoot"><button class="link" id="resetColors">Reset colours</button><span class="note" style="margin:0">Saved on this device</span></div>`;
+  pop.innerHTML=h;
+  pop.querySelectorAll('[data-units]').forEach(b=>b.onclick=()=>{ if(state.units===b.dataset.units) return; state.units=b.dataset.units; renderSettings(); refreshAll(); });
+  pop.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{ state.theme=b.dataset.theme; applyTheme(); saveSettings(); renderSettings(); requestAnimationFrame(()=>{ readColors(); recompute(); if(state.view==='fm') renderFM(); }); });
+  pop.querySelectorAll('.sw').forEach(b=>b.onclick=()=>{ const k=b.dataset.ck; if(b.dataset.c) state.colors[k]=b.dataset.c; else delete state.colors[k]; applyColors(); renderSettings(); refreshColors(); });
+  pop.querySelectorAll('input[type=color]').forEach(inp=>inp.oninput=()=>{ state.colors[inp.dataset.ck]=inp.value; applyColors(); refreshColors(); inp.closest('.sws').querySelectorAll('.sw').forEach(s=>s.setAttribute('aria-pressed','false')); });
+  $('#eachTgl').onchange=e=>{ state.eachColor=e.target.checked; renderSettings(); renderLoads(); refreshColors(); };
+  $('#resetColors').onclick=()=>{ state.colors={}; state.eachColor=false; applyColors(); renderSettings(); renderLoads(); refreshColors(); };
+}
+function refreshColors(){ saveSettings(); readColors(); document.querySelectorAll('.load').forEach(el=>{ const l=state.loads.find(x=>x.id===+el.dataset.id); if(l) el.style.setProperty('--lc', state.eachColor?loadColor(l):`var(--${l.type==='point'?'pload':l.type==='udl'?'dload':'mload'})`); }); updateLegend(); draw(); if(state.view==='fm') renderFM(); }
+function openSettings(open){ const p=$('#setPop'), b=$('#setBtn'); if(open) renderSettings(); p.hidden=!open; b.setAttribute('aria-expanded',open); }
+$('#setBtn').onclick=()=>openSettings($('#setPop').hidden);
+document.addEventListener('pointerdown',e=>{ if(!$('#setPop').hidden && !e.target.closest('.settings')) openSettings(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#setPop').hidden){ openSettings(false); $('#setBtn').focus(); } });
+
+loadSettings();
 readColors();
 renderPresets();
 renderMaterial();
