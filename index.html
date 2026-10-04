@@ -39,6 +39,8 @@ button,select,input{font:inherit;color:inherit}
 .app > header,.app > .intro{flex:0 0 auto}
 .app > .work{flex:1 1 auto;min-height:0}
 header{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;padding:10px 20px}
+.brand{display:flex;flex-direction:column;line-height:1.1}
+.byline{font-size:12px;color:var(--muted);margin-top:2px;letter-spacing:.02em}
 .pages{display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:3px}
 .pages a{padding:6px 14px;border-radius:7px;text-decoration:none;color:var(--muted);font-weight:600;font-size:15px}
 .pages a:hover{color:var(--ink)}
@@ -199,6 +201,14 @@ select{width:100%;padding:5px 8px;border:1px solid var(--line);border-radius:6px
 .sdblk:last-child{border-bottom:0}
 .sdblk .sm{display:block;margin-bottom:2px}
 .sdeq{font-family:var(--cond);font-size:14px;line-height:1.7;margin:8px 0;padding:8px 10px;background:var(--paper);border-radius:6px;overflow-x:auto;white-space:nowrap}
+.rlegend{position:absolute;left:12px;right:12px;bottom:10px;display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;pointer-events:none;font-size:13px}
+.rlegend:empty{display:none}
+.rlegend .rl-title{color:var(--muted);font-weight:600;margin-right:2px}
+.rlegend .rl{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--panel) 92%,transparent);border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(4px)}
+.rlegend .rl b{font-family:var(--cond);font-size:14px}
+.rlegend .rv{font-family:var(--cond);font-weight:600;white-space:nowrap}
+.rlegend .ar{color:var(--react);font-weight:700;display:inline-block;width:1em;text-align:center}
+.rlegend .rl-note{color:var(--muted);font-size:12px}
 .spanbtns{display:flex;gap:8px;margin-top:4px}
 
 @media (max-width:860px){
@@ -276,17 +286,208 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
 .tgl input:checked{background:var(--deform)}
 .tgl input:checked::after{transform:translateX(14px)}
 .setfoot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
-@media (max-width:1500px){ .iconbtn span{display:none} .iconbtn{padding:7px 9px} h1{font-size:22px} header{gap:10px 14px} .pickbtn{min-width:200px} }
+.badge b{white-space:nowrap}
+@media (max-width:1750px){ .iconbtn span{display:none} .iconbtn{padding:7px 9px} }
+@media (max-width:1500px){ .badge{max-width:280px} .badge small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .pickbtn{min-width:0} .iconbtn{padding:7px 9px} h1{font-size:22px} header{gap:10px 10px;padding:10px 14px} .pickbtn{min-width:0} }
+@media (max-width:1350px){ h1{font-size:19px!important} .badge small{display:none!important} .pages a{padding:6px 10px} header .spacer{min-width:0} .pk-ic{display:none} .pickbtn{padding:5px 10px} }
+
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ---------- edit group, toast, page modes ---------- */
+.editgrp{display:inline-flex;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--panel);box-shadow:var(--shadow)}
+.editgrp .ib{border:0;border-right:1px solid var(--line);background:transparent;padding:6px 9px;cursor:pointer;color:var(--ink);display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px}
+.editgrp .ib:last-child{border-right:0}
+.editgrp .ib svg{width:17px;height:17px}
+.editgrp .ib:hover:not(:disabled){background:color-mix(in srgb,var(--deform) 12%,transparent)}
+.editgrp .ib:disabled{opacity:.35;cursor:default}
+.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:var(--ink);color:var(--paper);padding:9px 16px;border-radius:10px;font-weight:600;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);z-index:50;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+body.page-il .tabs, body.page-il #secHow, body.page-il #secSettle, body.page-il #secLoads, body.page-il #secMat, body.page-il #tab-probe, body.page-il #tab-results{display:none!important}
+body.page-il #ilSec{display:block!important}
+body.page-il #viewSeg, body.page-il #diag, body.page-il #bent, body.page-il .tool, body.page-il #fit, body.page-il #wobble, body.page-il #fmM, body.page-il #fmV, body.page-il #fmN, body.page-il #rlegend, body.page-il #legend{display:none!important}
+body.page-pr .panel, body.page-pr .ptoggle, body.page-pr .toolbar, body.page-pr #badge, body.page-pr #aboutBtn{display:none!important}
+body.page-pr .work{grid-template-columns:1fr!important}
+.ilout{width:100%;border-collapse:collapse;font-size:14px;margin-top:4px}
+.ilout td{padding:4px 0;border-top:1px solid var(--line);vertical-align:top}
+.ilout td:last-child{white-space:nowrap;padding-left:8px;text-align:right;font-family:var(--cond);font-weight:700;font-size:15px}
+.ilout small{display:block;font-family:var(--font);font-weight:400;color:var(--muted);font-size:12px}
+/* practice */
+.prgrid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:16px;align-items:start}
+.prsel{display:flex;flex-wrap:wrap;gap:14px 22px;align-items:flex-end}
+.prsel .grp{display:flex;flex-direction:column;gap:5px}
+.prsel .grp > span{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.prsel .seg button{padding:7px 14px}
+.prsel .seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.btn.primary{background:var(--deform);border-color:var(--deform);color:#fff}
+.btn.primary:hover{filter:brightness(1.08)}
+.card p b{color:var(--ink)}
+.given{margin:8px 0 0;padding-left:18px;font-size:14.5px;line-height:1.6}
+.qrow{display:grid;grid-template-columns:1fr auto 26px;gap:10px;align-items:center}
+.qrow:first-child{border-top:0}
+.qrow .ql{font-size:14.5px}
+.qrow .ql small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px}
+.qrow .hint{display:none;color:var(--deform);font-size:12.5px;margin-top:4px}
+.showhints .qrow .hint{display:block}
+.qrow .num input{width:96px}
+.qrow .mark{font-size:18px;text-align:center;font-weight:700}
+.qrow.ok .mark{color:var(--shear)} .qrow.bad .mark{color:var(--load)}
+.qrow.ok .num{border-color:var(--shear)} .qrow.bad .num{border-color:var(--load)}
+.qrow .ans{grid-column:1/-1}
+.prbtns{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.score{font-family:var(--cond);font-weight:700;font-size:15px;color:var(--muted)}
+@media (max-width:1100px){ .prgrid{grid-template-columns:1fr} }
+@media (max-width:1500px){ .editgrp .ib span{display:none} }
+@media (max-width:1650px){ .pages a{padding:6px 10px;font-size:14px} .brand .byline{font-size:11px} }
+@media (max-width:1720px){ .pages .long{display:none} .pk-ic{display:none} }
+@media (max-width:1560px){ .badge small{display:none!important} }
+@media (max-width:1420px){ h1{font-size:20px!important} .badge b{font-size:15px} }
+@media (max-width:1320px){ h1{font-size:18px!important} header{gap:8px!important;padding:8px 12px!important} .pages a{padding:5px 8px!important;font-size:13.5px!important} .pk-tx span{font-size:14px} .pk-tx small{display:none} .badge{padding:4px 9px} }
+
+/* ---------- workshop ---------- */
+.buildgrp{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+.buildgrp[hidden]{display:none!important}
+.seg.build button{display:inline-flex;align-items:center;gap:6px}
+.seg.build svg{width:17px;height:17px}
+.seg.build button[aria-pressed="true"]{background:var(--deform);color:#fff}
+body.page-ws .pick:not(.settings){display:none!important}
+.jt{display:grid;gap:6px}
+.jh,.jr{display:grid;grid-template-columns:20px 1fr 1fr 44px 22px;gap:8px;align-items:center}
+.jh{font-size:12px;color:var(--muted)}
+.jr b{font-family:var(--cond);font-size:15px}
+.jr .num input{width:100%}
+.jr .hg{display:flex;justify-content:center}
+.jr .hg input{width:18px;height:18px;accent-color:var(--deform)}
+.link.x{font-size:18px;text-decoration:none;line-height:1}
+.ml{margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.ml .lbl{width:100%}
+.mchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 6px 3px 10px;font-weight:600;font-size:13.5px;background:var(--paper)}
+.mchip small{color:var(--muted);font-weight:500}
+body.page-pr .pick:not(.settings){display:none!important}
+
+/* ---------- practice redesign ---------- */
+.prwrap{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.prhero{border-radius:16px;padding:18px 20px;background:linear-gradient(135deg,color-mix(in srgb,var(--deform) 14%,var(--panel)),var(--panel) 60%);border:1px solid var(--line);box-shadow:var(--shadow)}
+.prhead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.prhead h2{margin:0;font-family:var(--cond);font-size:26px}
+.prhead p{margin:2px 0 0;color:var(--muted)}
+.scorepill{padding:6px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);font-size:14px;color:var(--muted);white-space:nowrap}
+.scorepill b{color:var(--shear);font-family:var(--cond);font-size:17px}
+.choices{display:flex;flex-wrap:wrap;gap:16px 26px;margin-top:14px;align-items:flex-end}
+.cgroup{display:flex;flex-direction:column;gap:6px}
+.cgroup .gl{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:700}
+.cgroup:last-child{flex-direction:row;align-items:flex-end;gap:12px}
+.cgroup:last-child .gl{position:absolute;opacity:0;pointer-events:none}
+.ccards{display:flex;gap:8px}
+.ccard{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--panel);cursor:pointer;text-align:left;min-width:190px}
+.ccard:hover{border-color:var(--muted);transform:translateY(-1px)}
+.ccard .ci svg{width:58px;height:30px;display:block;color:var(--ink)}
+.ccard .ct{display:flex;flex-direction:column;line-height:1.2}
+.ccard .ct b{font-size:15px}
+.ccard .ct small{color:var(--muted);font-size:12px}
+.ccard[aria-pressed="true"]{border-color:var(--deform);background:color-mix(in srgb,var(--deform) 12%,var(--panel));box-shadow:0 0 0 3px color-mix(in srgb,var(--deform) 18%,transparent)}
+.ccard[aria-pressed="true"] .ci svg{color:var(--deform)}
+.seg.lvl{display:inline-flex;box-shadow:none}
+.seg.lvl button{padding:9px 16px}
+.seg.lvl button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.btn.big{padding:10px 18px;font-size:15px;display:inline-flex;align-items:center;gap:8px;border-radius:12px}
+.btn.big svg{width:18px;height:18px}
+.btn.ghost{background:transparent}
+.prgrid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(340px,.8fr);gap:16px;align-items:start}
+.fadein{animation:fadeUp .35s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card.prob .tags{display:flex;gap:6px;margin-bottom:8px}
+.tag{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;background:color-mix(in srgb,var(--deform) 12%,transparent);color:var(--deform)}
+.card.prob canvas.mini{height:330px}
+.given{margin:10px 0 0;padding-left:18px;font-size:14.5px;line-height:1.65}
+.task{margin-top:12px;padding:10px 12px;border-left:4px solid var(--deform);background:color-mix(in srgb,var(--deform) 8%,transparent);border-radius:8px;font-weight:600;font-size:14.5px}
+.card.answers{position:sticky;top:0}
+.ahead{display:flex;justify-content:space-between;align-items:baseline}
+.ahead h3{margin:0}
+.prog{font-size:13px;color:var(--muted);font-weight:600}
+.progbar{height:6px;border-radius:999px;background:color-mix(in srgb,var(--muted) 20%,transparent);margin:8px 0 6px;overflow:hidden}
+.progbar i{display:block;height:100%;width:0;background:var(--deform);border-radius:999px;transition:width .3s var(--ease)}
+.qrow{border-radius:10px;padding:10px 10px;border:1px solid transparent;border-top:1px solid var(--line);transition:background-color .2s var(--ease),border-color .2s var(--ease)}
+.qrow.ok{background:color-mix(in srgb,var(--shear) 10%,transparent);border-color:color-mix(in srgb,var(--shear) 45%,transparent)}
+.qrow.bad{background:color-mix(in srgb,var(--load) 9%,transparent);border-color:color-mix(in srgb,var(--load) 40%,transparent)}
+.qrow .ans{display:none;margin-top:8px;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--shear) 16%,var(--panel));border:1.5px solid var(--shear);color:var(--ink);font-size:15px;align-items:center;gap:10px;animation:fadeUp .3s var(--ease)}
+.qrow .ans b{font-family:var(--cond);font-size:18px;color:var(--shear)}
+.qrow .ans .ansl{font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#fff;background:var(--shear);padding:2px 8px;border-radius:999px}
+.reveal .qrow .ans{display:flex}
+.reveal-btn[aria-pressed="true"]{background:var(--shear);border-color:var(--shear);color:#fff}
+.hint{border-radius:8px;padding:6px 8px;background:color-mix(in srgb,var(--deform) 8%,transparent)}
+.prbtns.sub{margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}
+@media (max-width:1100px){ .prgrid{grid-template-columns:1fr} .card.answers{position:static} }
+
+.zoomctl{position:absolute;right:12px;top:42px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow);z-index:3}
+.zoomctl button{width:34px;height:32px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;font-size:18px;font-weight:700;color:var(--ink);display:grid;place-items:center}
+.zoomctl button:last-child{border-bottom:0}
+.zoomctl button:hover{background:color-mix(in srgb,var(--deform) 12%,transparent)}
+.zoomctl svg{width:16px;height:16px}
+body.page-il .zoomctl{display:none}
+.wsstatus{position:absolute;left:50%;top:12px;transform:translateX(-50%);padding:7px 14px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:var(--shadow);border:1.5px solid var(--line);background:var(--panel);display:flex;gap:8px;align-items:center;z-index:3;white-space:nowrap}
+.wsstatus small{font-weight:500;color:var(--muted);font-size:12.5px}
+.wsstatus.ok{border-color:var(--shear);color:var(--shear)} .wsstatus.ind{border-color:var(--deform);color:var(--deform)} .wsstatus.bad{border-color:var(--load);color:var(--load)} .wsstatus.empty{color:var(--muted)}
+.wsstatus .go{border:0;background:var(--deform);color:#fff;border-radius:999px;padding:3px 10px;font-weight:700;font-size:12.5px;cursor:pointer}
+/* member editor */
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mcard{border:1px solid var(--line);border-radius:12px;padding:10px 12px 2px;background:var(--paper)}
+.mcard .mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mcard .mh b{font-family:var(--cond);font-size:16px}
+.mcard .mh small{color:var(--muted);margin-left:6px}
+.addm{border:1.5px dashed var(--line);border-radius:12px;padding:10px 12px;margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.addm .full{grid-column:1/-1}
+.addm .dirs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.addm .dirs button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:5px 0;cursor:pointer;font-size:15px}
+.addm .dirs button[aria-pressed="true"]{background:var(--deform);color:#fff;border-color:var(--deform)}
+details.coords{margin-top:12px}
+details.coords summary{cursor:pointer;color:var(--muted);font-size:13px;font-weight:600}
+.hchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.hchip{border:1px solid var(--line);border-radius:999px;padding:4px 10px;background:var(--panel);cursor:pointer;font-weight:600;font-size:13px}
+.hchip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.cgroup[hidden]{display:none!important}
+
+body.page-ws #badge{display:none!important}
+.solvehead{grid-column:1/-1;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--deform) 12%,var(--panel)),var(--panel) 65%);box-shadow:var(--shadow)}
+.solvehead h3{margin:0;font-family:var(--cond);font-size:20px}
+.solvehead p{margin:0;color:var(--muted);font-size:13.5px;flex-basis:100%}
+.solvehead .ccards{display:flex;gap:8px}
+
+body.page-ws #secDesigns{display:block!important}
+body.page-ws #quickSave{display:inline-flex!important}
+.dcount{font-family:var(--font);font-size:12.5px;font-weight:600;color:var(--muted)}
+.dsave{display:flex;gap:8px}
+.dsave input{flex:1;min-width:0;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--field);font-size:14px}
+.dsave input:focus{outline:none;border-color:var(--deform);box-shadow:0 0 0 3px color-mix(in srgb,var(--deform) 18%,transparent)}
+.dlist{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.ditem{border:1px solid var(--line);border-radius:12px;padding:8px 10px;background:var(--paper);display:grid;grid-template-columns:54px 1fr;gap:4px 10px;align-items:center;transition:border-color .15s var(--ease),box-shadow .15s var(--ease)}
+.ditem.cur{border-color:var(--deform);box-shadow:0 0 0 2px color-mix(in srgb,var(--deform) 20%,transparent)}
+.ditem svg.thumb{width:54px;height:34px;grid-row:span 2;color:var(--ink)}
+.ditem .dn{font-weight:700;font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ditem .dm{font-size:12px;color:var(--muted)}
+.ditem .dacts{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.ditem .dacts button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:4px 10px;font-size:12.5px;font-weight:600;cursor:pointer}
+.ditem .dacts button:hover{border-color:var(--muted)}
+.ditem .dacts .open{background:var(--deform);border-color:var(--deform);color:#fff}
+.ditem .dacts .del{margin-left:auto;color:var(--load)}
+.ditem input.rn{grid-column:2;padding:4px 8px;border:1px solid var(--deform);border-radius:6px;font-weight:700;font-size:14px;background:var(--field)}
+
+.askback{position:fixed;inset:0;background:rgba(10,14,18,.45);display:grid;place-items:center;z-index:60;animation:fadeIn .15s var(--ease)}
+.askback[hidden]{display:none}
+.askbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;width:min(380px,calc(100vw - 32px));box-shadow:0 20px 50px rgba(0,0,0,.3);animation:popIn .18s var(--ease)}
+.askbox p{margin:0 0 14px;font-size:15px;font-weight:600}
+.askbtns{display:flex;justify-content:flex-end;gap:8px}
+.btn.danger{background:var(--load);border-color:var(--load);color:#fff}
 </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <h1>Beam & frame playground</h1>
+    <div class="brand"><h1>Beam & frame playground</h1><span class="byline">Created by Moarly</span></div>
     <nav class="pages" aria-label="Pages">
       <a href="#determinate" data-page="det">Determinate</a>
       <a href="#indeterminate" data-page="ind">Indeterminate</a>
+      <a href="#workshop" data-page="ws">Workshop</a>
+      <a href="#practice" data-page="pr">Practice</a>
     </nav>
     <div class="pick">
       <button class="pickbtn" id="presetBtn" aria-haspopup="true" aria-expanded="false" aria-controls="presets">
@@ -295,10 +496,6 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
       </button>
       <div class="pop" id="presets" role="menu" aria-label="Choose a structure" hidden></div>
     </div>
-    <button class="iconbtn reset" id="resetBtn" disabled title="Nothing to reset yet" aria-label="Reset this structure to its original setup">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Reset</span>
-    </button>
     <div id="badge"></div>
     <button class="about" id="aboutBtn" aria-expanded="false" aria-controls="intro" aria-label="What does determinate or indeterminate mean?" title="What does this mean?">?</button>
     <div class="spacer"></div>
@@ -314,10 +511,27 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
   <main class="work">
     <section class="stage">
       <div class="toolbar">
+        <div class="editgrp" id="editGrp" role="group" aria-label="Edit history and sharing">
+          <button class="ib" id="undoBtn" disabled title="Undo (Ctrl+Z)" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H5V3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.3 7A8 8 0 1 1 4 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
+          <button class="ib" id="redoBtn" disabled title="Redo (Ctrl+Shift+Z)" aria-label="Redo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7h4V3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.7 7A8 8 0 1 0 20 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
+          <button class="ib" id="resetBtn" disabled title="Nothing to reset yet" aria-label="Reset this structure to its original setup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="ib" id="quickSave" title="Save this design (Ctrl+S)" aria-label="Save this design" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M8 4v5h7V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+          <button class="ib share" id="shareBtn" title="Copy a link to this exact structure" aria-label="Share a link to this structure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1 1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1-1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Share</span></button>
+        </div>
+        <div class="buildgrp" id="buildGrp" hidden>
+          <div class="seg build" id="buildSeg" role="group" aria-label="Build tools">
+            <button data-tool="select" aria-pressed="true" title="Drag joints and loads"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l14 8-6 1.5L10 19z" fill="currentColor" fill-opacity=".2" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>Select</button>
+            <button data-tool="member" aria-pressed="false" title="Draw members"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="18" r="2.4" fill="currentColor"/><circle cx="19" cy="6" r="2.4" fill="currentColor"/><path d="M6.5 16.5l11-9" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Member</button>
+            <button data-tool="support" aria-pressed="false" title="Add or change supports"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l-6 9h12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M4 18h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Support</button>
+            <button data-tool="hinge" aria-pressed="false" title="Add or remove internal hinges"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h6M15 12h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>Hinge</button>
+            <button data-tool="delete" aria-pressed="false" title="Delete joints or members"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M9 7V5h6v2M8 7l1 12h6l1-12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>Delete</button>
+          </div>
+          <label class="tool">Snap <select id="gridSel" style="width:auto"><option value="0.25">0.25</option><option value="0.5" selected>0.5</option><option value="1">1</option></select></label>
+          <select id="tplSel" style="width:auto" aria-label="Start from a template"></select>
+        </div>
         <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
           <button data-v="play" aria-pressed="true">Playground</button>
-          <button data-v="fm" aria-pressed="false">Force method</button>
-          <button data-v="sd" aria-pressed="false">Slope-deflection</button>
+          <button data-v="solve" aria-pressed="false">Solve</button>
         </div>
         <div class="seg" id="diag" role="group" aria-label="Diagram">
           <button data-d="none" aria-pressed="true">No diagram</button>
@@ -346,9 +560,17 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
         <div class="legend" id="legend"></div>
         <div class="banner" id="banner"></div>
         <div class="tip" id="tip"></div>
+        <div class="rlegend" id="rlegend" aria-label="Support reactions"></div>
+        <div class="zoomctl" id="zoomCtl" role="group" aria-label="Zoom">
+          <button id="zIn" title="Zoom in (or scroll)" aria-label="Zoom in">+</button>
+          <button id="zOut" title="Zoom out (or scroll)" aria-label="Zoom out">−</button>
+          <button id="zFit" title="Fit the structure in view" aria-label="Fit to view"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="wsstatus" id="wsStatus" hidden></div>
       </div>
       <div class="fmview" id="fmView" hidden></div>
       <div class="fmview" id="sdView" hidden></div>
+      <div class="fmview" id="prView" hidden></div>
     </section>
     <button class="ptoggle" id="panelToggle" aria-expanded="true" aria-controls="sidePanel" title="Hide the side panel" aria-label="Hide the side panel">
       <svg viewBox="0 0 10 16" aria-hidden="true"><path d="M3 2l5 6-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -360,10 +582,27 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
         <button role="tab" id="t-results" aria-controls="tab-results" aria-selected="false" tabindex="-1" data-tab="results">Results</button>
       </div>
       <div class="tabpanel" id="tab-edit" role="tabpanel" aria-labelledby="t-edit">
-        <div class="sec">
+        <div class="sec" id="ilSec" hidden>
+          <h2>Influence line</h2>
+          <div class="f"><span class="lbl">Show the influence line for</span><select id="ilQty" aria-label="Quantity"></select></div>
+          <div id="ilFields"></div>
+          <div id="ilOut"></div>
+          <p class="note" style="margin-top:8px"><b>How to read it:</b> the height of the line under any point is the value of the chosen quantity when a 1 unit load sits at that point. Drag the load (or click anywhere on the drawing) to move it.</p>
+          <p class="note"><b>Müller-Breslau:</b> the influence line has the same shape as the beam deflects when you remove the restraint for that quantity and give it a unit movement. </p>
+        </div>
+        <div class="sec" id="secDesigns" hidden>
+          <h2>My designs <span class="dcount" id="dCount"></span></h2>
+          <div class="dsave">
+            <input type="text" id="dName" maxlength="60" placeholder="Name this design" aria-label="Design name">
+            <button class="btn primary" id="dSave">Save</button>
+          </div>
+          <p class="note" id="dState"></p>
+          <div class="dlist" id="dList"></div>
+        </div>
+        <div class="sec" id="secHow">
           <p class="howto" style="margin:0">Drag a red load to move it, even across supports. Click a joint to change its support. Click anywhere on the structure to check the forces and deflection at that point.</p>
         </div>
-        <div class="sec">
+        <div class="sec" id="secSize">
           <h2>Size</h2>
           <div id="size"></div>
         </div>
@@ -372,12 +611,12 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
           <div class="sups" id="sups"></div>
           <p class="note" style="margin-top:8px">Pinned stops movement but lets it rotate. Roller only stops vertical movement. Fixed stops everything.</p>
         </div>
-        <div class="sec">
+        <div class="sec" id="secSettle">
           <h2>Support settlement <button class="link" id="clearSettle">Reset all</button></h2>
           <p class="note">Make a support sink by a set amount, like "support C settles 6 mm". Type a value or drag. A negative value lifts the support.</p>
           <div id="settleBox"></div>
         </div>
-        <div class="sec">
+        <div class="sec" id="secLoads">
           <h2>Loads <button class="link" id="clearLoads">Remove all</button></h2>
           <div id="loads"></div>
           <div class="adds">
@@ -386,7 +625,7 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
             <button class="btn" data-add="moment">Add moment</button>
           </div>
         </div>
-        <div class="sec">
+        <div class="sec" id="secMat">
           <h2>Material & section</h2>
           <div class="f"><span class="lbl">Material</span><select id="mat"></select></div>
           <div id="matFields"></div>
@@ -417,6 +656,13 @@ input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color
     </aside>
   </main>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="askback" id="askBack" hidden>
+  <div class="askbox" role="alertdialog" aria-modal="true" aria-labelledby="askMsg">
+    <p id="askMsg"></p>
+    <div class="askbtns"><button class="btn" id="askNo">Cancel</button><button class="btn danger" id="askYes">OK</button></div>
+  </div>
+</div>
 <script>
 (() => {
 const $ = s => document.querySelector(s);
@@ -445,6 +691,7 @@ const PRESETS = [
   {page:'det', id:'dover', name:'Double overhang', kind:'beam', spans:[2,6,2], supports:{1:'pin',2:'roller'}, loads:[{type:'udl',m:0,ta:0,m2:2,tb:1,mag:8,dir:'down'},{type:'point',m:0,t:0,mag:10,dir:'down'},{type:'point',m:2,t:1,mag:10,dir:'down'}]},
   {page:'det', id:'lframe', name:'L-frame', kind:'frame', W:4, H:4, gen:(L,H)=>({nodes:[[0,0],[0,H],[L,H]], members:[[0,1],[1,2]]}), supports:{0:'fixed'}, loads:[{type:'point',m:1,t:1,mag:10,dir:'down'}]},
   {page:'det', id:'prportal', name:'Portal on pin & roller', kind:'frame', W:8, H:4, gen:PORTAL, supports:{0:'pin',3:'roller'}, loads:[{type:'udl',m:1,ta:0,tb:1,mag:10,dir:'down'},{type:'point',m:0,t:1,mag:15,dir:'right'}]},
+  {page:'ws', id:'custom', name:'My structure', kind:'frame', W:0, H:0, cgeo:{nodes:[],members:[],mid:1}, supports:{}, loads:[]},
   // indeterminate
   {page:'ind', id:'prop', name:'Propped cantilever', kind:'beam', spans:[8], supports:{0:'fixed',1:'roller'}, loads:[{type:'udl',m:0,ta:0,tb:1,mag:10,dir:'down'}]},
   {page:'ind', id:'ff', name:'Fixed both ends', kind:'beam', spans:[8], supports:{0:'fixed',1:'fixed'}, loads:[{type:'point',m:0,t:0.5,mag:40,dir:'down'}]},
@@ -460,7 +707,7 @@ const PRESETS = [
 const state = {
   preset:null, kind:'beam', spans:[8], W:8, H:4,
   nodes:[], members:[], runs:[], runOf:[], supports:{}, loads:[],
-  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', units:'si', eachColor:false, theme:'auto', colors:{}, showBent:true,
+  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', hinges:{}, cgeo:{nodes:[],members:[],mid:1}, units:'si', eachColor:false, theme:'auto', colors:{}, showBent:true,
   settle:{}, diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
 };
 const isBeam = () => state.kind==='beam';
@@ -483,6 +730,9 @@ function q(v,k,d=1){ const extra=(state.units==='us'&&(k==='defl'||k==='settle'|
 
 /* ---------- geometry & runs ---------- */
 function genGeometry(){
+  if(state.preset==='custom'){
+    return {nodes:state.cgeo.nodes.map(p=>[p[0],p[1]]), members:state.cgeo.members.map(m=>[m.a,m.b])};
+  }
   if(isBeam()){
     const nodes=[[0,0]]; let x=0;
     state.spans.forEach(s=>{ x+=s; nodes.push([x,0]); });
@@ -560,7 +810,9 @@ function rebuildGeometry(anchor){
   if(anchor && state.runs.length) anchors=state.loads.map(l=> l.type==='udl'
     ? {a:toMember(l.run,l.sa,true), b:toMember(l.run,l.sb,false)} : {p:toMember(l.run,l.s)});
   const pAnchor = anchor && state.runs.length && state.runs[state.probe.run] ? toMember(state.probe.run,state.probe.s) : null;
-  const g=genGeometry(); state.nodes=g.nodes; state.members=g.members; buildRuns();
+  const g=genGeometry(); state.nodes=g.nodes; state.members=g.members;
+  if(state.preset==='custom') state.kind = (g.nodes.length>=2 && g.members.length && g.nodes.every(p=>Math.abs(p[1]-g.nodes[0][1])<1e-9)) ? 'beam':'frame';
+  buildRuns();
   if(pAnchor && pAnchor.m<state.members.length){ const q=fromMember(pAnchor.m,pAnchor.t); state.probe.run=q.run; state.probe.s=r2(q.s); }
   if(anchors) state.loads.forEach((l,i)=>{ const A=anchors[i];
     if(l.type==='udl'){ const a=fromMember(A.a.m,A.a.t), b=fromMember(A.b.m,A.b.t); l.run=a.run; l.sa=r2(a.s); l.sb=r2(b.s); }
@@ -568,6 +820,7 @@ function rebuildGeometry(anchor){
   clampLoads();
 }
 function clampLoads(){
+  if(!state.runs.length){ state.loads=[]; return; }
   if(!state.runs[state.probe.run]) state.probe.run=0;
   if(state.runs.length) state.probe.s=clamp(state.probe.s,0,state.runs[state.probe.run].len);
   state.loads=state.loads.filter(l=>{
@@ -639,6 +892,11 @@ function solve(opts={}){
   const nd=nodes.length*3, K=new Float64Array(nd*nd), F=new Float64Array(nd);
   const E=state.E*1e6, I=state.I*1e-8, Aa=state.A*1e-4, EI=E*I, EA=E*Aa;
   const els=[];
+  // internal hinges: at a hinge joint every member except one gets a released (pinned) end
+  const HG=opts.hinges||state.hinges||{}, rel=new Set();
+  Object.keys(HG).forEach(n=>{ n=+n; if(!HG[n]) return;
+    const ms=state.members.map((_,i)=>i).filter(i=>state.members[i][0]===n||state.members[i][1]===n);
+    ms.slice(1).forEach(i=>rel.add(i+(state.members[i][0]===n?':a':':b'))); });
   memberLists.forEach((list,mi)=>{
     const mLen=memberLen(mi);
     for(let k=0;k<list.length-1;k++){
@@ -651,15 +909,22 @@ function solve(opts={}){
       const i=list[k].n, j=list[k+1].n;
       const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y, L=Math.hypot(dx,dy);
       if(L<1e-9) continue;
-      const c=dx/L, s=dy/L, kl=localK(EA,EI,L), T=rotT(c,s), kg=TtKT(T,kl);
+      const c=dx/L, s=dy/L, kl=localK(EA,EI,L), T=rotT(c,s);
+      const rs=[]; if(rel.has(mi+':a')&&ta<1e-9) rs.push(2); if(rel.has(mi+':b')&&tb>1-1e-9) rs.push(5);
       const dofs=[3*i,3*i+1,3*i+2,3*j,3*j+1,3*j+2];
-      for(let p=0;p<6;p++) for(let q=0;q<6;q++) K[dofs[p]*nd+dofs[q]]+=kg[p][q];
       const qa0=qx0*c+qy0*s, qt0=-qx0*s+qy0*c, qa1=qx1*c+qy1*s, qt1=-qx1*s+qy1*c;
       const p=qt0, dd=qt1-qt0, pa=qa0, da=qa1-qa0;
       // equivalent nodal loads: uniform part + triangular part (0 at i rising to dd at j)
       const fe=[pa*L/2+da*L/6, p*L/2+3*dd*L/20, p*L*L/12+dd*L*L/30, pa*L/2+da*L/3, p*L/2+7*dd*L/20, -p*L*L/12-dd*L*L/20];
-      const feg=matTVec(T,fe); for(let p=0;p<6;p++) F[dofs[p]]+=feg[p];
-      els.push({i,j,m:mi,t0:ta,t1:tb,L,c,s,kl,T,dofs,qt0,qt1,qa0,qa1,fe,mLen,EI,EA});
+      // condense out released end rotations
+      let kc=kl.map(r=>r.slice()), fc=fe.slice();
+      rs.forEach(r=>{ const krr=kc[r][r]; const k2=kc.map(row=>row.slice()), f2=fc.slice();
+        for(let a=0;a<6;a++){ f2[a]=fc[a]-kc[a][r]*fc[r]/krr; for(let b=0;b<6;b++) k2[a][b]=kc[a][b]-kc[a][r]*kc[r][b]/krr; }
+        for(let a=0;a<6;a++){ k2[r][a]=0; k2[a][r]=0; } f2[r]=0; kc=k2; fc=f2; });
+      const kg=TtKT(T,kc);
+      for(let p=0;p<6;p++) for(let q=0;q<6;q++) K[dofs[p]*nd+dofs[q]]+=kg[p][q];
+      const feg=matTVec(T,fc); for(let p=0;p<6;p++) F[dofs[p]]+=feg[p];
+      els.push({i,j,m:mi,t0:ta,t1:tb,L,c,s,kl,T,dofs,qt0,qt1,qa0,qa1,fe,mLen,EI,EA,rs});
     }
   });
   EL.forEach(l=>{
@@ -692,7 +957,12 @@ function solve(opts={}){
   const samples=[], byMember=state.members.map(()=>[]), elSamples=[];
   const mx={D:0,M:0,V:0,N:0}, mxS={};
   els.forEach(el=>{
-    const ue=el.dofs.map(d=>u[d]), ul=matVec(el.T,ue), kf=matVec(el.kl,ul), f=kf.map((v,p)=>v-el.fe[p]);
+    const ue=el.dofs.map(d=>u[d]), ul=matVec(el.T,ue);
+    if(el.rs.length){ const K0=el.kl, rs=el.rs, free=[0,1,2,3,4,5].filter(x=>!rs.includes(x));
+      const rhs=rs.map(r=>el.fe[r]-free.reduce((a,j)=>a+K0[r][j]*ul[j],0));
+      if(rs.length===1) ul[rs[0]]=rhs[0]/K0[rs[0]][rs[0]];
+      else { const a=K0[2][2],b=K0[2][5],c2=K0[5][2],d=K0[5][5],det=a*d-b*c2; ul[2]=(rhs[0]*d-b*rhs[1])/det; ul[5]=(a*rhs[1]-c2*rhs[0])/det; } }
+    const kf=matVec(el.kl,ul), f=kf.map((v,p)=>v-el.fe[p]);
     el.ul=ul; el.f=f; el.x0=nodes[el.i].x; el.y0=nodes[el.i].y;
     const L=el.L, ns=24;
     const arr=[]; elSamples.push(arr);
@@ -721,10 +991,11 @@ function determinacy(){
   const R=restraintsFrom(state.supports);
   let r=0, ry=0; Object.values(R).forEach(d=>{ r+=d.length; ry+=d.filter(x=>x!==0).length; });
   const m=state.members.length, j=state.nodes.length;
-  const full=3*m+r-3*j;
+  let c=0; Object.keys(state.hinges||{}).forEach(n=>{ if(!state.hinges[n]) return; const deg=state.members.filter(mb=>mb[0]==n||mb[1]==n).length; if(deg>=2) c+=deg-1; });
+  const full=3*m+r-3*j-c;
   const beamMode=isBeam() && !hasHorizontalLoad();
-  const n = beamMode ? ry-2 : full;
-  return {n, full, beamMode, r, ry, m, j};
+  const n = beamMode ? ry-2-c : full;
+  return {n, full, beamMode, r, ry, m, j, c};
 }
 
 /* ---------- force method ---------- */
@@ -817,10 +1088,12 @@ function slopeDeflection(){
     const va=-r.u[3*a]*s+r.u[3*a+1]*c, vb=-r.u[3*b]*s+r.u[3*b+1]*c;
     const psi=-(vb-va)/L;
     const [fa,fb]=memberFEM(m);
-    return {m,a,b,L,psi,FEMab:fa,FEMba:fb,Mab:-e0.f[2],Mba:-e1.f[5]};
+    return {m,a,b,L,psi,FEMab:fa,FEMba:fb,Mab:-e0.f[2],Mba:-e1.f[5],relA:isHingeNode(a),relB:isHingeNode(b)};
   });
   return {EI,theta,members};
 }
+
+function isHingeNode(n){ return !!(state.hinges&&state.hinges[n]) && state.members.filter(mb=>mb[0]===n||mb[1]===n).length>=2; }
 
 /* ---------- canvas setup ---------- */
 let C={};
@@ -835,12 +1108,24 @@ function resize(){ const r=wrap.getBoundingClientRect(); dpr=window.devicePixelR
 function structSpan(){
   let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
   state.nodes.forEach(([x,y])=>{minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y);});
+  if(state.page==='ws'&&state.view==='play'&&state.members.length<1){ minx=Math.min(minx,0); maxx=Math.max(maxx,10); miny=Math.min(miny,0); maxy=Math.max(maxy,5); }
   return {minx,maxx,miny,maxy,bw:maxx-minx,bh:maxy-miny,span:Math.max(maxx-minx,maxy-miny)};
 }
-function computeView(){
+function legendH(){ const el=document.getElementById('rlegend'); return el&&el.offsetHeight?el.offsetHeight+12:0; }
+const cam={z:1,px:0,py:0};
+function resetCam(){ cam.z=1; cam.px=0; cam.py=0; }
+function computeView(){ computeViewBase(); if(state.page==='il') return; const z=cam.z; view.k*=z; view.ox=W/2+(view.ox-W/2)*z+cam.px; view.oy=Hh/2+(view.oy-Hh/2)*z+cam.py; }
+function computeViewBase(){
+  if(state.page==='ws'&&state.view==='play'&&ws.tool!=='select'&&ws.frozen&&ws.frozen.W===W&&ws.frozen.H===Hh){ view.k=ws.frozen.k; view.ox=ws.frozen.ox; view.oy=ws.frozen.oy; return; }
+  computeViewRaw();
+  if(state.page==='ws'&&state.view==='play'&&ws.tool!=='select') ws.frozen={k:view.k,ox:view.ox,oy:view.oy,W,H:Hh};
+}
+function computeViewRaw(){
   const b=structSpan();
   const padL=Math.min(isBeam()?(state.showDims?110:80):110, W*0.15), padR=Math.min(isBeam()?80:(state.showDims?150:110), W*0.17);
-  const padT=Math.min(state.diagram!=='none'?130:110, Hh*0.26), padB=state.showDims?Math.min(isBeam()?200:160, Hh*0.36):120;
+  const legH=legendH();
+  const padT=Math.min(state.diagram!=='none'?130:110, Hh*0.26), padB=(state.showDims?Math.min(isBeam()?200:160, Hh*0.36):120)+legH;
+  if(state.page==='il'){ const aw=Math.max(50,W-2*Math.min(90,W*0.1)), ah=Math.max(40,Hh*0.5-150); const bb=structSpan(); let k=aw/Math.max(bb.bw,1e-6); k=Math.min(k,600); view.k=k; view.ox=(W-bb.bw*k)/2-bb.minx*k; view.oy=104+ah/2+(bb.miny)*k; return; }
   const aw=Math.max(50,W-padL-padR), ah=Math.max(50,Hh-padT-padB);
   let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,600);
   view.k=k; view.ox=padL+(aw-b.bw*k)/2-b.minx*k;
@@ -957,7 +1242,7 @@ function drawDims(Da){
   let maxSY=-Infinity, maxSX=-Infinity;
   if(r && !r.unstable) r.samples.forEach(sm=>{ const [x,y]=toS(sm.x0+sm.dx*Da, sm.y0+sm.dy*Da); if(y>maxSY) maxSY=y; if(x>maxSX) maxSX=x; });
   const baseY=toS(0,b.miny)[1], baseX=toS(b.maxx,0)[0];
-  let offB=Math.max(98, Math.min(maxSY-baseY+40, Hh-110-baseY));
+  let offB=Math.max(98, Math.min(maxSY-baseY+40, Hh-110-legendH()-baseY));
   if(state.diagram!=='none' && isBeam()) offB=Math.max(offB, 112);
   const offR=Math.max(100, Math.min(maxSX-baseX+40, W-70-baseX));
   const joints=uniqSorted(state.nodes.map(n=>n[0]));
@@ -979,7 +1264,8 @@ function drawDims(Da){
 
 /* ---------- main drawing ---------- */
 function draw(){
-  if(!W||!state.runs.length) return;
+  if(!W) return;
+  if(!state.runs.length){ if(state.page==='ws') drawWsEmpty(); return; }
   readColors();
   ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,Hh);
   computeView(); hits=[];
@@ -995,6 +1281,7 @@ function draw(){
   for(let y=Math.floor(wy0/gs)*gs;y<=wy1;y+=gs){ const sy=Math.round(toS(0,y)[1])+0.5; ctx.moveTo(0,sy); ctx.lineTo(W,sy); }
   ctx.stroke();
 
+  if(state.page==='il'){ drawIL(); return; }
   // original shape
   ctx.setLineDash([6,5]); ctx.strokeStyle=C.muted; ctx.lineWidth=1.5;
   state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
@@ -1031,7 +1318,8 @@ function draw(){
   });
   state.nodes.forEach((p,n)=>{
     const [x,y]=nodeS[n];
-    ctx.beginPath(); ctx.arc(x,y,4.5,0,Math.PI*2); ctx.fillStyle=C.paper; ctx.fill(); ctx.strokeStyle=stable&&!diagOn?C.deform:C.ink; ctx.lineWidth=2; ctx.stroke();
+    const hg=isHingeNode(n);
+    ctx.beginPath(); ctx.arc(x,y,hg?7:4.5,0,Math.PI*2); ctx.fillStyle=C.paper; ctx.fill(); ctx.strokeStyle=hg?C.ink:(stable&&!diagOn?C.deform:C.ink); ctx.lineWidth=hg?2.4:2; ctx.stroke();
     const [ax,ay]=memberAway(n), t=state.supports[n]||'free';
     let lx=-14, ly=-14;
     if(t==='free'){ const L=Math.hypot(ax,ay)||1; lx=ax/L*18; ly=-ay/L*18; if(Math.abs(lx)<4&&Math.abs(ly)<4){lx=-14;ly=-14;} }
@@ -1130,6 +1418,7 @@ function draw(){
   if(stable && state.probe.show && state.tab==='probe') drawProbe(Da);
 
   diagLabels.forEach(L=>pill(L.text,clamp(L.x,46,W-46),clamp(L.y,46,Hh-14),L.col,12.5));
+  drawBuildOverlay();
 }
 
 function probeValues(){
@@ -1248,6 +1537,8 @@ function project(sx,sy){
 }
 let drag=null, downNode=null;
 cv.addEventListener('pointerdown',e=>{
+  if(spaceDown||e.button===1){ const p0=pt(e); panning={x:p0.x,y:p0.y,px:cam.px,py:cam.py,moved:true}; cv.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+  if(ilPointer(e,'down')||wsPointer(e,'down')) return;
   if(document.activeElement && document.activeElement!==document.body) document.activeElement.blur();
   const p=pt(e), h=hitLoad(p);
   if(h){
@@ -1261,9 +1552,13 @@ cv.addEventListener('pointerdown',e=>{
   const pb=hits.find(x=>x.kind==='probe' && Math.hypot(p.x-x.x,p.y-x.y)<14);
   if(pb){ drag={probe:true}; cv.setPointerCapture(e.pointerId); tip.style.display='none'; e.preventDefault(); return; }
   const n=hitNode(p); if(n){ downNode={n:n.n,x:p.x,y:p.y}; e.preventDefault(); return; }
-  downEmpty={x:p.x,y:p.y};
+  downEmpty={x:p.x,y:p.y}; panning={x:p.x,y:p.y,px:cam.px,py:cam.py,moved:false}; cv.setPointerCapture(e.pointerId);
 });
-let downEmpty=null;
+let downEmpty=null, panning=null, spaceDown=false;
+document.addEventListener('keydown',e=>{ if(e.code==='Space'&&!(e.target&&/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName))){ spaceDown=true; cv.style.cursor='grab'; e.preventDefault(); } });
+document.addEventListener('keyup',e=>{ if(e.code==='Space'){ spaceDown=false; cv.style.cursor='default'; } });
+function zoomAt(sx,sy,f){ const z2=clamp(cam.z*f,0.2,8); f=z2/cam.z; cam.px=sx-W/2-(sx-W/2-cam.px)*f; cam.py=sy-Hh/2-(sy-Hh/2-cam.py)*f; cam.z=z2; if(ws) ws.frozenCam=null; draw(); }
+cv.addEventListener('wheel',e=>{ if(state.page==='pr') return; e.preventDefault(); const p=pt(e); zoomAt(p.x,p.y, Math.exp(-e.deltaY*0.0015)); },{passive:false});
 function nearestOnStructure(p,maxD){
   const r=state.result; if(!r||r.unstable) return null;
   const {D}=dispFactor(), Da=state.showBent?D*anim:0; let best=null, bd=maxD;
@@ -1273,6 +1568,8 @@ function nearestOnStructure(p,maxD){
 }
 function setProbe(q){ if(!q) return; state.probe.run=q.run; state.probe.s=r2(q.s); state.probe.show=true; renderProbe(); draw(); showTab('probe'); }
 cv.addEventListener('pointermove',e=>{
+  if(panning&&(e.buttons&5)){ const p0=pt(e); if(Math.hypot(p0.x-panning.x,p0.y-panning.y)>5) panning.moved=true; if(panning.moved){ cam.px=panning.px+p0.x-panning.x; cam.py=panning.py+p0.y-panning.y; cv.style.cursor='grabbing'; tip.style.display='none'; draw(); return; } }
+  if(ilPointer(e,'move')||wsPointer(e,'move')) return;
   const p=pt(e);
   if(drag && drag.probe){ const q=nearestOnStructure(p,Infinity); if(q){ state.probe.run=q.run; state.probe.s=r2(q.s); syncProbe(); draw(); } return; }
   if(drag){
@@ -1296,13 +1593,16 @@ cv.addEventListener('pointermove',e=>{
   if(h) tip.style.display='none'; else showTip(p);
 });
 cv.addEventListener('pointerup',e=>{
+  if(panning&&panning.moved&&(spaceDown||e.button===1||!downEmpty)){ panning=null; return; }
+  if(ilPointer(e,'up')||wsPointer(e,'up')) return;
   const p=pt(e);
   if(downNode && Math.hypot(p.x-downNode.x,p.y-downNode.y)<6){
     const n=downNode.n, cur=state.supports[n]||'free', i=SUP_CYCLE.indexOf(cur);
     const nx=SUP_CYCLE[(i+1)%SUP_CYCLE.length]; if(nx==='free') delete state.supports[n]; else state.supports[n]=nx;
     renderSupports(); recompute();
   }
-  if(downEmpty && Math.hypot(p.x-downEmpty.x,p.y-downEmpty.y)<6) setProbe(nearestOnStructure(p,18));
+  const wasPan=panning&&panning.moved; panning=null;
+  if(!wasPan && downEmpty && Math.hypot(p.x-downEmpty.x,p.y-downEmpty.y)<6) setProbe(nearestOnStructure(p,18));
   if(drag){ cv.style.cursor='grab'; }
   drag=null; downNode=null; downEmpty=null;
 });
@@ -1331,7 +1631,7 @@ function setHL(id){
 
 /* ---------- typed + slider fields ---------- */
 const showNum=(v,dec)=>String(parseFloat((+v).toFixed(dec)));
-function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,dec=2,onChange}){
+function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,dec=2,onChange,onCommit}){
   const w=document.createElement('div'); w.className='f';
   const id='f'+(uid++);
   const fac=()=>kind?UNITSYS[state.units][kind][1]:1, D=v=>v*fac(), S=v=>v/fac();
@@ -1346,7 +1646,8 @@ function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,d
   apply(); rng.value=D(value); num.value=showNum(D(value),dec); paint();
   rng.addEventListener('input',()=>{ cur=S(+rng.value); num.value=showNum(D(cur),dec); paint(); onChange(cur); });
   num.addEventListener('input',()=>{ const v=parseFloat(num.value); if(!isFinite(v)) return; cur=clamp(S(v),cfg.hardMin,cfg.hardMax); rng.value=D(cur); paint(); onChange(cur); });
-  num.addEventListener('change',()=>{ num.value=showNum(D(cur),dec); });
+  num.addEventListener('change',()=>{ num.value=showNum(D(cur),dec); if(onCommit) onCommit(cur); });
+  if(onCommit) rng.addEventListener('change',()=>onCommit(cur));
   num.addEventListener('keydown',e=>{ if(e.key==='Enter') num.blur(); });
   w.set=(v,opts)=>{ if(opts) Object.assign(cfg,opts); apply(); cur=v; rng.value=D(v); paint(); if(document.activeElement!==num) num.value=showNum(D(v),dec); };
   w.setLabel=t=>{ w.querySelector('label').textContent=t; rng.setAttribute('aria-label',t); };
@@ -1356,7 +1657,7 @@ function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,d
 /* ---------- presets bar ---------- */
 function renderPresets(){
   const nav=$('#presets'); nav.innerHTML='';
-  PRESETS.filter(p=>p.page===state.page).forEach(p=>{
+  PRESETS.filter(p=>p.id!=='custom' && (state.page==='il' ? p.kind==='beam' : p.page===state.page)).forEach(p=>{
     const g=p.kind==='beam' ? (()=>{ const nodes=[[0,0]]; let x=0; p.spans.forEach(s=>{x+=s;nodes.push([x,0]);}); return {nodes,members:p.spans.map((_,i)=>[i,i+1])}; })() : p.gen(p.W,p.H);
     let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
     g.nodes.forEach(([x,y])=>{minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y);});
@@ -1380,6 +1681,9 @@ function renderPresets(){
 /* ---------- size ---------- */
 let sizeFields=[];
 function renderSize(){
+  const h2=document.querySelector('#secSize h2'); if(h2) h2.textContent=state.preset==='custom'?'Joints & members':'Size';
+  const how=document.querySelector('#secHow .howto'); if(how) how.textContent=state.page==='ws'?'Use the tools above the drawing: Member to draw, Support and Hinge to click joints, Delete to remove. In Select mode, drag joints to move them and drag red loads along members. Add loads below.':'Drag a red load to move it, even across supports. Click a joint to change its support. Click anywhere on the structure to check the forces and deflection at that point.';
+  if(state.preset==='custom'){ renderJoints(); return; }
   const box=$('#size'); box.innerHTML=''; sizeFields=[];
   if(isBeam()){
     state.spans.forEach((s,i)=>{
@@ -1517,6 +1821,7 @@ function defaultRun(){
   return best;
 }
 document.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{
+  if(!state.runs.length){ toast('Draw a member first'); return; }
   const type=b.dataset.add, run=defaultRun(), L=state.runs[run].len;
   const l = type==='udl' ? {id:uid++,type,run,sa:0,sb:r2(L),mag:10,mag2:10,shape:'uniform',dir:'down'}
     : type==='moment' ? {id:uid++,type,run,s:r2(L/2),mag:20,dir:'cw'} : {id:uid++,type,run,s:r2(L/2),mag:20,dir:'down'};
@@ -1599,10 +1904,24 @@ function renderReactions(){
     r.reactions.map(re=>`<tr><td>${letter(re.n)}</td><td>${q(re.Rx,'force')}</td><td>${q(re.Ry,'force')}</td><td>${re.dofs.includes(2)?q(re.Mz,'moment'):'–'}</td></tr>`).join('')+
     `</table><p class="note" style="margin-top:6px">Positive means right, up, or anticlockwise.</p>`;
 }
+function updateReacLegend(){
+  const el=$('#rlegend'), r=state.result;
+  if(!r||r.unstable||!r.reactions.length){ el.innerHTML=''; return; }
+  const arrow=(v,d)=>Math.abs(v)<1e-6?'':d===0?(v>0?'→':'←'):d===1?(v>0?'↑':'↓'):(v>0?'↺':'↻');
+  const sub=(L,d)=>d===0?`${L}<sub>x</sub>`:d===1?`${L}<sub>y</sub>`:`M<sub>${L}</sub>`;
+  let h='<span class="rl-title">Reactions</span>';
+  r.reactions.slice().sort((a,b)=>a.n-b.n).forEach(re=>{
+    const L=letter(re.n), parts=re.dofs.slice().sort().map(d=>{ const v=[re.Rx,re.Ry,re.Mz][d];
+      return `<span class="rv">${sub(L,d)} = ${q(Math.abs(v),d===2?'moment':'force')} <span class="ar" aria-label="${Math.abs(v)<1e-6?'zero':d===0?(v>0?'to the right':'to the left'):d===1?(v>0?'upward':'downward'):(v>0?'anticlockwise':'clockwise')}">${arrow(v,d)}</span></span>`; });
+    h+=`<span class="rl">${parts.join('')}</span>`;
+  });
+  h+='<span class="rl-note">arrows show the actual direction</span>';
+  el.innerHTML=h;
+}
 function updateReadout(){
   const r=state.result, ro=$('#readout'), ban=$('#banner');
   if(!r||r.unstable){
-    ban.style.display='block'; ban.textContent='This structure can move freely, so it has no stable shape. Add a support, or change a roller to pinned or fixed.';
+    ban.style.display='block'; ban.textContent= (state.page==='ws'&&!state.members.length) ? '' : (state.page==='ws'&&!Object.keys(state.supports).length) ? 'Add supports: pick the Support tool, then click a joint.' : 'This structure can move freely, so it has no stable shape. Add a support, or change a roller to pinned or fixed.'; if(!ban.textContent) ban.style.display='none';
     ro.innerHTML='<p class="empty">No results while the structure can move freely.</p>'; $('#exagOut').textContent='–'; updateLegend(); return;
   }
   ban.style.display='none';
@@ -1660,14 +1979,14 @@ $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateProbeOut(); updateIntro(); if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else draw(); }
+function recompute(){ state.result=solve(); historyTouch(); if(state.page==='il') ensureIL(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateReacLegend(); updateProbeOut(); updateIntro(); updateWsStatus(); if(state.page==='ws') updateDesignState(); if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else draw(); if(state.page==='il') updateIL(); }
 /* ---------- saved structures: every preset remembers its edits ---------- */
 const SAVE_KEY='bfp-structures';
 let saved={}, defaults={}, lastPreset={}, saveTimer=0;
 try{ const raw=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}'); saved=raw.saved||{}; lastPreset=raw.last||{}; }catch(e){}
 function snapshot(){
   return JSON.parse(JSON.stringify({kind:state.kind, spans:state.spans, W:state.W, H:state.H, supports:state.supports, settle:state.settle,
-    loads:state.loads, mat:state.mat, E:state.E, I:state.I}));
+    loads:state.loads, mat:state.mat, E:state.E, I:state.I, hinges:state.hinges||{}, ...(state.preset==='custom'?{cgeo:state.cgeo}:{})}));
 }
 const cmpKey=sn=>JSON.stringify({...sn, loads:sn.loads.map(({id,...rest})=>rest)});
 function isModified(id){ return !!(saved[id] && defaults[id] && cmpKey(saved[id])!==cmpKey(defaults[id])); }
@@ -1683,8 +2002,9 @@ function updateEditedMarks(){
   const r=$('#resetBtn'); if(r){ r.disabled=!mod; r.title=mod?'Reset this structure to its original setup':'Nothing to reset yet'; }
 }
 function applyDefaults(p){
-  state.kind=p.kind;
-  if(p.kind==='beam') state.spans=p.spans.slice(); else { state.W=p.W; state.H=p.H; }
+  state.kind=p.kind; state.hinges={...(p.hinges||{})};
+  if(p.id==='custom') state.cgeo=JSON.parse(JSON.stringify(p.cgeo||{nodes:[],members:[],mid:1}));
+  if(p.kind==='beam'&&p.spans) state.spans=p.spans.slice(); else if(p.kind!=='beam'){ state.W=p.W; state.H=p.H; }
   state.supports={...p.supports}; state.settle={...(p.settle||{})}; state.loads=[]; state.runs=[];
   state.mat='steel'; state.E=200; state.I=8000;
   rebuildGeometry(false);
@@ -1695,8 +2015,9 @@ function applyDefaults(p){
   });
 }
 function applySnapshot(sn){
-  state.kind=sn.kind;
-  if(sn.kind==='beam') state.spans=sn.spans.slice(); else { state.W=sn.W; state.H=sn.H; }
+  state.kind=sn.kind; state.hinges={...(sn.hinges||{})};
+  if(sn.cgeo) state.cgeo=JSON.parse(JSON.stringify(sn.cgeo));
+  if(sn.kind==='beam'&&sn.spans) state.spans=sn.spans.slice(); else if(sn.kind!=='beam'){ state.W=sn.W; state.H=sn.H; }
   state.supports={...sn.supports}; state.settle={...sn.settle}; state.runs=[];
   state.mat=sn.mat; state.E=sn.E; state.I=sn.I;
   state.loads=[];
@@ -1711,14 +2032,14 @@ function loadPreset(id, opts={}){
   state.preset=id; state.fm.sel=null; state.result=null;
   applyDefaults(p); defaults[id]=snapshot();
   if(saved[id] && !opts.fresh){ try{ applySnapshot(saved[id]); }catch(e){ delete saved[id]; applyDefaults(p); } }
-  lastPreset[p.page]=id; persist();
-  state.baseScale=null; state.scaleMul=1; $('#exag').value=0; state.hl=null;
-  state.probe.run=defaultRun(); state.probe.s=r2(state.runs[state.probe.run].len/2); state.probe.show=true;
+  lastPreset[state.page==='il'?'il':state.page==='ws'?'ws':p.page]=id; persist();
+  state.baseScale=null; state.scaleMul=1; $('#exag').value=0; state.hl=null; resetCam();
+  if(state.runs.length){ state.probe.run=defaultRun(); state.probe.s=r2(state.runs[state.probe.run].len/2); } state.probe.show=true;
   renderProbe();
   document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false'));
   updatePresetBtn();
   renderSize(); renderSupports(); renderLoads(); renderMaterial();
-  recompute();
+  recompute(); historyStart();
   if(!wobbleOn){ anim=0; startSpring(); }
 }
 function resetPreset(){
@@ -1732,7 +2053,7 @@ function resetPreset(){
 /* ---------- slope-deflection view ---------- */
 function kinematic(){
   const N=state.nodes.length, R=restraintsFrom(state.supports);
-  const rot=state.nodes.map((_,n)=>n).filter(n=>!(R[n]||[]).includes(2));
+  const rot=state.nodes.map((_,n)=>n).filter(n=>!(R[n]||[]).includes(2) && !isHingeNode(n));
   // translations: members are axially rigid, so (u_b − u_a)·e = 0 for each member
   const rows=[];
   state.members.forEach(([a,b])=>{ const dx=state.nodes[b][0]-state.nodes[a][0], dy=state.nodes[b][1]-state.nodes[a][1], L=Math.hypot(dx,dy);
@@ -1749,9 +2070,10 @@ function kinematic(){
   return {rot, sway:2*N-rank};
 }
 function renderSDView(){
+  $('#fmN').hidden = state.view!=='sd' || isBeam();
   const box=$('#sdView'); if(box.hidden) return;
   const r=state.result;
-  if(!r||r.unstable){ box.innerHTML=`<div class="fm-grid"><div class="card wide"><h3>Slope-deflection</h3><p class="status bad">The structure is unstable. Add or change a support first.</p></div></div>`; return; }
+  if(!r||r.unstable){ box.innerHTML=`<div class="fm-grid">${solveHead()}<div class="card wide"><h3>Slope-deflection</h3><p class="status bad">The structure is unstable. Add or change a support first.</p></div></div>`; wireSolveHead(box); return; }
   const kin=kinematic(), sd=slopeDeflection(), EI=uc(sd.EI,'EI'), Lf=uc(1,'len');
   const R=restraintsFrom(state.supports);
   const nm=(a,b)=>letter(a)+letter(b), Mv=v=>fmt(uc(v,'moment'),2), mu=uu('moment');
@@ -1769,6 +2091,7 @@ function renderSDView(){
     <p>Count the joint movements you don't know: rotations of joints that aren't fixed, plus independent sideways movements (sway), treating members as unable to stretch.</p>
     <div class="eq">Unknown rotations: ${kin.rot.length?kin.rot.map(th).join(', '):'none'} &nbsp;(${kin.rot.length})<br>
     Independent sway / joint translations: ${kin.sway}<br><b>Degree of kinematic indeterminacy = ${kin.rot.length} + ${kin.sway} = ${kin.rot.length+kin.sway}</b></div>
+    ${state.nodes.some((_,n)=>isHingeNode(n))?`<p>Internal hinge${state.nodes.filter((_,n)=>isHingeNode(n)).length>1?'s':''} at ${state.nodes.map((_,n)=>n).filter(n=>isHingeNode(n)).map(letter).join(', ')}: the moment there is zero, so members meeting the hinge use the modified equation and the hinge rotation isn't an unknown.</p>`:''}
     ${pinNodes.length?`<p>Tip: at a pinned or roller end (${pinNodes.map(letter).join(', ')}) you can use the modified equation M = (3EI/L)(θ − ψ) + FEM′ to remove that rotation from the unknowns.</p>`:''}
     ${kin.sway?`<p>This structure can sway, so the chord rotations ψ of the columns are unknown too, and you need one extra equation per sway (horizontal equilibrium, written with column shears).</p>`:''}
     <canvas class="mini" id="sdKin" style="height:280px"></canvas>
@@ -1785,17 +2108,24 @@ function renderSDView(){
   let eqs='';
   sd.members.forEach(m=>{
     const L=m.L*Lf, A=letter(m.a), B=letter(m.b);
-    const end=(n1,n2,F,lab)=>{
+    // hinged (released) far end: modified equation M = (3EI/L)(θ − ψ) + FEM′, and the hinged end moment is zero
+    const end=(n1,n2,F,lab,Ffar,nearHinge,farHinge)=>{
       let s=`M<sub>${lab}</sub> = `, parts=[];
-      if(free(n1)) parts.push({c:4/L,t:`EI${th(n1)}`});
-      if(free(n2)) parts.push({c:2/L,t:`EI${th(n2)}`});
-      let konst=uc(F,'moment');
-      if(Math.abs(m.psi)>1e-9){ if(psiKnown) konst+= -6/L*EI*m.psi; else parts.push({c:-6/L,t:`EIψ<sub>${A}${B}</sub>`}); }
+      if(nearHinge) return s+'0 &nbsp;<span class="sm">(hinge)</span>';
+      const mod=farHinge, kN=mod?3/L:4/L;
+      if(free(n1)) parts.push({c:kN,t:`EI${th(n1)}`});
+      if(!mod && free(n2)) parts.push({c:2/L,t:`EI${th(n2)}`});
+      let konst=uc(mod?F-Ffar/2:F,'moment');
+      const kp=mod?-3/L:-6/L;
+      if(Math.abs(m.psi)>1e-9){ if(psiKnown) konst+= kp*EI*m.psi; else parts.push({c:kp,t:`EIψ<sub>${A}${B}</sub>`}); }
       parts.forEach((p,i)=>{ s+=(i===0?(p.c<0?'−':''):sgnN(p.c))+coef(p.c)+p.t; });
       if(!parts.length) s+=fmt(konst,2); else if(Math.abs(konst)>1e-9) s+=sgnN(konst)+fmt(Math.abs(konst),2);
       return s;
     };
-    eqs+=`<div class="sdblk"><div class="sm">Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM</div>${end(m.a,m.b,m.FEMab,A+B)}<br>${end(m.b,m.a,m.FEMba,B+A)}</div>`;
+    const hdr = m.relA&&m.relB ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinged at both ends, so both end moments are zero`
+      : (m.relA||m.relB) ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinge at ${m.relA?A:B}, so use the modified equation M = (3EI/L)(θ − ψ) + FEM′, with FEM′ = FEM<sub>near</sub> − ½FEM<sub>far</sub>`
+      : `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM`;
+    eqs+=`<div class="sdblk"><div class="sm">${hdr}</div>${end(m.a,m.b,m.FEMab,A+B,m.FEMba,m.relA,m.relB)}<br>${end(m.b,m.a,m.FEMba,B+A,m.FEMab,m.relB,m.relA)}</div>`;
   });
   cards.push(`<div class="card wide"><h3><span class="step">4</span>Slope-deflection equations</h3><p>Write the equation for both ends of every member. Rotations at fixed supports are zero, so they drop out${psiKnown&&sd.members.some(m=>Math.abs(m.psi)>1e-9)?', and known settlement chord rotations are already worked into the numbers':''}. Moments in ${mu}, EI in ${uu('EI')}.</p><div class="eq">${eqs}</div></div>`);
   // 5. equilibrium
@@ -1815,18 +2145,913 @@ function renderSDView(){
     <table class="sdt" style="margin-top:12px"><tr><th>Member</th><th>M near (${mu})</th><th>M far (${mu})</th></tr>
     ${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${Mv(m.Mab)}</td><td>${Mv(m.Mba)}</td></tr>`).join('')}</table>
     <p class="status ok" style="margin-top:8px">These match the full stiffness analysis ✓</p></div>`);
-  cards.push(`<div class="card wide"><h3><span class="step">7</span>Final result</h3><p>With the end moments known, draw the moment diagram member by member (end moments plus the simply supported moment from the loads).</p>
-    <canvas class="mini" id="sdBent" style="height:240px"></canvas><h4 class="sub">Bending moment (${mu})</h4><canvas class="mini" id="sdM" style="height:240px"></canvas></div>`);
-  box.innerHTML=`<div class="fm-grid">${cards.join('')}</div>`;
+  cards.push(`<div class="card wide"><h3><span class="step">7</span>Final result</h3><p>With the end moments known, draw the diagrams member by member: the moment diagram is the end moments plus the simply supported moment from the loads, and the shear follows from equilibrium of each member.</p>
+    <canvas class="mini" id="sdBent" style="height:240px"></canvas>${state.fm.showM?`<h4 class="sub">Bending moment (${mu})</h4><canvas class="mini" id="sdM" style="height:240px"></canvas>`:''}
+    ${state.fm.showV?`<h4 class="sub">Shear force (${uu('force')})</h4><canvas class="mini" id="sdV" style="height:240px"></canvas>`:''}
+    ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (${uu('force')}), tension (T) and compression (C)</h4><canvas class="mini" id="sdN" style="height:240px"></canvas>`:''}
+    ${!state.fm.showM&&!state.fm.showV&&!(state.fm.showN&&!isBeam())?`<p class="note">Use <b>Moment diagram</b>, <b>Shear diagram</b>${isBeam()?'':' or <b>Axial diagram</b>'} in the toolbar to add the final diagrams here.</p>`:''}</div>`);
+  box.innerHTML=`<div class="fm-grid">${solveHead()}${cards.join('')}</div>`; wireSolveHead(box);
   const restr=restraintsFrom(state.supports);
   // markers: rotation arcs at unknown joints, sway arrow at a free top joint
   const md=r.maxDisp||1;
   const moves=state.nodes.map((_,n)=>n).filter(n=>{ const d=restr[n]||[]; if(d.includes(0)&&d.includes(1)) return false; return Math.hypot(r.nodeDisp[n][0],r.nodeDisp[n][1])>0.02*md; });
   renderMini($('#sdKin'),{restr, EL:r.EL, res:r, thetas:kin.rot, deltas:moves.map(n=>({n,d:1,text:`Δ${letter(n)}`}))});
   renderMini($('#sdBent'),{restr, EL:r.EL, res:r});
-  renderMini($('#sdM'),{restr, samples:r.elSamples, diag:'M'});
+  if(state.fm.showM) renderMini($('#sdM'),{restr, samples:r.elSamples, diag:'M'});
+  if(state.fm.showV) renderMini($('#sdV'),{restr, samples:r.elSamples, diag:'V'});
+  if(state.fm.showN&&!isBeam()) renderMini($('#sdN'),{restr, samples:r.elSamples, diag:'N'});
 }
 new ResizeObserver(()=>{ if(!$('#sdView').hidden) renderSDView(); }).observe($('#sdView'));
+
+/* ---------- undo / redo (per structure) ---------- */
+const HIST={}; let histTimer=0, histMuted=false;
+function hist(){ const id=state.preset; return HIST[id]||(HIST[id]={stack:[],idx:-1}); }
+function historyTouch(){
+  if(histMuted || !state.preset || !state.runs.length || state.page==='pr') return;
+  clearTimeout(histTimer); histTimer=setTimeout(commitHistory,350);
+  updateHistoryBtns();
+}
+function commitHistory(){
+  clearTimeout(histTimer);
+  if(!state.preset || !state.runs.length) return;
+  const h=hist(), sn=snapshot();
+  if(h.idx>=0 && cmpKey(h.stack[h.idx])===cmpKey(sn)) return;
+  h.stack=h.stack.slice(0,h.idx+1); h.stack.push(sn); if(h.stack.length>80) h.stack.shift(); h.idx=h.stack.length-1;
+  updateHistoryBtns();
+}
+function historyStart(){ const h=hist(); if(h.idx<0){ h.stack=[snapshot()]; h.idx=0; } updateHistoryBtns(); }
+function updateHistoryBtns(){
+  const h=HIST[state.preset]; const u=$('#undoBtn'), r=$('#redoBtn'); if(!u) return;
+  u.disabled=!(h&&h.idx>0); r.disabled=!(h&&h.idx<h.stack.length-1);
+}
+function applyHistory(sn){
+  histMuted=true;
+  try{ applySnapshot(sn); renderSize(); renderSupports(); renderLoads(); renderMaterial(); renderProbe(); recompute(); }
+  finally{ histMuted=false; }
+  updateHistoryBtns();
+}
+function undo(){ commitHistory(); const h=hist(); if(h.idx>0){ h.idx--; applyHistory(h.stack[h.idx]); toast('Undone'); } }
+function redo(){ commitHistory(); const h=hist(); if(h.idx<h.stack.length-1){ h.idx++; applyHistory(h.stack[h.idx]); toast('Redone'); } }
+$('#undoBtn').onclick=undo; $('#redoBtn').onclick=redo;
+document.addEventListener('keydown',e=>{
+  if(!(e.ctrlKey||e.metaKey) || state.page==='pr') return;
+  const t=e.target; if(t && (t.tagName==='INPUT'||t.tagName==='SELECT'||t.tagName==='TEXTAREA')) return;
+  const k=e.key.toLowerCase();
+  if(k==='z' && !e.shiftKey){ e.preventDefault(); undo(); }
+  else if((k==='z'&&e.shiftKey)||k==='y'){ e.preventDefault(); redo(); }
+});
+
+/* ---------- toast ---------- */
+let toastT=0;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),1800); }
+
+/* ---------- share links ---------- */
+const b64e=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64d=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))));
+const PAGE_HASH={det:'determinate',ind:'indeterminate',il:'influence',pr:'practice',ws:'workshop'};
+const HASH_PAGE={determinate:'det',indeterminate:'ind',influence:'det',practice:'pr',workshop:'ws'};
+function parseHash(){
+  const h=location.hash.replace(/^#/,''); const [name,qs]=h.split('?');
+  const params=new URLSearchParams(qs||'');
+  return {page:HASH_PAGE[name]||'det', s:params.get('s'), q:params.get('q')};
+}
+function baseUrl(){ return location.href.split('#')[0]; }
+async function copyLink(url,msg){
+  try{ await navigator.clipboard.writeText(url); toast(msg||'Link copied'); }
+  catch(e){ window.prompt('Copy this link:',url); }
+}
+function shareStructure(){
+  const sn=snapshot(); const payload={p:state.preset, sn:{...sn, loads:sn.loads.map(({id,...r})=>r)}};
+  copyLink(`${baseUrl()}#${PAGE_HASH[state.page]}?s=${b64e(payload)}`,'Link to this structure copied');
+}
+$('#shareBtn').onclick=shareStructure;
+function openShared(code){
+  try{
+    const d=b64d(code); if(!d||!PRESETS.some(p=>p.id===d.p)) return false;
+    loadPreset(d.p,{noSave:true,fresh:true});
+    const sn={...d.sn, loads:(d.sn.loads||[]).map(l=>({...l,id:uid++}))};
+    applySnapshot(sn); renderSize(); renderSupports(); renderLoads(); renderMaterial(); renderProbe();
+    state.baseScale=null; recompute(); historyStart(); commitHistory();
+    if(d.name){ state.design=null; $('#dName')&&($('#dName').value=d.name); toast(`Opened "${d.name}" (save it to keep a copy)`); } else toast('Opened shared structure');
+    if(state.page==='ws') renderDesigns();
+    return true;
+  }catch(e){ toast('That share link could not be opened'); return false; }
+}
+
+/* ---------- in-app confirm ---------- */
+function ask(msg,yesText='OK'){
+  return new Promise(res=>{
+    const back=$('#askBack'), yes=$('#askYes'), no=$('#askNo'), prev=document.activeElement;
+    $('#askMsg').textContent=msg; yes.textContent=yesText; back.hidden=false; yes.focus();
+    const done=v=>{ back.hidden=true; document.removeEventListener('keydown',key,true); back.onclick=null; if(prev&&prev.focus) prev.focus(); res(v); };
+    const key=e=>{ if(e.key==='Escape'){ e.preventDefault(); done(false); } else if(e.key==='Enter'){ e.preventDefault(); done(true); } };
+    document.addEventListener('keydown',key,true);
+    yes.onclick=()=>done(true); no.onclick=()=>done(false);
+    back.onclick=e=>{ if(e.target===back) done(false); };
+  });
+}
+
+/* ---------- influence lines ---------- */
+state.il={qty:null, s:null, x:null, P:10};
+let ilCache={key:'',xs:[],vals:[]}, ilFieldsKey='', ilSField=null, ilXField=null, ilPField=null;
+function ilOptions(){
+  const R=restraintsFrom(state.supports), opts=[];
+  Object.keys(R).map(Number).sort((a,b)=>a-b).forEach(n=>{
+    if(R[n].includes(1)) opts.push({k:`R:${n}:1`, t:`Reaction ${letter(n)}y (vertical)`});
+    if(R[n].includes(2)) opts.push({k:`R:${n}:2`, t:`Moment reaction M${letter(n)}`});
+  });
+  opts.push({k:'V',t:'Shear at section S'},{k:'M',t:'Bending moment at section S'});
+  return opts;
+}
+function ilKind(q){ return q==='V'||q==='M'; }
+function ilIsMoment(q){ return q==='M' || (q&&q.startsWith('R:')&&q.endsWith(':2')); }
+function ilEval(res,q,s){
+  if(q.startsWith('R:')){ const [,n,d]=q.split(':').map(Number); const re=res.reactions.find(r=>r.n===n); return re?[re.Rx,re.Ry,re.Mz][d]:NaN; }
+  const {m,t}=toMember(0,s); const els=res.els.filter(e=>e.m===m);
+  let e=els.find(x=>t>=x.t0-1e-9&&t<=x.t1+1e-9)||els[0]; if(!e) return NaN;
+  const v=evalEl(e, clamp((t-e.t0)/((e.t1-e.t0)||1),0,1)*e.L); return q==='V'?v.V:v.M;
+}
+function computeIL(){
+  const q=state.il.qty, s=state.il.s, L=state.runs[0].len;
+  const key=JSON.stringify([state.spans,state.supports,state.E,state.I,q,ilKind(q)?s:0]);
+  if(key===ilCache.key) return ilCache;
+  let xs=[]; const n=200; for(let i=0;i<=n;i++) xs.push(L*i/n);
+  let x0=0; state.spans.forEach(sp=>{ x0+=sp; xs.push(Math.min(L,x0)); });
+  if(ilKind(q)){ xs=xs.filter(x=>Math.abs(x-s)>2e-3); xs.push(Math.max(0,s-1e-4),Math.min(L,s+1e-4)); }
+  xs=[...new Set(xs.map(x=>+x.toFixed(6)))].sort((a,b)=>a-b);
+  const vals=xs.map(x=>{ const {m,t}=toMember(0,x); const res=solve({EL:[{id:-99,type:'point',m,t,mag:1,dir:'down'}], settle:{}}); return res.unstable?NaN:ilEval(res,q,s); });
+  ilCache={key,xs,vals}; return ilCache;
+}
+function ilAt(x){ const {xs,vals}=ilCache; for(let i=1;i<xs.length;i++){ if(x<=xs[i]){ const t=(x-xs[i-1])/((xs[i]-xs[i-1])||1); return vals[i-1]+(vals[i]-vals[i-1])*t; } } return vals[vals.length-1]; }
+function ilName(q){ if(!q) return ''; if(q==='V') return 'V at S'; if(q==='M') return 'M at S'; const [,n,d]=q.split(':').map(Number); return d===2?`M${letter(n)}`:`${letter(n)}y`; }
+function ilFmt(v,q){ return ilIsMoment(q) ? `${fmt(uc(v,'len'),3)} ${uu('len')}` : fmt(v,3); }
+function ensureIL(){
+  if(state.page!=='il'||!state.runs.length) return false;
+  const L=state.runs[0].len, opts=ilOptions();
+  if(!opts.some(o=>o.k===state.il.qty)) state.il.qty=opts[0].k;
+  if(state.il.s==null||state.il.s>L) state.il.s=r2(Math.min(L, state.spans[0]/2));
+  if(state.il.x==null||state.il.x>L) state.il.x=r2(L/3);
+  return true;
+}
+function updateIL(){
+  if(!ensureIL()) return;
+  const opts=ilOptions(), sel=$('#ilQty'), key=opts.map(o=>o.k).join('|')+state.units;
+  if(sel.dataset.key!==key){ sel.innerHTML=opts.map(o=>`<option value="${o.k}">${o.t}</option>`).join(''); sel.dataset.key=key; }
+  sel.value=state.il.qty;
+  const L=state.runs[0].len, fk=key+'|'+(ilKind(state.il.qty)?'s':'');
+  if(fk!==ilFieldsKey){
+    ilFieldsKey=fk; const box=$('#ilFields'); box.innerHTML='';
+    ilSField=null;
+    if(ilKind(state.il.qty)){ ilSField=makeField({label:'Section S, distance from A', kind:'len', min:0, max:L, step:0.05, hardMax:L, value:state.il.s, onChange:v=>{ state.il.s=v; drawILOnly(); }}); box.appendChild(ilSField); }
+    ilXField=makeField({label:'Unit load position, from A', kind:'len', min:0, max:L, step:0.05, hardMax:L, value:state.il.x, onChange:v=>{ state.il.x=v; drawILOnly(); }});
+    ilPField=makeField({label:'Try a real load P', kind:'force', min:0, max:100, step:0.5, hardMax:100000, value:state.il.P, onChange:v=>{ state.il.P=v; renderILOut(); }});
+    box.append(ilXField,ilPField);
+  } else {
+    if(ilSField) ilSField.set(state.il.s,{max:L,hardMax:L});
+    ilXField.set(state.il.x,{max:L,hardMax:L});
+  }
+  renderILOut();
+}
+$('#ilQty').onchange=e=>{ state.il.qty=e.target.value; updateIL(); draw(); };
+function drawILOnly(){ draw(); renderILOut(); }
+function renderILOut(){
+  if(state.page!=='il'||!ensureIL()) return;
+  computeIL();
+  const q=state.il.qty, {xs,vals}=ilCache, nm=ilName(q);
+  let iMax=0,iMin=0,aPos=0,aNeg=0;
+  vals.forEach((v,i)=>{ if(v>vals[iMax]) iMax=i; if(v<vals[iMin]) iMin=i; if(i){ const dx=xs[i]-xs[i-1], av=(v+vals[i-1])/2; if(av>0) aPos+=av*dx; else aNeg+=av*dx; } });
+  const here=ilAt(state.il.x), P=state.il.P, L=v=>`${fmt(uc(v,'len'),2)} ${uu('len')} from A`;
+  const areaU=ilIsMoment(q)?`${uu('len')}²`:uu('len'), aF=v=>fmt(ilIsMoment(q)?v*uc(1,'len')**2:uc(v,'len'),3)+' '+areaU;
+  const qU=ilIsMoment(q)?'moment':'force';
+  $('#ilOut').innerHTML=`<table class="ilout">
+    <tr><td>Ordinate at the load<small>load at ${L(state.il.x)}</small></td><td>${ilFmt(here,q)}</td></tr>
+    <tr><td>With a real load P there<small>${nm} = P × ordinate</small></td><td>${fmt(uc(P*here,qU),2)} ${uu(qU)}</td></tr>
+    <tr><td>Largest positive ordinate<small>${vals[iMax]>1e-9?'load at '+L(xs[iMax]):'none'}</small></td><td>${ilFmt(Math.max(0,vals[iMax]),q)}</td></tr>
+    <tr><td>Largest negative ordinate<small>${vals[iMin]<-1e-9?'load at '+L(xs[iMin]):'none'}</small></td><td>${ilFmt(Math.min(0,vals[iMin]),q)}</td></tr>
+    <tr><td>Positive area<small>a uniform load w on these parts increases ${nm}</small></td><td>${aF(aPos)}</td></tr>
+    <tr><td>Negative area<small>a uniform load w on these parts decreases ${nm}</small></td><td>${aF(aNeg)}</td></tr>
+    <tr><td>Net area<small>${nm} for a uniform load w on the whole beam = w × net area</small></td><td>${aF(aPos+aNeg)}</td></tr>
+  </table>`;
+}
+function drawIL(){
+  if(!ensureIL()) return;
+  const L=state.runs[0].len, q=state.il.qty, s=state.il.s, x=state.il.x;
+  const {xs,vals}=computeIL();
+  const R=restraintsFrom(state.supports);
+  // beam
+  ctx.strokeStyle=C.ink; ctx.lineWidth=3; ctx.lineCap='round';
+  state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+  state.nodes.forEach((p,n)=>{ const [sx,sy]=toS(...p); drawSupport(state.supports[n]||'free',sx,sy,n); label(letter(n),sx-12,sy-16,C.muted,'center',14,700); });
+  if(q.startsWith('R:')){ const n=+q.split(':')[1], [sx,sy]=toS(...state.nodes[n]); ctx.save(); ctx.strokeStyle=C.deform; ctx.lineWidth=2.5; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.arc(sx,sy+10,26,0,Math.PI*2); ctx.stroke(); ctx.restore(); }
+  if(ilKind(q)){ const [sx,sy]=toS(s,0); ctx.strokeStyle=C.deform; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(sx,sy-14); ctx.lineTo(sx,sy+14); ctx.stroke(); label('S',sx,sy+26,C.deform,'center',14,700); }
+  if(state.showDims){ const joints=uniqSorted(state.nodes.map(n=>n[0])); chain(joints,0,true,64,C.muted, joints.length>2?'Spans':'Span'); }
+  const [lx,ly]=toS(x,0);
+  arrow(lx,ly-62,lx,ly-6,C.pload,3,12); label('1',lx+12,ly-54,C.pload,'left',15,800);
+  hits.push({kind:'ilload',x:lx,y:ly-30});
+  // plot region
+  const top=Hh*0.5, bot=Hh-34, h=bot-top-30;
+  let mx=0,mn=0; vals.forEach(v=>{ if(v>mx) mx=v; if(v<mn) mn=v; });
+  const range=mx-mn||1, sc=(h-30)/range, zy=top+54+mx*sc;
+  const X=v=>toS(v,0)[0], Y=v=>zy-v*sc;
+  ctx.fillStyle=C.panel; ctx.globalAlpha=0.6; ctx.fillRect(0,top-8,W,Hh-top+8); ctx.globalAlpha=1;
+  ctx.strokeStyle=C.line; ctx.beginPath(); ctx.moveTo(0,top-8.5); ctx.lineTo(W,top-8.5); ctx.stroke();
+  setFont(15,700); ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillStyle=C.ink;
+  ctx.fillText(`Influence line for ${ilName(q)}`, 16, top+10);
+  setFont(12.5,500); ctx.fillStyle=C.muted;
+  ctx.fillText(ilIsMoment(q)?`ordinates in ${uu('len')} (moment per unit load)`:'ordinates per unit load (no units)', 16, top+28);
+  // zero line
+  ctx.strokeStyle=C.muted; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(X(0),zy); ctx.lineTo(X(L),zy); ctx.stroke();
+  // support guides
+  ctx.save(); ctx.setLineDash([3,4]); ctx.strokeStyle=C.line; uniqSorted(state.nodes.map(n=>n[0])).forEach(px=>{ const sx=X(px); ctx.beginPath(); ctx.moveTo(sx,toS(0,0)[1]+30); ctx.lineTo(sx,bot); ctx.stroke(); }); ctx.restore();
+  // fills
+  const path=()=>{ ctx.beginPath(); ctx.moveTo(X(xs[0]),zy); xs.forEach((xv,i)=>ctx.lineTo(X(xv),Y(vals[i]))); ctx.lineTo(X(xs[xs.length-1]),zy); ctx.closePath(); };
+  ctx.save(); ctx.beginPath(); ctx.rect(0,top,W,zy-top); ctx.clip(); path(); ctx.fillStyle=alpha(C.deform,0.2); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(0,zy,W,bot-zy+40); ctx.clip(); path(); ctx.fillStyle=alpha(C.load,0.16); ctx.fill(); ctx.restore();
+  ctx.strokeStyle=C.deform; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.beginPath(); xs.forEach((xv,i)=>{ const px=X(xv), py=Y(vals[i]); i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.stroke();
+  // peaks
+  let iMax=0,iMin=0; vals.forEach((v,i)=>{ if(v>vals[iMax]) iMax=i; if(v<vals[iMin]) iMin=i; });
+  if(vals[iMax]>1e-9) pill(ilFmt(vals[iMax],q), clamp(X(xs[iMax]),50,W-50), Math.max(top+46,Y(vals[iMax])-14), C.deform, 12);
+  if(vals[iMin]<-1e-9) pill(ilFmt(vals[iMin],q), clamp(X(xs[iMin]),50,W-50), Math.min(bot+10,Y(vals[iMin])+16), C.load, 12);
+  // current load position
+  const v=ilAt(x);
+  ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=alpha(C.pload,0.7); ctx.lineWidth=1.3; ctx.beginPath(); ctx.moveTo(lx,ly+4); ctx.lineTo(lx,bot); ctx.stroke(); ctx.restore();
+  ctx.beginPath(); ctx.arc(lx,Y(v),5.5,0,Math.PI*2); ctx.fillStyle=C.pload; ctx.fill(); ctx.strokeStyle=C.paper; ctx.lineWidth=2; ctx.stroke();
+  pill(`${ilName(q)} = ${ilFmt(v,q)}`, clamp(lx+(lx<W-160?70:-70),70,W-70), Y(v)+(v>=0?-22:22), C.ink, 12.5);
+}
+// pointer: click or drag anywhere to move the unit load
+let ilDrag=false;
+function ilPointer(e,type){
+  if(state.page!=='il') return false;
+  const p=pt(e), L=state.runs[0].len;
+  if(type==='down'){ ilDrag=true; cv.setPointerCapture(e.pointerId); }
+  if(type==='up'){ ilDrag=false; return true; }
+  if(type==='move'){ cv.style.cursor='ew-resize'; if(!ilDrag) return true; }
+  state.il.x=r2(clamp(fromS(p.x,p.y)[0]-state.nodes[state.runs[0].nodes[0]][0],0,L));
+  if(ilXField) ilXField.set(state.il.x,{max:L,hardMax:L});
+  drawILOnly(); return true;
+}
+
+/* ---------- workshop: build your own beams and frames ---------- */
+const ws={tool:'select', grid:0.5, start:null, hover:null, down:null, dragNode:null, frozen:null};
+const TEMPLATES=[
+  {name:'Blank', nodes:[], members:[], supports:{}, hinges:{}, loads:[]},
+  {name:'Simply supported beam', nodes:[[0,0],[8,0]], members:[[0,1]], supports:{0:'pin',1:'roller'}, loads:[{type:'udl',m:0,mag:10}]},
+  {name:'Two-span beam', nodes:[[0,0],[6,0],[12,0]], members:[[0,1],[1,2]], supports:{0:'pin',1:'roller',2:'roller'}, loads:[{type:'udl',m:0,mag:10},{type:'udl',m:1,mag:10}]},
+  {name:'Portal frame', nodes:[[0,0],[0,4],[8,4],[8,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, loads:[{type:'udl',m:1,mag:10}]},
+  {name:'Past paper frame 1', nodes:[[0,0],[1,3],[6,3],[9,-1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'udl',m:1,mag:96}]},
+  {name:'Past paper frame 2', nodes:[[0,0],[0,4],[5,4],[4,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:0,mag:30,dir:'right'},{type:'point',m:1,t:0.5,mag:80}]},
+  {name:'Past paper frame 3', nodes:[[0,0],[0,3],[3,3],[4,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'udl',m:0,mag:18,dir:'right'}]},
+  {name:'Past paper frame 4', nodes:[[0,0],[1,3],[4,3],[6,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:1,mag:80}]},
+  {name:'Past paper frame 5', nodes:[[0,0],[2,4],[8,4],[9,1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'point',m:0,t:1,mag:60,dir:'left'},{type:'udl',m:1,mag:18}]},
+];
+function loadTemplate(i){
+  const t=TEMPLATES[i]; commitHistory(); state.design=null;
+  state.cgeo={nodes:t.nodes.map(p=>[...p]), members:t.members.map(([a,b],k)=>({a,b,id:k+1})), mid:t.members.length+1};
+  state.supports={...t.supports}; state.hinges={...(t.hinges||{})}; state.settle={}; state.loads=[]; state.runs=[];
+  rebuildGeometry(false);
+  state.loads=t.loads.map(d=>{ const id=uid++;
+    if(d.type==='udl'){ const a=fromMember(d.m,0), b=fromMember(d.m,1); return {id,type:'udl',run:a.run,sa:Math.min(a.s,b.s),sb:Math.max(a.s,b.s),mag:d.mag,mag2:d.mag2??d.mag,shape:'uniform',dir:d.dir||'down'}; }
+    const q=fromMember(d.m,d.t); return {id,type:'point',run:q.run,s:q.s,mag:d.mag,dir:d.dir||'down'}; });
+  state.baseScale=null; afterGeoChange(true);
+  toast(i===0?'Cleared, start drawing':`Loaded ${t.name}`);
+}
+function afterGeoChange(full){
+  if(state.runs.length && state.probe && !state.runs[state.probe.run]){ state.probe.run=0; state.probe.s=r2(state.runs[0].len/2); }
+  renderSize(); renderSupports(); if(full) renderLoads(); else state.loads.forEach(syncLoadRow); renderProbe(); recompute();
+}
+// keep loads attached to their members (by stable member id) through any geometry edit
+function editGeo(mutate){
+  const cg=state.cgeo;
+  const anchors=state.loads.map(l=>{ if(!state.runs[l.run]) return null;
+    const A=(s,later)=>{ const r=toMember(l.run,s,later); return {id:cg.members[r.m]&&cg.members[r.m].id, t:r.t}; };
+    return l.type==='udl' ? {a:A(l.sa,true), b:A(l.sb,false)} : {p:A(l.s,false)}; });
+  const info=mutate(cg)||{};
+  if(info.nodeMap) remapNodes(info.nodeMap);
+  const keep=state.loads; state.loads=[]; state.runs=[];
+  rebuildGeometry(false);
+  const idx=id=>state.cgeo.members.findIndex(m=>m.id===id);
+  const fix=a=>{ if(!a) return null; let {id,t}=a; const sp=info.split&&info.split.find(x=>x.oldId===id);
+    if(sp){ if(t<=sp.t){ t=t/sp.t; } else { id=sp.newId; t=(t-sp.t)/(1-sp.t); } }
+    const m=idx(id); return m<0?null:fromMember(m,clamp(t,0,1)); };
+  state.loads=keep.filter((l,i)=>{ const A=anchors[i]; if(!A) return false;
+    if(l.type==='udl'){ const a=fix(A.a), b=fix(A.b); if(!a||!b) return false; l.run=a.run; l.sa=Math.min(a.s,b.run===a.run?b.s:a.s); l.sb=b.run===a.run?Math.max(a.s,b.s):state.runs[a.run].len; return l.sb-l.sa>0.01; }
+    const p=fix(A.p); if(!p) return false; l.run=p.run; l.s=p.s; return true; });
+}
+function remapNodes(map){
+  const rm=o=>{ const out={}; Object.entries(o).forEach(([k,v])=>{ const n=map[+k]; if(n!=null&&n>=0) out[n]=v; }); return out; };
+  state.supports=rm(state.supports); state.settle=rm(state.settle); state.hinges=rm(state.hinges);
+}
+function nodeAt(cg,x,y){ return cg.nodes.findIndex(p=>Math.abs(p[0]-x)<1e-6&&Math.abs(p[1]-y)<1e-6); }
+function addMember(p1,p2){
+  if(Math.abs(p1.x-p2.x)<1e-9&&Math.abs(p1.y-p2.y)<1e-9) return false;
+  let added=false;
+  editGeo(cg=>{
+    const split=[];
+    const ensure=(x,y)=>{ let k=nodeAt(cg,x,y); if(k>=0) return k;
+      cg.nodes.push([x,y]); k=cg.nodes.length-1;
+      // landing on the middle of an existing member splits it
+      cg.members.slice().forEach(m=>{ const A=cg.nodes[m.a], B=cg.nodes[m.b], vx=B[0]-A[0], vy=B[1]-A[1], L2=vx*vx+vy*vy;
+        const t=((x-A[0])*vx+(y-A[1])*vy)/L2, d=Math.hypot(x-(A[0]+vx*t), y-(A[1]+vy*t));
+        if(t>1e-6&&t<1-1e-6&&d<1e-6){ const nid=cg.mid++; cg.members.push({a:k,b:m.b,id:nid}); m.b=k; split.push({oldId:m.id,newId:nid,t}); } });
+      return k; };
+    const a=ensure(p1.x,p1.y), b=ensure(p2.x,p2.y);
+    if(!cg.members.some(m=>(m.a===a&&m.b===b)||(m.a===b&&m.b===a))){ cg.members.push({a,b,id:cg.mid++}); added=true; }
+    return {split};
+  });
+  afterGeoChange(true); return added;
+}
+function deleteMember(mi){
+  editGeo(cg=>{ cg.members.splice(mi,1); return pruneNodes(cg); }); afterGeoChange(true);
+}
+function deleteNode(n){
+  editGeo(cg=>{ cg.members=cg.members.filter(m=>m.a!==n&&m.b!==n); return pruneNodes(cg); }); afterGeoChange(true);
+}
+function pruneNodes(cg){
+  const used=new Set(); cg.members.forEach(m=>{ used.add(m.a); used.add(m.b); });
+  const map=[]; const nodes=[]; cg.nodes.forEach((p,i)=>{ if(used.has(i)){ map[i]=nodes.length; nodes.push(p); } else map[i]=-1; });
+  cg.nodes=nodes; cg.members.forEach(m=>{ m.a=map[m.a]; m.b=map[m.b]; });
+  return {nodeMap:map};
+}
+function moveJoint(n,x,y){
+  const cg=state.cgeo; if(nodeAt(cg,x,y)>=0 && nodeAt(cg,x,y)!==n) return;
+  editGeo(cg=>{ cg.nodes[n]=[x,y]; });
+  afterGeoChange(false);
+}
+function snapPoint(p){
+  const nh=hits.find(h=>h.kind==='node'&&Math.hypot(h.x-p.x,h.y-p.y)<14);
+  if(nh) return {node:nh.n, x:state.nodes[nh.n][0], y:state.nodes[nh.n][1]};
+  const [wx,wy]=fromS(p.x,p.y), g=ws.grid; return {node:null, x:r2(Math.round(wx/g)*g), y:r2(Math.round(wy/g)*g)};
+}
+function memberAtScreen(p){
+  let best=-1, bd=10;
+  state.members.forEach(([a,b],i)=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); const d=segDist(p,{x1,y1,x2,y2}); if(d<bd){bd=d;best=i;} });
+  return best;
+}
+const SUP_ORDER=['free','pin','roller','fixed','sideroller'];
+function wsPointer(e,type){
+  if(state.page!=='ws' || state.view!=='play') return false;
+  const p=pt(e), tool=ws.tool;
+  if(tool==='select'){
+    if(type==='down'){ if(hitLoad(p)) return false; if(hits.some(h=>(h.kind==='probe'||h.kind==='probeClose')&&Math.hypot(p.x-h.x,p.y-h.y)<14)) return false;
+      const n=hitNode(p); if(n){ commitHistory(); ws.dragNode={n:n.n,x0:p.x,y0:p.y,moved:false}; cv.setPointerCapture(e.pointerId); e.preventDefault(); return true; } return false; }
+    if(type==='move'&&ws.dragNode){ const d=ws.dragNode; if(Math.hypot(p.x-d.x0,p.y-d.y0)>5) d.moved=true;
+      if(d.moved){ const s=snapPoint({x:p.x,y:p.y}); if(s.node==null||s.node===d.n) moveJoint(d.n,s.x,s.y); } cv.style.cursor='grabbing'; return true; }
+    if(type==='up'&&ws.dragNode){ const d=ws.dragNode; ws.dragNode=null;
+      if(!d.moved){ const cur=state.supports[d.n]||'free', nx=SUP_CYCLE[(SUP_CYCLE.indexOf(cur)+1)%SUP_CYCLE.length]; if(nx==='free') delete state.supports[d.n]; else state.supports[d.n]=nx; renderSupports(); recompute(); }
+      return true; }
+    return false;
+  }
+  if(type==='move'){ ws.hover=snapPoint(p); cv.style.cursor=tool==='member'?'crosshair':(hitNode(p)||memberAtScreen(p)>=0?'pointer':'default'); draw(); return true; }
+  if(tool==='member'){
+    if(type==='down'){ ws.down={p, s:snapPoint(p)}; return true; }
+    if(type==='up'){ const s=snapPoint(p), d=ws.down; ws.down=null; if(!d) return true;
+      const dragged=Math.hypot(p.x-d.p.x,p.y-d.p.y)>8;
+      if(!ws.start){ if(!state.members.length){ commitHistory(); addMember({x:0,y:0},s); ws.start=s; } else if(dragged){ commitHistory(); addMember(d.s,s); ws.start=s; } else ws.start=s; }
+      else { if(Math.abs(s.x-ws.start.x)<1e-9&&Math.abs(s.y-ws.start.y)<1e-9){ ws.start=null; } else { commitHistory(); addMember(ws.start,s); ws.start=s; } }
+      draw(); return true; }
+    return true;
+  }
+  if(type!=='down') return true;
+  const n=hitNode(p);
+  if(tool==='support'){ if(!n){ toast('Click a joint to change its support'); return true; }
+    const cur=state.supports[n.n]||'free', nx=SUP_ORDER[(SUP_ORDER.indexOf(cur)+1)%SUP_ORDER.length]; if(nx==='free') delete state.supports[n.n]; else state.supports[n.n]=nx;
+    renderSupports(); recompute(); toast(`${letter(n.n)}: ${SUP[nx].label}`); return true; }
+  if(tool==='hinge'){ if(!n){ toast('Click a joint where members meet'); return true; }
+    const deg=state.members.filter(m=>m[0]===n.n||m[1]===n.n).length; if(deg<2){ toast('A hinge joins two or more members'); return true; }
+    if(state.hinges[n.n]) delete state.hinges[n.n]; else state.hinges[n.n]=true; renderSize(); recompute(); toast(state.hinges[n.n]?`Hinge added at ${letter(n.n)}`:`Hinge removed at ${letter(n.n)}`); return true; }
+  if(tool==='delete'){ commitHistory(); if(n){ deleteNode(n.n); toast('Joint deleted'); return true; } const mi=memberAtScreen(p); if(mi>=0){ deleteMember(mi); toast('Member deleted'); } return true; }
+  return true;
+}
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&ws.start){ ws.start=null; draw(); } });
+function drawBuildOverlay(){
+  if(state.page!=='ws'||state.view!=='play') return;
+  if(ws.tool==='member'){
+    const st=ws.start||(!state.members.length?{x:0,y:0}:null);
+    if(st&&ws.hover){ const [x1,y1]=toS(st.x,st.y), [x2,y2]=toS(ws.hover.x,ws.hover.y);
+      ctx.save(); ctx.setLineDash([8,6]); ctx.strokeStyle=C.deform; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); ctx.restore();
+      const L=Math.hypot(ws.hover.x-st.x, ws.hover.y-st.y); if(L>1e-9) pill(q(L,'len',2),(x1+x2)/2,(y1+y2)/2-16,C.deform,12); }
+    if(st){ const [x,y]=toS(st.x,st.y); ctx.beginPath(); ctx.arc(x,y,6,0,Math.PI*2); ctx.fillStyle=C.deform; ctx.fill(); }
+  }
+  if(ws.hover && ws.tool==='member'){ const [x,y]=toS(ws.hover.x,ws.hover.y); ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.strokeStyle=C.deform; ctx.lineWidth=2; ctx.stroke();
+    label(`(${fmt(uc(ws.hover.x,'len'),2)}, ${fmt(uc(ws.hover.y,'len'),2)})`, x+10, y-14, C.muted,'left',11.5,600); }
+}
+function drawWsEmpty(){
+  updateWsStatus();
+  readColors(); ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,W,Hh); computeView(); hits=[];
+  const steps=[0.25,0.5,1,2,5,10]; const gs=steps.find(s=>s*view.k>=26)||10;
+  ctx.strokeStyle=C.grid; ctx.lineWidth=1; ctx.beginPath();
+  const [wx0,wy1]=fromS(0,0), [wx1,wy0]=fromS(W,Hh);
+  for(let x=Math.floor(wx0/gs)*gs;x<=wx1;x+=gs){ const sx=Math.round(toS(x,0)[0])+0.5; ctx.moveTo(sx,0); ctx.lineTo(sx,Hh); }
+  for(let y=Math.floor(wy0/gs)*gs;y<=wy1;y+=gs){ const sy=Math.round(toS(0,y)[1])+0.5; ctx.moveTo(0,sy); ctx.lineTo(W,sy); }
+  ctx.stroke();
+  const [ox,oy]=toS(0,0); label('(0, 0)',ox+10,oy+14,C.muted,'left',11.5,600); ctx.strokeStyle=alpha(C.muted,0.5); ctx.beginPath(); ctx.moveTo(ox-8,oy); ctx.lineTo(ox+8,oy); ctx.moveTo(ox,oy-8); ctx.lineTo(ox,oy+8); ctx.stroke();
+  if(!ws.start){ setFont(18,700); ctx.textAlign='center'; ctx.fillStyle=C.ink; ctx.fillText('Draw your structure', W/2, Hh/2-30);
+    setFont(14,500); ctx.fillStyle=C.muted;
+    ctx.fillText(ws.tool==='member'?'Your first member starts at the origin (0, 0). Click where it should end, then keep clicking to add more; Esc stops.':'Pick the Member tool above, add a member in the panel, or start from a template.', W/2, Hh/2-4);
+    setFont(12.5,500); ctx.fillText('Scroll to zoom, drag empty space (or hold Space) to move around.', W/2, Hh/2+20); }
+  drawBuildOverlay();
+}
+// toolbar wiring
+document.querySelectorAll('#buildSeg button').forEach(b=>b.onclick=()=>{ ws.tool=b.dataset.tool; ws.start=null; ws.frozen=null;
+  document.querySelectorAll('#buildSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); draw();
+  const tips={select:'Drag joints and loads. Click a joint to change its support.',member:'Click two points to draw a member. Keep clicking to chain them; Esc stops.',support:'Click a joint to cycle its support.',hinge:'Click a joint where members meet to add or remove a hinge.',delete:'Click a joint or member to delete it.'};
+  toast(tips[ws.tool]); });
+$('#gridSel').onchange=e=>{ ws.grid=+e.target.value; };
+$('#tplSel').innerHTML='<option value="">Start from…</option>'+TEMPLATES.map((t,i)=>`<option value="${i}">${t.name}</option>`).join('');
+$('#tplSel').onchange=async e=>{ const v=e.target.value; e.target.value=''; if(v==='') return; if(state.cgeo.nodes.length && !(await ask('Replace your current structure? You can undo this.','Replace'))) return; loadTemplate(+v); };
+
+/* ---------- zoom buttons ---------- */
+$('#zIn').onclick=()=>zoomAt(W/2,Hh/2,1.25);
+$('#zOut').onclick=()=>zoomAt(W/2,Hh/2,0.8);
+$('#zFit').onclick=()=>{ resetCam(); ws.frozen=null; draw(); };
+
+/* ---------- workshop status chip ---------- */
+function wsSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable && determinacy().n>0); }
+function updateWsStatus(){
+  const el=$('#wsStatus'); if(!el) return;
+  if(state.page==='ws'){ const ok=wsSolvable(); $('#viewSeg').hidden=!ok; if(!ok && (state.view==='fm'||state.view==='sd')) setView('play'); }
+  if(state.page!=='ws'||state.view!=='play'){ el.hidden=true; return; }
+  el.hidden=false;
+  const r=state.result, det=determinacy();
+  if(!state.members.length){ el.className='wsstatus empty'; el.innerHTML='Nothing built yet <small>pick Member and click to draw from (0, 0)</small>'; return; }
+  if(!Object.keys(state.supports).length){ el.className='wsstatus bad'; el.innerHTML='No supports yet <small>pick Support and click a joint</small>'; return; }
+  if(!r||r.unstable){ el.className='wsstatus bad'; el.innerHTML='Unstable <small>it can move freely; add or change a support</small>'; return; }
+  if(det.n<=0){ el.className='wsstatus ok'; el.innerHTML='✓ Statically determinate <small>equilibrium alone solves it</small>'; return; }
+  el.className='wsstatus ind'; el.innerHTML=`Statically indeterminate, degree ${det.n} <small>use Solve to work it out</small>`;
+}
+
+/* ---------- member editor: length and angle instead of coordinates ---------- */
+const DIRS8=[['→',0],['↗',45],['↑',90],['↖',135],['←',180],['↙',-135],['↓',-90],['↘',-45]];
+let addCfg={from:null, ang:0, len:4};
+function downstream(mi){
+  // joints that move with the far end of member mi (everything reachable from it without crossing mi)
+  const [a,b]=state.members[mi], seen=new Set([b]), stack=[b];
+  while(stack.length){ const n=stack.pop(); state.members.forEach(([p,q],k)=>{ if(k===mi) return; const o=p===n?q:q===n?p:-1; if(o>=0&&!seen.has(o)){ seen.add(o); stack.push(o); } }); }
+  if(seen.has(a)) return new Set([b]);
+  return seen;
+}
+function setMemberGeom(mi,len,angDeg){
+  const [a,b]=state.members[mi], A=state.cgeo.nodes[a], B=state.cgeo.nodes[b];
+  const ang=angDeg*Math.PI/180, nb=[r2(A[0]+len*Math.cos(ang)), r2(A[1]+len*Math.sin(ang))];
+  const oldAng=Math.atan2(B[1]-A[1],B[0]-A[0]), dth=ang-oldAng, S=downstream(mi);
+  editGeo(cg=>{ S.forEach(n=>{ if(n===b){ cg.nodes[n]=nb; return; }
+    const p=cg.nodes[n], dx=p[0]-B[0], dy=p[1]-B[1], c=Math.cos(dth), s=Math.sin(dth);
+    cg.nodes[n]=[r2(nb[0]+dx*c-dy*s), r2(nb[1]+dx*s+dy*c)]; }); });
+  state.loads.forEach(syncLoadRow); recompute();
+}
+function renderJoints(){
+  const box=$('#size'); box.innerHTML='';
+  const cg=state.cgeo;
+  if(!cg.members.length){
+    box.innerHTML='<p class="empty" style="margin-bottom:8px">Nothing built yet. Add your first member below, or use the <b>Member</b> tool and click on the drawing: the first member starts at (0, 0).</p>';
+  }
+  const list=document.createElement('div'); list.className='mlist'; box.appendChild(list);
+  state.members.forEach(([a,b],mi)=>{
+    const A=state.nodes[a], B=state.nodes[b], len=memberLen(mi), ang=Math.atan2(B[1]-A[1],B[0]-A[0])*180/Math.PI;
+    const c=document.createElement('div'); c.className='mcard';
+    c.innerHTML=`<div class="mh"><span><b>${letter(a)}${letter(b)}</b><small>from ${letter(a)} to ${letter(b)}</small></span><button class="link x" title="Delete member ${letter(a)}${letter(b)}" aria-label="Delete member ${letter(a)}${letter(b)}">×</button></div>`;
+    let curLen=len, curAng=ang;
+    c.appendChild(makeField({label:'Length', kind:'len', min:0.5, max:Math.max(20,Math.ceil(len)), step:0.1, hardMin:0.1, hardMax:200, value:len,
+      onChange:v=>{ curLen=v; setMemberGeom(mi,curLen,curAng); }, onCommit:()=>{ commitHistory(); renderJoints(); renderLoads(); }}));
+    c.appendChild(makeField({label:'Angle (0° = right, 90° = up)', unit:'°', min:-180, max:180, step:5, dec:1, value:r2(ang),
+      onChange:v=>{ curAng=v; setMemberGeom(mi,curLen,curAng); }, onCommit:()=>{ commitHistory(); renderJoints(); renderLoads(); }}));
+    c.querySelector('.x').onclick=()=>{ commitHistory(); deleteMember(mi); };
+    list.appendChild(c);
+  });
+  // add a member from a joint
+  const joints=state.nodes.map((_,n)=>n);
+  if(addCfg.from==null||addCfg.from>=state.nodes.length) addCfg.from=joints.length?joints[joints.length-1]:null;
+  const add=document.createElement('div'); add.className='addm';
+  add.innerHTML=`<div class="full"><span class="lbl"><b>Add a member</b></span></div>
+    <div><span class="lbl">Start at</span><select data-k="from">${joints.length?joints.map(n=>`<option value="${n}" ${n===addCfg.from?'selected':''}>Joint ${letter(n)}</option>`).join(''):'<option>Origin (0, 0)</option>'}</select></div>
+    <div><span class="lbl">Length (${uu('len')})</span><span class="num" style="display:flex"><input type="number" data-k="len" step="0.1" value="${showNum(uc(addCfg.len,'len'),2)}" style="width:100%"></span></div>
+    <div class="full"><span class="lbl">Direction</span><div class="dirs">${DIRS8.map(([s,d])=>`<button data-ang="${d}" aria-pressed="${addCfg.ang===d}" title="${d}°">${s}</button>`).join('')}</div></div>
+    <button class="btn primary full" data-k="go">Add member</button>`;
+  add.querySelector('[data-k=from]').onchange=e=>addCfg.from=+e.target.value;
+  add.querySelector('[data-k=len]').oninput=e=>{ const v=parseFloat(e.target.value); if(v>0) addCfg.len=v/uc(1,'len'); };
+  add.querySelectorAll('.dirs button').forEach(b=>b.onclick=()=>{ addCfg.ang=+b.dataset.ang; add.querySelectorAll('.dirs button').forEach(x=>x.setAttribute('aria-pressed',x===b)); });
+  add.querySelector('[data-k=go]').onclick=()=>{
+    commitHistory();
+    const from=joints.length?state.nodes[addCfg.from]:[0,0], a=addCfg.ang*Math.PI/180;
+    const to={x:r2(from[0]+addCfg.len*Math.cos(a)), y:r2(from[1]+addCfg.len*Math.sin(a))};
+    addMember({x:from[0],y:from[1]},to);
+    addCfg.from=nodeAt(state.cgeo,to.x,to.y); renderJoints(); resetCam(); ws.frozen=null; draw();
+  };
+  box.appendChild(add);
+  // hinges
+  const hz=state.nodes.map((_,n)=>n).filter(n=>state.members.filter(m=>m[0]===n||m[1]===n).length>=2);
+  if(hz.length){ const h=document.createElement('div'); h.innerHTML=`<span class="lbl" style="margin-top:12px">Internal hinges (click to toggle)</span><div class="hchips">${hz.map(n=>`<button class="hchip" data-n="${n}" aria-pressed="${!!state.hinges[n]}">Hinge at ${letter(n)}</button>`).join('')}</div>`;
+    h.querySelectorAll('.hchip').forEach(b=>b.onclick=()=>{ const n=+b.dataset.n; commitHistory(); if(state.hinges[n]) delete state.hinges[n]; else state.hinges[n]=true; b.setAttribute('aria-pressed',!!state.hinges[n]); recompute(); });
+    box.appendChild(h); }
+  // advanced: raw coordinates
+  if(cg.nodes.length){
+    const d=document.createElement('details'); d.className='coords';
+    d.innerHTML=`<summary>Joint coordinates (advanced)</summary><div class="jt" style="margin-top:8px"><div class="jh" style="grid-template-columns:20px 1fr 1fr 22px"><span></span><span>x (${uu('len')})</span><span>y (${uu('len')})</span><span></span></div>${cg.nodes.map((p,n)=>`<div class="jr" data-n="${n}" style="grid-template-columns:20px 1fr 1fr 22px"><b>${letter(n)}</b>
+      <span class="num"><input type="number" step="${STEPS[state.units].len}" data-k="x" value="${showNum(uc(p[0],'len'),3)}" aria-label="x of joint ${letter(n)}"></span>
+      <span class="num"><input type="number" step="${STEPS[state.units].len}" data-k="y" value="${showNum(uc(p[1],'len'),3)}" aria-label="y of joint ${letter(n)}"></span>
+      <button class="link x" title="Delete joint ${letter(n)}" aria-label="Delete joint ${letter(n)}">×</button></div>`).join('')}</div>`;
+    d.querySelectorAll('.jr').forEach(row=>{ const n=+row.dataset.n;
+      row.querySelectorAll('input').forEach(inp=>inp.onchange=()=>{ const v=parseFloat(inp.value); if(!isFinite(v)) return; const p=state.cgeo.nodes[n];
+        commitHistory(); moveJoint(n, inp.dataset.k==='x'?v/uc(1,'len'):p[0], inp.dataset.k==='y'?v/uc(1,'len'):p[1]); renderJoints(); });
+      row.querySelector('.x').onclick=()=>{ commitHistory(); deleteNode(n); }; });
+    box.appendChild(d);
+  }
+}
+
+/* ---------- workshop: saved designs ---------- */
+const DKEY='bfp-designs';
+let designs=[]; try{ designs=JSON.parse(localStorage.getItem(DKEY)||'[]'); if(!Array.isArray(designs)) designs=[]; }catch(e){ designs=[]; }
+state.design=null; // {id,name} of the design currently open
+let designSavedKey='';
+function persistDesigns(){ try{ localStorage.setItem(DKEY,JSON.stringify(designs)); }catch(e){ toast('Could not save on this device'); } }
+function designSnap(){ const sn=snapshot(); sn.loads=sn.loads.map(({id,...r})=>r); return sn; }
+function thumbSVG(sn){
+  const g=sn.cgeo||{nodes:[],members:[]}; if(!g.nodes.length) return '<svg class="thumb" viewBox="0 0 54 34"></svg>';
+  let a=Infinity,b=-Infinity,c=Infinity,d=-Infinity; g.nodes.forEach(([x,y])=>{a=Math.min(a,x);b=Math.max(b,x);c=Math.min(c,y);d=Math.max(d,y);});
+  const sx=46/Math.max(b-a,1e-6), sy=d-c>1e-6?26/(d-c):Infinity, k=Math.min(sx,sy), ox=27-(a+b)/2*k, oy=17+(c+d)/2*k;
+  const P=([x,y])=>[ox+x*k, oy-y*k];
+  return `<svg class="thumb" viewBox="0 0 54 34" aria-hidden="true">${g.members.map(m=>{ const [x1,y1]=P(g.nodes[m.a]), [x2,y2]=P(g.nodes[m.b]); return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`; }).join('')}${Object.keys(sn.supports||{}).map(n=>{ const p=g.nodes[n]; if(!p) return ''; const [x,y]=P(p); return `<path d="M${x} ${y}l-3 4.5h6z" fill="none" stroke="currentColor" stroke-width="1.2"/>`; }).join('')}</svg>`;
+}
+function describeDesign(sn){
+  const m=(sn.cgeo&&sn.cgeo.members.length)||0, L=(sn.loads||[]).length;
+  return `${m} member${m===1?'':'s'}, ${L} load${L===1?'':'s'}`;
+}
+function curKey(){ return cmpKey({...snapshot(), loads:state.loads.map(({id,...r})=>r)}); }
+function updateDesignState(){
+  const st=$('#dState'); if(!st) return;
+  const cur=state.design && designs.find(d=>d.id===state.design.id);
+  const dirty = cur ? curKey()!==designSavedKey : state.members.length>0;
+  st.textContent = cur ? (dirty?`Editing "${cur.name}" (unsaved changes)`:`"${cur.name}" is saved`) : (state.members.length?'Not saved yet':'Build something, then save it here.');
+  $('#dSave').textContent = cur && dirty ? 'Save changes' : 'Save';
+  $('#dCount').textContent = designs.length?`${designs.length} saved`:'';
+}
+function saveDesign(asNew){
+  if(!state.members.length){ toast('Build something first'); return; }
+  let name=$('#dName').value.trim();
+  const cur=state.design && designs.find(d=>d.id===state.design.id);
+  if(!name) name = cur&&!asNew ? cur.name : `Design ${designs.length+1}`;
+  const now=Date.now();
+  if(cur && !asNew && name===cur.name){ cur.sn=designSnap(); cur.updated=now; }
+  else if(cur && !asNew){ cur.name=name; cur.sn=designSnap(); cur.updated=now; }
+  else { const d={id:'d'+now.toString(36)+Math.random().toString(36).slice(2,6), name, sn:designSnap(), created:now, updated:now}; designs.unshift(d); state.design={id:d.id,name}; }
+  persistDesigns(); designSavedKey=curKey(); $('#dName').value=''; renderDesigns(); toast(`Saved "${name}"`);
+}
+function openDesign(id){
+  const d=designs.find(x=>x.id===id); if(!d) return;
+  if(state.page!=='ws') setPage('ws',false);
+  commitHistory();
+  const sn={...d.sn, loads:d.sn.loads.map(l=>({...l,id:uid++}))};
+  applySnapshot(sn); state.baseScale=null; resetCam(); ws.frozen=null;
+  renderSize(); renderSupports(); renderLoads(); renderMaterial(); renderProbe();
+  recompute(); commitHistory(); setView('play');
+  state.design={id:d.id,name:d.name}; designSavedKey=curKey(); renderDesigns();
+  toast(`Opened "${d.name}"`);
+}
+function shareDesign(id){
+  const d=designs.find(x=>x.id===id); if(!d) return;
+  copyLink(`${baseUrl()}#workshop?s=${b64e({p:'custom', name:d.name, sn:d.sn})}`,`Link to "${d.name}" copied`);
+}
+function renderDesigns(){
+  const box=$('#dList'); if(!box) return;
+  if(!designs.length){ box.innerHTML='<p class="empty" style="margin:4px 0 0">No saved designs yet.</p>'; updateDesignState(); return; }
+  const fmtDate=t=>new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  box.innerHTML=designs.map(d=>`<div class="ditem ${state.design&&state.design.id===d.id?'cur':''}" data-id="${d.id}">
+    ${thumbSVG(d.sn)}<div class="dn" title="${d.name.replace(/"/g,'&quot;')}">${d.name.replace(/</g,'&lt;')}</div><div class="dm">${describeDesign(d.sn)} · ${fmtDate(d.updated)}</div>
+    <div class="dacts"><button class="open">Open</button><button class="sh">Share</button><button class="rnb">Rename</button><button class="del" aria-label="Delete ${d.name.replace(/"/g,'&quot;')}">Delete</button></div></div>`).join('');
+  box.querySelectorAll('.ditem').forEach(el=>{ const id=el.dataset.id, d=designs.find(x=>x.id===id);
+    el.querySelector('.open').onclick=()=>openDesign(id);
+    el.querySelector('.sh').onclick=()=>shareDesign(id);
+    el.querySelector('.del').onclick=async()=>{ if(!(await ask(`Delete "${d.name}"? This can't be undone.`,'Delete'))) return; designs=designs.filter(x=>x.id!==id); if(state.design&&state.design.id===id) state.design=null; persistDesigns(); renderDesigns(); toast('Design deleted'); };
+    el.querySelector('.rnb').onclick=()=>{ const nm=el.querySelector('.dn'); const inp=document.createElement('input'); inp.className='rn'; inp.value=d.name; inp.maxLength=60; nm.replaceWith(inp); inp.focus(); inp.select();
+      const done=ok=>{ if(ok){ const v=inp.value.trim(); if(v){ d.name=v; d.updated=Date.now(); if(state.design&&state.design.id===id) state.design.name=v; persistDesigns(); toast('Renamed'); } } renderDesigns(); };
+      inp.onkeydown=e=>{ if(e.key==='Enter') done(true); if(e.key==='Escape') done(false); }; inp.onblur=()=>done(true); };
+  });
+  updateDesignState();
+}
+$('#dSave').onclick=()=>saveDesign(false);
+$('#dName').addEventListener('keydown',e=>{ if(e.key==='Enter') saveDesign(false); });
+$('#quickSave').onclick=()=>saveDesign(false);
+document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&state.page==='ws'){ e.preventDefault(); saveDesign(false); } });
+
+/* ---------- practice mode ---------- */
+state.pr={dtype:'ind', struct:'beam', method:'fm', level:'easy', prob:null, correct:0, tried:0};
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
+// run fn with a temporary structure loaded, then put everything back exactly as it was
+function withStructure(def,fn){
+  const keys=['preset','kind','spans','W','H','nodes','members','runs','runOf','supports','settle','loads','result','E','I','mat','fm','cgeo','hinges'];
+  const keep={}; keys.forEach(k=>keep[k]=state[k]);
+  try{
+    state.preset=def.preset; state.kind=def.kind; state.fm={...state.fm, sel:null, sig:null};
+    if(def.kind==='beam') state.spans=def.spans.slice(); else { state.W=def.W; state.H=def.H; }
+    if(def.preset==='custom') state.cgeo={nodes:def.nodes.map(p=>[...p]), members:def.members.map(([a,b],i)=>({a,b,id:i+1})), mid:def.members.length+1};
+    state.hinges={...(def.hinges||{})};
+    state.supports={...def.supports}; state.settle={}; state.loads=[]; state.runs=[]; state.E=200; state.I=8000; state.mat='steel';
+    const g=genGeometry(); state.nodes=g.nodes; state.members=g.members; if(def.preset==='custom') state.kind='frame'; buildRuns();
+    state.loads=def.loads.map(d=>{ const id=uid++;
+      if(d.type==='udl'){ const a=fromMember(d.m,d.ta), b=fromMember(d.m2??d.m,d.tb); const rev=a.s>b.s; return {id,type:'udl',run:a.run,sa:Math.min(a.s,b.s),sb:Math.max(a.s,b.s),mag:rev?(d.mag2??d.mag):d.mag,mag2:rev?d.mag:(d.mag2??d.mag),shape:d.shape||'uniform',dir:d.dir}; }
+      const q=fromMember(d.m,d.t); return {id,type:'point',run:q.run,s:q.s,mag:d.mag,dir:d.dir}; });
+    state.result=solve();
+    return fn();
+  } finally { keys.forEach(k=>state[k]=keep[k]); }
+}
+function shapedUdl(m,dir,base){
+  const w=base??rint(2,5)*5, shape=pick(['uniform','rise','fall','trap','trap']);
+  if(shape==='uniform') return {type:'udl',m,ta:0,tb:1,mag:w,mag2:w,shape,dir};
+  if(shape==='rise') return {type:'udl',m,ta:0,tb:1,mag:0,mag2:w,shape,dir};
+  if(shape==='fall') return {type:'udl',m,ta:0,tb:1,mag:w,mag2:0,shape,dir};
+  const lo=Math.max(5,w-rint(1,3)*5); return Math.random()<0.5?{type:'udl',m,ta:0,tb:1,mag:lo,mag2:w,shape:'custom',dir}:{type:'udl',m,ta:0,tb:1,mag:w,mag2:lo,shape:'custom',dir};
+}
+function beamLoads(spans){
+  const loads=[];
+  spans.forEach((L,m)=>{
+    if(Math.random()<0.55) loads.push(shapedUdl(m,'down'));
+    else { const a=rint(1,Math.max(1,L-1)); loads.push({type:'point',m,t:a/L,mag:rint(2,12)*5,dir:'down'}); }
+  });
+  return loads;
+}
+function genDeterminate(struct,level){
+  if(struct==='beam'){
+    if(level==='easy'){
+      if(Math.random()<0.6){ const L=rint(4,10); const loads=[shapedUdl(0,'down')]; if(Math.random()<0.6) loads.push({type:'point',m:0,t:rint(1,L-1)/L,mag:rint(2,10)*5,dir:'down'}); return {kind:'beam',preset:'ss',spans:[L],supports:{0:'pin',1:'roller'},loads}; }
+      const L=rint(3,7); return {kind:'beam',preset:'cant',spans:[L],supports:{0:'fixed'},loads:[shapedUdl(0,'down'),...(Math.random()<0.6?[{type:'point',m:0,t:1,mag:rint(2,8)*5,dir:'down'}]:[])]};
+    }
+    if(Math.random()<0.5){ const L1=rint(5,9), L2=rint(2,3); return {kind:'beam',preset:'over',spans:[L1,L2],supports:{0:'pin',1:'roller'},loads:[shapedUdl(0,'down'),{type:'point',m:1,t:1,mag:rint(2,8)*5,dir:'down'}]}; }
+    const a=rint(1,3), L=rint(5,8), c=rint(1,3);
+    return {kind:'beam',preset:'dover',spans:[a,L,c],supports:{1:'pin',2:'roller'},loads:[{type:'point',m:0,t:0,mag:rint(2,6)*5,dir:'down'},shapedUdl(1,'down'),{type:'point',m:2,t:1,mag:rint(2,6)*5,dir:'down'}]};
+  }
+  const W=rint(4,8), H=rint(3,5);
+  if(level==='easy'){
+    if(Math.random()<0.5) return {kind:'frame',preset:'lframe',W,H,supports:{0:'fixed'},loads:[Math.random()<0.5?shapedUdl(1,'down'):{type:'point',m:1,t:1,mag:rint(2,8)*5,dir:'down'}, ...(Math.random()<0.5?[{type:'point',m:0,t:1,mag:rint(2,6)*5,dir:'right'}]:[])]};
+    return {kind:'frame',preset:'prportal',W,H,supports:{0:'pin',3:'roller'},loads:[shapedUdl(1,'down'),...(Math.random()<0.6?[{type:'point',m:0,t:1,mag:rint(2,6)*5,dir:'right'}]:[])]};
+  }
+  // three-hinged frames in the past-paper style: pinned bases and one internal hinge
+  const f=pastPaperFrame('hard'); f.supports={0:'pin',3:'pin'}; return f;
+}
+function genProblem(struct,method,level,dtype){
+  if(dtype==='det') return genDeterminate(struct,level);
+  if(struct==='beam'){
+    let preset, spans, supports;
+    if(method==='fm'){
+      if(level==='easy'){ preset=pick(['prop','cont2']); }
+      else preset=pick(['cont','ff']);
+    } else {
+      preset = level==='easy' ? 'prop' : pick(['cont2','cont2fixed']);
+    }
+    if(preset==='prop'){ spans=[rint(4,10)]; supports={0:'fixed',1:'roller'}; }
+    else if(preset==='ff'){ spans=[rint(5,10)]; supports={0:'fixed',1:'fixed'}; }
+    else if(preset==='cont2'){ spans=[rint(4,9),rint(4,9)]; supports={0:'pin',1:'roller',2:'roller'}; }
+    else if(preset==='cont2fixed'){ preset='cont2'; spans=[rint(4,9),rint(4,9)]; supports={0:'fixed',1:'roller',2:'roller'}; }
+    else { spans=[rint(4,8),rint(4,8),rint(4,8)]; supports={0:'pin',1:'roller',2:'roller',3:'roller'}; }
+    let loads=beamLoads(spans);
+    if(preset==='ff'){ const L=spans[0]; loads=[Math.random()<0.6?shapedUdl(0,'down'):{type:'point',m:0,t:rint(1,L-1)/L,mag:rint(4,12)*5,dir:'down'}]; }
+    return {kind:'beam', preset, spans, supports, loads};
+  }
+  const W=rint(4,10), H=rint(3,6), P=rint(2,6)*5;
+  if(method==='fm'){
+    if(level==='easy'){
+      if(Math.random()<0.5) return {kind:'frame', preset:'portalpin', W, H, supports:{0:'pin',3:'pin'}, loads:[shapedUdl(1,'down'), ...(Math.random()<0.6?[{type:'point',m:0,t:1,mag:P,dir:'right'}]:[])]};
+      return {kind:'frame', preset:'lframe', W, H, supports:{0:'fixed',2:'roller'}, loads:[Math.random()<0.6?shapedUdl(1,'down'):{type:'point',m:1,t:rint(1,W-1)/W,mag:P*2,dir:'down'}]};
+    }
+    return {kind:'frame', preset:'portal', W, H, supports:{0:'fixed',3:'pin'}, loads:[shapedUdl(1,'down'),{type:'point',m:0,t:1,mag:P,dir:'right'}]};
+  }
+  return pastPaperFrame(level);
+}
+// frames in the style of past exam papers: inclined legs, fixed bases at different levels, one internal hinge
+function pastPaperFrame(level){
+  const h=pick([3,4]), L=rint(3,6), a=pick([0,1,2]), c=pick([1,2,3]);
+  const kinds = level==='easy' ? ['t3','t2'] : ['t1','t4','t5'];
+  const k=pick(kinds);
+  let nodes, hinge, loads=[];
+  const big=rint(2,10)*10;
+  if(k==='t1'){ const drop=pick([0,1]); nodes=[[0,0],[a||1,h],[(a||1)+L,h],[(a||1)+L+c,-drop]]; hinge=2; loads=[shapedUdl(1,'down',big)]; }
+  else if(k==='t2'){ nodes=[[0,0],[0,h],[L,h],[L-1,0]]; hinge=1; loads=[shapedUdl(0,'right',rint(2,6)*5),{type:'point',m:1,t:0.5,mag:rint(4,10)*10,dir:'down'}]; }
+  else if(k==='t3'){ nodes=[[0,0],[0,h],[L,h],[L+c,0]]; hinge=2; loads=[shapedUdl(0,'right',rint(2,6)*5), ...(Math.random()<0.5?[{type:'point',m:1,t:0.5,mag:rint(3,8)*10,dir:'down'}]:[])]; }
+  else if(k==='t4'){ nodes=[[0,0],[a||1,h],[(a||1)+L,h],[(a||1)+L+c,0]]; hinge=1; loads=[shapedUdl(1,'down',big)]; }
+  else { const hl=4, hr=3; nodes=[[0,0],[2,hl],[2+L,hl],[2+L+1,hl-hr]]; hinge=2; loads=[{type:'point',m:0,t:1,mag:rint(3,8)*10,dir:'left'}, shapedUdl(1,'down',rint(2,5)*5)]; }
+  // members: AB, BC, DC (column members run upward from the base)
+  return {kind:'frame', preset:'custom', nodes, members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{[hinge]:true}, loads, W:0, H:0};
+}
+// describe the problem in words (display units)
+function defGeometry(def){
+  if(def.preset==='custom') return {nodes:def.nodes, members:def.members};
+  if(def.kind==='beam'){ const nodes=[[0,0]]; let x=0; def.spans.forEach(L=>{ x+=L; nodes.push([x,0]); }); return {nodes, members:def.spans.map((_,i)=>[i,i+1])}; }
+  return PRESETS.find(p=>p.id===def.preset).gen(def.W,def.H);
+}
+function describe(def){
+  const sname={fixed:'fixed',pin:'pinned',roller:'a roller',sideroller:'a side roller'};
+  const g=defGeometry(def), lines=[];
+  const mLen=m=>{ const [a,b]=g.members[m]; return Math.hypot(g.nodes[b][0]-g.nodes[a][0], g.nodes[b][1]-g.nodes[a][1]); };
+  const mname=m=>letter(g.members[m][0])+letter(g.members[m][1]);
+  if(def.kind==='beam'){
+    const n=def.spans.length, names=def.spans.map((_,i)=>letter(i)+letter(i+1));
+    const nmJ=Array.from({length:n+1},(_,i)=>letter(i)).join(''), supported=Object.keys(def.supports).length;
+    const kindTxt = n===1 ? (def.supports[0]==='fixed'&&!def.supports[1] ? 'A cantilever beam AB' : 'A single-span beam AB')
+      : supported<n+1 ? `An overhanging beam ${nmJ}` : `A ${n}-span continuous beam ${nmJ}`;
+    lines.push(`${kindTxt}, with ${def.spans.map((L,i)=>`${names[i]} = ${q(L,'len',2)}`).join(', ')}.`);
+  } else if(def.preset==='custom'){
+    lines.push(`Frame ${g.nodes.map((_,i)=>letter(i)).join('')} with members ${g.members.map((_,i)=>mname(i)).join(', ')}. Joint positions (x, y): ${g.nodes.map((p,i)=>`${letter(i)} (${fmt(uc(p[0],'len'),2)}, ${fmt(uc(p[1],'len'),2)})`).join(', ')} in ${uu('len')}.`);
+  } else {
+    lines.push(def.preset==='lframe'
+      ? `An L-shaped frame ABC: column AB is ${q(def.H,'len',2)} tall and beam BC is ${q(def.W,'len',2)} long, joined rigidly at B.`
+      : `A portal frame ABCD: columns AB and DC are ${q(def.H,'len',2)} tall and beam BC is ${q(def.W,'len',2)} long, with rigid joints at B and C.`);
+  }
+  lines.push('Supports: '+Object.entries(def.supports).map(([n,t])=>`${letter(+n)} is ${sname[t]||t}`).join(', ')+'.');
+  const hz=Object.keys(def.hinges||{}).filter(k=>def.hinges[k]);
+  if(hz.length) lines.push(`There is an internal hinge at ${hz.map(k=>letter(+k)).join(', ')} (no moment is carried there).`);
+  const dirW={down:'downward',up:'upward',right:'horizontal, to the right',left:'horizontal, to the left'};
+  def.loads.forEach(l=>{
+    const nm=mname(l.m), A=nm[0], B=nm[1];
+    if(l.type==='udl'){
+      const w1=l.mag, w2=l.mag2??l.mag, d=dirW[l.dir||'down'];
+      if(Math.abs(w1-w2)<1e-9) lines.push(`A uniform load of ${q(w1,'dist')} (${d}) acts along ${nm}.`);
+      else if(w1===0) lines.push(`A triangular load (${d}) on ${nm} rises from 0 at ${A} to ${q(w2,'dist')} at ${B}.`);
+      else if(w2===0) lines.push(`A triangular load (${d}) on ${nm} falls from ${q(w1,'dist')} at ${A} to 0 at ${B}.`);
+      else lines.push(`A trapezoidal load (${d}) on ${nm} varies from ${q(w1,'dist')} at ${A} to ${q(w2,'dist')} at ${B}.`);
+    } else {
+      const d=dirW[l.dir||'down'];
+      if(l.t>=0.999) lines.push(`A point load of ${q(l.mag,'force')} (${d}) acts at joint ${B}.`);
+      else if(l.t<=0.001) lines.push(`A point load of ${q(l.mag,'force')} (${d}) acts at joint ${A}.`);
+      else lines.push(`A point load of ${q(l.mag,'force')} (${d}) acts on ${nm}, ${q(l.t*mLen(l.m),'len',2)} from ${A}.`);
+    }
+  });
+  lines.push('EI is constant for every member. Ignore axial shortening.');
+  return lines;
+}
+function eiUnit(kind){ // kind: 'D' translation×EI, 'R' rotation×EI, or dims power
+  return kind;
+}
+function buildQuestions(def,method){
+  return withStructure(def,()=>{
+    const Lf=uc(1,'len'), Ff=uc(1,'force'), Mf=uc(1,'moment'), EIu=uu('EI'), lu=uu('len'), fu=uu('force'), mu=uu('moment');
+    const out={qs:[], intro:'', meta:{}};
+    if(method==='eq'){
+      const r=state.result; if(!r||r.unstable) return null;
+      const det=determinacy(); if(det.n!==0) return null;
+      out.intro='This structure is statically determinate: use equilibrium (ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0)'+(Object.keys(state.hinges||{}).length?' plus zero moment at the hinge':'')+' to find the values below.';
+      const dirTxt={0:'horizontal, positive to the right',1:'vertical, positive upward',2:'moment, anticlockwise positive'};
+      r.reactions.slice().sort((a,b)=>a.n-b.n).forEach(re=>{ re.dofs.slice().sort().forEach(d=>{ if(det.beamMode&&d===0) return;
+        const v=[re.Rx,re.Ry,re.Mz][d], L=letter(re.n);
+        out.qs.push({label:d===0?`${L}<sub>x</sub>`:d===1?`${L}<sub>y</sub>`:`M<sub>${L}</sub>`, sub:`${['Horizontal','Vertical','Moment'][d]} reaction at ${L} (${dirTxt[d]})`, unit:d===2?mu:fu, value:uc(v,d===2?'moment':'force'),
+          hint:d===2?'Take moments about this support for the whole structure.':d===1?'Take moments about the other support (or use ΣF_y = 0 once the others are known).':'Use ΣF_x = 0, or moments about the hinge for a three-hinged frame.'}); }); });
+      if(state.kind==='beam'){
+        const L0=state.runs[0].len, EL=r.EL.find(l=>l.type==='point'&&l.t>0.01&&l.t<0.99);
+        const s0 = EL ? fromMember(EL.m,EL.t).s : r2(state.spans[0]/2);
+        const {m,t}=toMember(0,s0), e=r.els.find(x=>x.m===m&&t>=x.t0-1e-9&&t<=x.t1+1e-9);
+        const Mv=evalEl(e, clamp((t-e.t0)/((e.t1-e.t0)||1),0,1)*e.L).M;
+        out.qs.push({label:`Bending moment at ${q(s0,'len',2)} from A`, sub:'sagging positive, hogging negative', unit:mu, value:uc(Mv,'moment'), hint:'Cut the beam there and take moments of everything on one side.'});
+      } else {
+        const jn = isHingeNode(1) ? 2 : 1, list = jn===1 ? r.byMember[0] : r.byMember[1], Mb = list[list.length-1].M;
+        out.qs.push({label:`|M| at joint ${letter(jn)}`, sub:`size of the bending moment at ${letter(jn)} (enter a positive number)`, unit:mu, value:Math.abs(uc(Mb,'moment')), abs:true, hint:`Cut the frame just next to ${letter(jn)} and take moments of one part about ${letter(jn)}.`});
+      }
+      out.meta.view='play';
+    } else if(method==='fm'){
+      const R=forceMethod(); if(R.error) return null;
+      const EI=uc(R.EI,'EI'), rot=rd=>rd.d===2;
+      const D0=R.reds.map((rd,i)=>R.D0[i]*(rot(rd)?1:Lf)*EI);
+      const F=R.reds.map((ri,i)=>R.reds.map((rj,j)=>R.F[i][j]*(rot(ri)?1:Lf)/(rot(rj)?Mf:Ff)*EI));
+      const X=R.reds.map((rd,i)=>R.X[i]*(rot(rd)?Mf:Ff));
+      const dU=rd=>rot(rd)?`${fu}·${lu}²`:`${fu}·${lu}³`;
+      const fU=(ri,rj)=>{ const p=3-(rot(ri)?1:0)-(rot(rj)?1:0); return p===1?lu:`${lu}${p===2?'²':'³'}`; };
+      out.intro=`Use the force method with ${R.reds.map((rd,i)=>`X${sub(i+1)} = ${redName(rd)} (${redLong(rd)}, ${rd.d===2?'anticlockwise':rd.d===1?'upward':'to the right'} positive)`).join(' and ')} as the redundant${R.reds.length>1?'s':''}.`;
+      out.meta.sel=R.sel;
+      R.reds.forEach((rd,i)=>out.qs.push({label:`Δ${sub(i+1)}${sub(0)} × EI`, sub:`movement of the primary structure at ${redName(rd)} under the real loads, times EI`, unit:dU(rd), value:D0[i], hint:`Remove ${redName(rd)}, find the ${rd.d===2?'rotation':'deflection'} there from the real loads (virtual work: ∫M₀·m${sub(i+1)} dx), then multiply by EI.`}));
+      R.reds.forEach((ri,i)=>R.reds.forEach((rj,j)=>{ if(j<i) return; out.qs.push({label:`δ${sub(i+1)}${sub(j+1)} × EI`, sub:`movement at ${redName(ri)} from a unit X${sub(j+1)}, times EI`, unit:fU(ri,rj), value:F[i][j], hint:`Apply a unit ${rj.d===2?'moment':'force'} at ${redName(rj)} on the primary structure; δ = ∫ m${sub(i+1)}·m${sub(j+1)} dx / EI.`}); }));
+      R.reds.forEach((rd,i)=>out.qs.push({label:`X${sub(i+1)} = ${redName(rd)}`, sub:`solve the compatibility equation${R.reds.length>1?'s':''}`, unit:rot(rd)?mu:fu, value:X[i], hint:`Δ${sub(i+1)}${sub(0)}${R.reds.map((_,j)=>` + δ${sub(i+1)}${sub(j+1)}X${sub(j+1)}`).join('')} = 0`}));
+      if(R.reds.length===1){
+        const sd=slopeDeflection();
+        if(state.kind==='frame'){ const m=sd.members.find(mm=>mm.b===1)||sd.members[0]; out.qs.push({label:`|M| at corner B`, sub:'size of the bending moment at joint B (enter a positive number)', unit:mu, value:Math.abs(uc(m.Mba,'moment')), abs:true, hint:'Superpose M = M₀ + X₁·m₁ at B.'}); }
+        else if(state.supports[0]==='fixed'){ const re=state.result.reactions.find(r=>r.n===0); out.qs.push({label:`Moment reaction M${letter(0)}`, sub:'anticlockwise positive', unit:mu, value:uc(re.Mz,'moment'), hint:'Take moments about A for the whole beam once X₁ is known.'}); }
+        else { const s=state.result.byMember[0]; const Mb=s[s.length-1].M; out.qs.push({label:`Bending moment over support B`, sub:'sagging positive, so hogging is negative', unit:mu, value:uc(Mb,'moment'), hint:'Cut the beam just left of B and take moments.'}); }
+      }
+    } else {
+      const sd=slopeDeflection(), kin=kinematic(), EI=uc(sd.EI,'EI');
+      const nm=(a,b)=>letter(a)+letter(b);
+      out.intro=`Use the slope-deflection method (clockwise positive for moments and rotations). Unknown rotations: ${kin.rot.map(n=>'θ'+letter(n)).join(', ')||'none'}${kin.sway?`, plus ${kin.sway} sway`:''}.`;
+      const loaded=new Set(state.result.EL.map(l=>l.m));
+      sd.members.filter(m=>loaded.has(m.m)&&(Math.abs(m.FEMab)>1e-6||Math.abs(m.FEMba)>1e-6)).slice(0,2).forEach(m=>{
+        out.qs.push({label:`FEM<sub>${nm(m.a,m.b)}</sub>`, sub:`fixed-end moment at ${letter(m.a)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMab,'moment'), hint:'Uniform load: wL²/12. Point load: Pab²/L² (near end) and Pa²b/L² (far end).'});
+        out.qs.push({label:`FEM<sub>${nm(m.b,m.a)}</sub>`, sub:`fixed-end moment at ${letter(m.b)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMba,'moment'), hint:'Same member, other end; opposite sign for a symmetric load.'});
+      });
+      kin.rot.forEach(n=>out.qs.push({label:`θ${letter(n)} × EI`, sub:`joint rotation at ${letter(n)}, clockwise positive, times EI`, unit:EIu, value:sd.theta[n]*EI, hint:`Write ΣM = 0 at ${letter(n)} using the slope-deflection equations, then solve.`}));
+      let ends=[];
+      if(state.kind==='beam'){ if(sd.members.length===1) ends.push([sd.members[0],'a']); else ends.push([sd.members[0],'b']); }
+      else { const order=[[0,'a'],[0,'b'],[2,'a'],[2,'b'],[1,'a'],[1,'b']];
+        order.forEach(([mi,e])=>{ const m=sd.members[mi]; if(!m||ends.length>=3) return; const v=e==='a'?m.Mab:m.Mba; if(Math.abs(v)>1e-6) ends.push([m,e]); }); }
+      ends.forEach(([m,e])=>{ const lab=e==='a'?nm(m.a,m.b):nm(m.b,m.a); out.qs.push({label:`M<sub>${lab}</sub>`, sub:'member end moment, clockwise positive', unit:mu, value:uc(e==='a'?m.Mab:m.Mba,'moment'), hint:'Substitute the rotations back into the slope-deflection equation for this end.'}); });
+      out.meta.view='sd';
+    }
+    out.snap=snapshot(); out.snap.loads=out.snap.loads.map(({id,...r})=>r);
+    out.geo={nodes:state.nodes.map(p=>[...p]), members:state.members.map(m=>[...m])};
+    return out;
+  });
+}
+function newProblem(){
+  const p=state.pr; let def, Q, tries=0;
+  const method=p.dtype==='det'?'eq':p.method;
+  do{ def=genProblem(p.struct,p.method,p.level,p.dtype); Q=buildQuestions(def,method); tries++; } while(!Q && tries<10);
+  p.prob={def,Q,method}; renderPractice();
+}
+const ICONS={
+  det:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M8 14h48" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M10 15l-5 8h10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M54 15l-5 7h10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="51" cy="25" r="1.8" fill="currentColor"/><circle cx="57" cy="25" r="1.8" fill="currentColor"/><text x="25" y="9" font-size="9" font-weight="700" fill="currentColor" font-family="Barlow, sans-serif">ΣF=0</text></svg>',
+  ind:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M6 14h52" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M4 6v16" stroke="currentColor" stroke-width="3"/><path d="M32 15l-5 8h10z M58 15l-5 8h10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+  beam:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M6 14h52" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/><path d="M10 15l-5 8h10z M32 15l-5 8h10z M54 15l-5 8h10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 6v6M22 6v6M30 6v6M38 6v6M46 6v6" stroke="currentColor" stroke-width="1.4" opacity=".55"/></svg>',
+  frame:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M10 29l4-21h32l6 21" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/><circle cx="46" cy="8" r="2.8" fill="var(--panel)" stroke="currentColor" stroke-width="1.8"/><path d="M6 30h9M47 30h9" stroke="currentColor" stroke-width="2"/></svg>',
+  fm:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M6 12h52" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M32 30V16" stroke="currentColor" stroke-width="2.4" stroke-dasharray="3 3"/><path d="M32 14l-4 6h8z" fill="currentColor"/><text x="38" y="29" font-size="11" font-weight="700" fill="currentColor" font-family="Barlow, sans-serif">X₁</text></svg>',
+  sd:'<svg viewBox="0 0 64 32" aria-hidden="true"><path d="M6 10h52" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3" opacity=".6"/><path d="M6 10q26 22 52 0" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M8 11l14 8" stroke="var(--load)" stroke-width="2"/><text x="24" y="16" font-size="11" font-weight="700" fill="var(--load)" font-family="Barlow, sans-serif">θ</text></svg>'
+};
+function renderPractice(){
+  const box=$('#prView'), p=state.pr;
+  if(!p.prob) { newProblem(); return; }
+  const {def,Q}=p.prob;
+  const tcard=(val,title,subtxt)=>`<button class="ccard" data-pr-dtype="${val}" aria-pressed="${p.dtype===val}"><span class="ci">${ICONS[val]}</span><span class="ct"><b>${title}</b><small>${subtxt}</small></span></button>`;
+  const card=(name,val,title,subtxt)=>`<button class="ccard" data-pr-${name}="${val}" aria-pressed="${p[name==='struct'?'struct':'method']===val}"><span class="ci">${ICONS[val]}</span><span class="ct"><b>${title}</b><small>${subtxt}</small></span></button>`;
+  const statement=describe(def);
+  const tag=t=>`<span class="tag">${t}</span>`;
+  box.innerHTML=`<div class="prwrap">
+    <section class="prhero">
+      <div class="prhead"><div><h2>Practice</h2><p>Get a fresh exam-style problem, work it out on paper, then check your answers.</p></div>
+        <div class="scorepill" id="prScore">${p.tried?`<b>${p.correct}</b> / ${p.tried} right this session`:'No answers checked yet'}</div></div>
+      <div class="choices">
+        <div class="cgroup"><span class="gl">Type</span><div class="ccards">${tcard('det','Determinate','solve with equilibrium')}${tcard('ind','Indeterminate','force method or slope-deflection')}</div></div>
+        <div class="cgroup"><span class="gl">Structure</span><div class="ccards">${card('struct','beam','Beam',p.dtype==='det'?'simply supported, cantilevers, overhangs':'propped, fixed & continuous')}${card('struct','frame','Frame',p.dtype==='det'?(p.level==='hard'?'three-hinged, past-paper style':'L-frames & portals'):p.method==='sd'?'past-paper style, with hinges':'portals & L-frames')}</div></div>
+        <div class="cgroup methodgrp" ${p.dtype==='det'?'hidden':''}><span class="gl">Method</span><div class="ccards">${card('method','fm','Force method','redundants & compatibility')}${card('method','sd','Slope-deflection','rotations & end moments')}</div></div>
+        <div class="cgroup"><span class="gl">Difficulty</span><div class="seg lvl" role="group" aria-label="Difficulty">${[['easy','Easier'],['hard','Harder']].map(([v,t])=>`<button data-pr-level="${v}" aria-pressed="${p.level===v}">${t}</button>`).join('')}</div>
+          <button class="btn primary big" id="prNew"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>New problem</button></div>
+      </div>
+    </section>
+    <div class="prgrid fadein">
+      <section class="card prob">
+        <div class="tags">${tag(def.kind==='beam'?'Beam':'Frame')}${tag(p.prob.method==='eq'?'Determinate':p.prob.method==='fm'?'Force method':'Slope-deflection')}${tag(p.level==='easy'?'Easier':'Harder')}</div>
+        <canvas class="mini" id="prFig" style="height:330px"></canvas>
+        <ul class="given">${statement.map(s=>`<li>${s}</li>`).join('')}</ul>
+        <div class="task">${Q.intro}</div>
+      </section>
+      <section class="card answers" id="prQs">
+        <div class="ahead"><h3>Your answers</h3><span class="prog" id="prProg">0 of ${Q.qs.length} answered</span></div>
+        <div class="progbar"><i id="prBar"></i></div>
+        <p class="note">Lengths in ${uu('len')}, forces in ${uu('force')}. Enter each value with its sign. Press Enter to check.</p>
+        <div class="qlist">${Q.qs.map((qq,i)=>`<div class="qrow" data-i="${i}"><div class="ql">${qq.label}<small>${qq.sub}</small><div class="hint">💡 ${qq.hint}</div></div>
+          <span class="num"><input type="number" step="any" inputmode="decimal" aria-label="${qq.label.replace(/<[^>]+>/g,'')}"><span>${qq.unit}</span></span><span class="mark" aria-live="polite"></span>
+          <div class="ans"><span class="ansl">Answer</span><b>${fmt(qq.value,3)}</b> ${qq.unit}</div></div>`).join('')}</div>
+        <div class="prbtns">
+          <button class="btn primary" id="prCheck">Check answers</button>
+          <button class="btn" id="prHint" aria-pressed="false">Show hints</button>
+          <button class="btn reveal-btn" id="prReveal" aria-pressed="false">Reveal answers</button>
+        </div>
+        <div class="prbtns sub">
+          <button class="btn ghost" id="prOpen" title="Open this problem in the Workshop to see every step">Open in Workshop ↗</button>
+          <button class="btn ghost" id="prShare">Share problem</button>
+        </div>
+      </section>
+    </div></div>`;
+  box.querySelectorAll('[data-pr-dtype]').forEach(b=>b.onclick=()=>{ p.dtype=b.dataset.prDtype; newProblem(); });
+  box.querySelectorAll('[data-pr-struct]').forEach(b=>b.onclick=()=>{ p.struct=b.dataset.prStruct; newProblem(); });
+  box.querySelectorAll('[data-pr-method]').forEach(b=>b.onclick=()=>{ p.method=b.dataset.prMethod; newProblem(); });
+  box.querySelectorAll('[data-pr-level]').forEach(b=>b.onclick=()=>{ p.level=b.dataset.prLevel; newProblem(); });
+  $('#prNew').onclick=newProblem;
+  $('#prCheck').onclick=checkAnswers;
+  const prog=()=>{ const all=box.querySelectorAll('.qrow input'); const n=[...all].filter(x=>x.value.trim()!=='').length; $('#prProg').textContent=`${n} of ${all.length} answered`; $('#prBar').style.width=(100*n/all.length)+'%'; };
+  box.querySelectorAll('.qrow input').forEach(inp=>{ inp.addEventListener('keydown',e=>{ if(e.key==='Enter') checkAnswers(); }); inp.addEventListener('input',prog); });
+  $('#prHint').onclick=e=>{ const on=$('#prQs').classList.toggle('showhints'); e.currentTarget.setAttribute('aria-pressed',on); e.currentTarget.textContent=on?'Hide hints':'Show hints'; };
+  $('#prReveal').onclick=e=>{ const on=$('#prQs').classList.toggle('reveal'); e.currentTarget.setAttribute('aria-pressed',on); e.currentTarget.textContent=on?'Hide answers':'Reveal answers'; if(on){ const first=$('#prQs .qrow'); if(first) first.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'}); } };
+  $('#prOpen').onclick=openInSolver;
+  $('#prShare').onclick=()=>copyLink(`${baseUrl()}#practice?q=${b64e({def:p.prob.def,method:p.prob.method,struct:p.struct,level:p.level,dtype:p.dtype})}`,'Link to this problem copied');
+  withStructure(def,()=>renderMini($('#prFig'),{restr:restraintsFrom(state.supports), EL:state.result.EL, dims:true, loadLabels:true}));
+}
+function checkAnswers(){
+  const p=state.pr, rows=document.querySelectorAll('#prQs .qrow'); let right=0, answered=0;
+  rows.forEach(row=>{
+    const qq=p.prob.Q.qs[+row.dataset.i], v=parseFloat(row.querySelector('input').value);
+    row.classList.remove('ok','bad'); const mk=row.querySelector('.mark'); mk.textContent='';
+    if(!isFinite(v)) return; answered++;
+    const target=qq.value, ok=Math.abs(v-target)<=Math.max(0.02*Math.abs(target),0.05);
+    row.classList.add(ok?'ok':'bad'); mk.textContent=ok?'✓':'✗'; mk.setAttribute('aria-label',ok?'correct':'not quite');
+    if(ok) right++;
+  });
+  if(!answered){ toast('Type at least one answer first'); return; }
+  p.correct+=right; p.tried+=answered; $('#prScore').innerHTML=`<b>${p.correct}</b> / ${p.tried} right this session`;
+  toast(right===rows.length?'All correct, nice work!':`${right} of ${answered} correct`);
+}
+function openInSolver(){
+  const pr=state.pr.prob; if(!pr) return;
+  setPage('ws',false);
+  commitHistory();
+  const geo=pr.Q.geo;
+  const sn={...pr.Q.snap, kind:'frame', cgeo:{nodes:geo.nodes.map(p=>[...p]), members:geo.members.map(([a,b],i)=>({a,b,id:i+1})), mid:geo.members.length+1},
+    loads:pr.Q.snap.loads.map(l=>({...l,id:uid++}))};
+  applySnapshot(sn); state.baseScale=null; state.fm.sel=null;
+  renderSize(); renderSupports(); renderLoads(); renderMaterial(); renderProbe();
+  recompute(); commitHistory();
+  if(pr.method==='fm' && pr.Q.meta.sel) state.fm.sel=pr.Q.meta.sel.slice();
+  setView(pr.method==='fm'?'fm':pr.method==='sd'?'sd':'play');
+  toast('Problem opened in the Workshop');
+}
+function openPracticeShared(code){
+  try{ const d=b64d(code); const p=state.pr; p.struct=d.struct||d.def.kind; p.method=d.method==='eq'?p.method:d.method; p.level=d.level||'easy'; p.dtype=d.dtype||(d.method==='eq'?'det':'ind');
+    const Q=buildQuestions(d.def,d.method); if(!Q) return; p.prob={def:d.def,Q,method:d.method}; renderPractice(); toast('Opened shared problem'); }
+  catch(e){ toast('That problem link could not be opened'); }
+}
 
 /* ---------- mini diagrams for the force method ---------- */
 const SUBS='₀₁₂₃₄₅₆₇₈₉';
@@ -1844,8 +3069,8 @@ function withTarget(canvas,fn){
   ctx.setTransform(dpr,0,0,dpr,0,0); ctx.clearRect(0,0,w,h);
   try{ fn(w,h); } finally { ctx=keep.ctx; view=keep.view; W=keep.W; Hh=keep.Hh; hits=keep.hits; }
 }
-function fitMini(w,h,extra){
-  const b=structSpan(), padX=64, padT=54, padB=54;
+function fitMini(w,h,extra,dims){
+  const b=structSpan(), padX=dims?78:64, padT=58, padB=dims?92:54;
   if(extra&&extra.length){ extra.forEach(([x,y])=>{ b.minx=Math.min(b.minx,x); b.maxx=Math.max(b.maxx,x); b.miny=Math.min(b.miny,y); b.maxy=Math.max(b.maxy,y); }); b.bw=b.maxx-b.minx; b.bh=b.maxy-b.miny; }
   const aw=w-2*padX, ah=h-padT-padB;
   let k=aw/Math.max(b.bw,1e-6); if(b.bh>1e-6) k=Math.min(k,ah/b.bh); k=Math.min(k,120);
@@ -1854,11 +3079,12 @@ function fitMini(w,h,extra){
 // opt: {restr, EL, res (for bent shape), samples (elSamples with M), marks:[{n,d,text,unit,col}], diagCol}
 function renderMini(canvas,opt){
   withTarget(canvas,(w,h)=>{
+    const pillQ=[];
     readColors();
     const bent = opt.res && !opt.res.unstable && opt.res.maxDisp>1e-12;
     const D = bent ? 0.12*structSpan().span/opt.res.maxDisp : 0;
     // fit the view around the original AND the bent shape so nothing is cut off
-    fitMini(w,h, bent ? opt.res.samples.map(s=>[s.x0+s.dx*D, s.y0+s.dy*D]) : null);
+    fitMini(w,h, bent ? opt.res.samples.map(s=>[s.x0+s.dx*D, s.y0+s.dy*D]) : null, opt.dims);
     const members=()=>state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
     // moment diagram (optional)
     const labels=[];
@@ -1899,7 +3125,7 @@ function renderMini(canvas,opt){
     } else { ctx.strokeStyle=C.ink; ctx.lineWidth=2.2; ctx.lineCap='round'; members(); }
     // supports
     Object.entries(opt.restr||{}).forEach(([n,d])=>{ const [x,y]=toS(...state.nodes[n]); drawSupport(typeFromDofs(d),x,y,+n); });
-    state.nodes.forEach((p,n)=>{ const [x,y]=toS(...p); ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle=C.ink; ctx.fill();
+    state.nodes.forEach((p,n)=>{ const [x,y]=toS(...p); if(isHingeNode(n)){ ctx.beginPath(); ctx.arc(x,y,5.5,0,Math.PI*2); ctx.fillStyle=C.paper; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.stroke(); } else { ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle=C.ink; ctx.fill(); }
       const [ax,ay]=memberAway(n), L=Math.hypot(ax,ay)||1; label(letter(n), x+(ax/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?10:0), y-(ay/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?8:0), C.muted,'center',12,700); });
     // loads
     if(opt.EL){
@@ -1917,7 +3143,7 @@ function renderMini(canvas,opt){
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
           arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,LC,2,8);
-          label(q(l.mag,'force',0),px-ds[0]*38-(ds[0]?ds[0]*12:0),py-ds[1]*38,LC,'center',11.5,700);
+          { const t=q(l.mag,'force',0); setFont(12,700); const tw=ctx.measureText(t).width; pillQ.push({t, x:px-ds[0]*(42+tw/2), y:py-ds[1]*44, c:LC}); }
         } else {
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
@@ -1974,6 +3200,19 @@ function renderMini(canvas,opt){
       const am=(a0+a1)/2, lr=R1+16;
       label('θ'+letter(n), x+lr*Math.cos(am), y+lr*Math.sin(am), C.load,'center',14,700);
     });
+    if(opt.dims){ const b=structSpan(); const joints=uniqSorted(state.nodes.map(n=>n[0])); if(joints.length>1) chain(joints,b.miny,true,52,C.muted);
+      if(!isBeam()){ const ys=uniqSorted(state.nodes.map(n=>n[1])); if(ys.length>1) chain(ys,b.maxx,false,46,C.muted); } }
+    if(opt.loadLabels && opt.EL){ const seen=new Set(); opt.EL.forEach(l=>{ if(l.type!=='udl'||seen.has(l.id)) return; seen.add(l.id);
+      const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
+      // keep the label away from any point load on the same member
+      let t=(l.a+l.b)/2; const pts=opt.EL.filter(x=>x.type==='point'&&x.m===l.m).map(x=>x.t);
+      if(pts.some(tp=>Math.abs(tp-t)<0.22)) t=pts.some(tp=>tp<0.5)?l.a+(l.b-l.a)*0.78:l.a+(l.b-l.a)*0.22;
+      const d=DIRS[l.dir]||[0,-1], ds=[d[0],-d[1]], [px,py]=toS(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t);
+      const txt=Math.abs(l.wa-l.wb)<1e-9?q(l.wa,'dist'):`${fmt(uc(l.wa,'dist'),1)} → ${q(l.wb,'dist')}`;
+      setFont(12,700); const tw=ctx.measureText(txt).width;
+      const src=state.loads.find(x=>x.id===l.id);
+      pillQ.push({t:txt, x:px-ds[0]*(34+tw/2), y:py-ds[1]*38, c:src?loadColor(src):C.load}); }); }
+    pillQ.forEach(P=>pill(P.t, clamp(P.x,50,w-50), clamp(P.y,14,h-14), P.c, 12));
     labels.forEach(L=>pill(L.t,L.x,L.y,L.col,11.5));
   });
 }
@@ -1981,55 +3220,73 @@ function renderMini(canvas,opt){
 /* ---------- pages ---------- */
 const INTRO={
   det:`<p><b>Statically determinate</b> structures can be solved with equilibrium alone: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0 and ΣM = 0 give every reaction. So the reactions and bending moments don't depend on the material or the section, and a support that settles only tilts the structure without bending it. Try changing E or I, or settling a support, and watch the reactions stay the same.</p>`,
+  ws:`<p><b>Workshop</b>: build any beam or frame. Pick <b>Member</b> and click points to draw, <b>Support</b> to add supports, <b>Hinge</b> for internal hinges, then add loads in the panel. Switch to Force method or Slope-deflection to solve it.</p>`,
+  il:`<p><b>Influence lines</b> show how one quantity (a reaction, or the shear or moment at a section) changes as a single unit load rolls across the beam. For a determinate beam they're made of straight lines; for an indeterminate beam they're curves. Pick a quantity on the right and drag the load.</p>`,
+  pr:`<p><b>Practice</b> generates a fresh problem every time. Work it out, enter your answers, and check them.</p>`,
   ind:`<p><b>Statically indeterminate</b> structures have more unknown reactions than equilibrium equations, so you also need <b>compatibility</b>: how the structure deflects. That's why stiffness and support settlement change the forces here. Switch to the <b>Force method</b> or <b>Slope-deflection</b> view to work through either method step by step.</p>`
 };
 function updateIntro(){
   const det=determinacy(), r=state.result, unstable=r&&r.unstable;
   let cls='ok', head, smallTxt, link='';
-  const formula = det.beamMode ? `${det.ry} vertical and moment reactions − 2 = ${det.n}` : `3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = ${det.full}`;
+  const formula = det.beamMode ? `${det.ry} vertical and moment reactions − 2${det.c?` − ${det.c} (hinge)`:''} = ${det.n}` : det.c ? `3m + r − 3j − c = 3(${det.m}) + ${det.r} − 3(${det.j}) − ${det.c} = ${det.full}` : `3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = ${det.full}`;
   if(unstable){ cls='bad'; head='Unstable'; smallTxt='It can move freely, so it can\'t carry load.'; }
   else if(det.n<=0){ head='Statically determinate'; smallTxt=formula; if(state.page==='ind') link='<a href="#determinate" data-keep>Open on the Determinate page</a>'; }
   else { cls='ind'; head=`Indeterminate to degree ${det.n}`; smallTxt=formula+(det.beamMode&&det.full!==det.n?` (${det.full} if horizontal reactions count)`:''); if(state.page==='det') link='<a href="#indeterminate" data-keep>Open on the Indeterminate page</a>'; }
-  $('#badge').innerHTML=`<div class="badge ${cls}"><b>${head}</b><small>${smallTxt}</small>${link}</div>`;
+  $('#badge').innerHTML=`<div class="badge ${cls}" title="${smallTxt.replace(/"/g,'&quot;')}"><b>${head}</b><small>${smallTxt}</small>${link}</div>`;
   $('#intro').innerHTML=INTRO[state.page];
   $('#badge').querySelectorAll('[data-keep]').forEach(a=>a.onclick=e=>{ e.preventDefault(); setPage(a.getAttribute('href')==='#indeterminate'?'ind':'det',true); });
 }
 function setPage(page,keep){
   state.page=page;
-  if(location.hash!==(page==='ind'?'#indeterminate':'#determinate')) history.replaceState(null,'',page==='ind'?'#indeterminate':'#determinate');
+  const want='#'+PAGE_HASH[page];
+  if(location.hash.split('?')[0]!==want) history.replaceState(null,'',want);
+  document.body.classList.toggle('page-il',page==='il'); document.body.classList.toggle('page-pr',page==='pr'); document.body.classList.toggle('page-ws',page==='ws');
   document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
-  $('#viewSeg').hidden=page!=='ind';
-  $('#sdSec').hidden=true;
-  if(page!=='ind') setView('play');
+  $('#viewSeg').hidden=!(page==='ind'||page==='ws');
+  $('#sdSec').hidden=true; $('#ilSec').hidden=page!=='il';
+  if(!(page==='ind'||page==='ws')) setView('play'); else setView(state.view);
+  $('#prView').hidden=page!=='pr'; $('#wrap').hidden=page==='pr';
+  $('#secDesigns').hidden=page!=='ws'; if(page==='ws') renderDesigns();
+  if(page==='pr'){ renderPractice(); return; }
+  if(page==='il'){ ilFieldsKey=''; state.il.qty=null; state.il.s=null; state.il.x=null; showTab('edit'); }
   renderPresets();
-  if(!keep){ const last=lastPreset[page]; loadPreset(PRESETS.some(p=>p.id===last&&p.page===page)?last:PRESETS.find(p=>p.page===page).id); }
+  if(!keep){ const pool=page==='il'?PRESETS.filter(p=>p.kind==='beam'):PRESETS.filter(p=>p.page===page); const last=lastPreset[page]; loadPreset(pool.some(p=>p.id===last)?last:pool[0].id); }
   else { document.querySelectorAll('.preset').forEach(b=>b.setAttribute('aria-pressed',b.dataset.id===state.preset?'true':'false')); updatePresetBtn(); state.fm.sel=null; recompute(); }
+  resize();
 }
 document.querySelectorAll('.pages a').forEach(a=>a.onclick=e=>{ e.preventDefault(); if(a.dataset.page!==state.page) setPage(a.dataset.page,false); });
-window.addEventListener('hashchange',()=>{ const p=location.hash==='#indeterminate'?'ind':'det'; if(p!==state.page) setPage(p,false); });
+window.addEventListener('hashchange',()=>{ const h=parseHash(); if(h.page!==state.page) setPage(h.page,false); if(h.s) openShared(h.s); if(h.q&&h.page==='pr') openPracticeShared(h.q); });
 
 function setView(v){
   state.view=v;
-  document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false'));
+  $('#buildGrp').hidden=!(state.page==='ws'&&v==='play'); ws.start=null; updateWsStatus();
+  if(v==='fm'||v==='sd') state.solveMethod=v;
+  document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='solve'?(v==='fm'||v==='sd'):b.dataset.v===v)?'true':'false'));
   const fm=v==='fm', sdv=v==='sd', other=fm||sdv;
   $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv;
   ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=other);
   $('#exag').closest('.tool').hidden=other;
-  $('#fmM').hidden=!fm; $('#fmV').hidden=!fm; $('#fmN').hidden=!fm||isBeam();
-  $('#sideWrap').hidden = fm ? !state.fm.showM : sdv ? false : state.diagram!=='M';
+  $('#fmM').hidden=!other; $('#fmV').hidden=!other; $('#fmN').hidden=!other||isBeam();
+  $('#sideWrap').hidden = other ? !state.fm.showM : state.diagram!=='M';
   if(fm) renderFM(); else if(sdv) renderSDView(); else resize();
 }
-document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v));
-$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; renderFM(); };
-$('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); renderFM(); };
-$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); renderFM(); };
+document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v==='solve'?(state.solveMethod||'fm'):b.dataset.v));
+function solveHead(){
+  const m=state.view;
+  const c=(v,t,s)=>`<button class="ccard" data-solve="${v}" aria-pressed="${m===v}"><span class="ci">${ICONS[v]}</span><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
+  return `<div class="solvehead"><h3>Solve this structure</h3><div class="ccards">${c('fm','Force method','redundants & compatibility')}${c('sd','Slope-deflection','rotations & end moments')}</div><p>Pick a method. Each one walks through every step, and both give the same final answer.</p></div>`;
+}
+function wireSolveHead(box){ box.querySelectorAll('[data-solve]').forEach(b=>b.onclick=()=>setView(b.dataset.solve)); }
+$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else renderFM(); };
+$('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); if(state.view==='sd') renderSDView(); else renderFM(); };
+$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else renderFM(); };
 
 /* ---------- force method view ---------- */
 function fmtEI(v,dec=2){ const a=Math.abs(v); return (v<0?'−':'')+a.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
 function sgn(v){ return v<0?' − ':' + '; }
 function dispTxt(v,d){ return d===2 ? `${fmt(v*1000,3)} mrad` : q(v,'defl',3); }
 function renderFM(){
-  $('#fmN').hidden = state.view!=='fm' || isBeam();
+  $('#fmN').hidden = (state.view!=='fm'&&state.view!=='sd') || isBeam();
   if(state.view==='sd'){ renderSDView(); }
   const box=$('#fmView'); if(box.hidden) return;
   const R=forceMethod(), det=R.det;
@@ -2037,7 +3294,8 @@ function renderFM(){
   const degreeCard=()=>{
     let html=`<div class="card wide"><h3><span class="step">1</span>Degree of indeterminacy and redundants</h3>`;
     html+= det.beamMode
-      ? `<p>For a beam with only vertical loads we count the vertical reactions and moments, and subtract the 2 equilibrium equations that involve them (ΣF<sub>y</sub> = 0 and ΣM = 0).</p><div class="eq">n = ${det.ry} − 2 = <b>${det.n}</b></div>`
+      ? `<p>For a beam with only vertical loads we count the vertical reactions and moments, and subtract the 2 equilibrium equations that involve them (ΣF<sub>y</sub> = 0 and ΣM = 0)${det.c?', plus one condition for each internal hinge':''}.</p><div class="eq">n = ${det.ry} − 2${det.c?` − ${det.c}`:''} = <b>${det.n}</b></div>`
+      : det.c ? `<p>Each member has 3 unknown end forces, each joint gives 3 equilibrium equations, r is the number of reactions, and each internal hinge adds c extra conditions (zero moment there, one per extra member meeting at the hinge).</p><div class="eq">n = 3m + r − 3j − c = 3(${det.m}) + ${det.r} − 3(${det.j}) − ${det.c} = <b>${det.full}</b></div>`
       : `<p>For a frame with rigid joints, each member has 3 unknown end forces, each joint gives 3 equilibrium equations, and r is the number of reactions.</p><div class="eq">n = 3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = <b>${det.full}</b></div>`;
     if(R.error==='unstable') return html+`<p class="status bad">The structure is unstable. Add or change a support first.</p></div>`;
     if(R.error==='determinate') return html+`<p class="status ok">This structure is statically determinate, so equilibrium alone solves it and the force method isn't needed. Pick an indeterminate structure, or add a support.</p></div>`;
@@ -2094,7 +3352,7 @@ function renderFM(){
       ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (${uu('force')}), tension (T) and compression (C)</h4><canvas class="mini" id="fmFinN" style="height:240px"></canvas>`:''}
       ${!state.fm.showM&&!state.fm.showV&&!(state.fm.showN&&!isBeam())?`<p class="note">Use <b>Moment diagram</b>, <b>Shear diagram</b>${isBeam()?'':' or <b>Axial diagram</b>'} in the toolbar to add the final diagrams here.</p>`:''}</div>`);
   }
-  box.innerHTML=`<div class="fm-grid">${cards.join('')}</div>`;
+  box.innerHTML=`<div class="fm-grid">${solveHead()}${cards.join('')}</div>`; wireSolveHead(box);
   box.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{ const k=c.dataset.key; let sel=(state.fm.sel||[]).slice(); sel=sel.includes(k)?sel.filter(x=>x!==k):[...sel,k]; state.fm.sel=sel; renderFM(); });
   const auto=$('#fmAuto'); if(auto) auto.onclick=()=>{ state.fm.sel=null; renderFM(); };
   if(ok){
@@ -2215,7 +3473,7 @@ renderPresets();
 renderMaterial();
 new ResizeObserver(resize).observe(wrap);
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>draw());
-setPage(location.hash==='#indeterminate'?'ind':'det',false);
+{ const h=parseHash(); if(h.q&&h.page==='pr'){ state.page='pr'; setPage('det',false); setPage('pr',false); openPracticeShared(h.q); } else { setPage(h.page,false); if(h.s) openShared(h.s); } }
 })();
 </script>
 </body></html>
