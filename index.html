@@ -349,7 +349,7 @@ body.page-pr .work{grid-template-columns:1fr!important}
 .seg.build button{display:inline-flex;align-items:center;gap:6px}
 .seg.build svg{width:17px;height:17px}
 .seg.build button[aria-pressed="true"]{background:var(--deform);color:#fff}
-body.page-ws .pick:not(.settings){display:none!important}
+body.page-ws .pick:not(.settings):not(.news){display:none!important}
 .jt{display:grid;gap:6px}
 .jh,.jr{display:grid;grid-template-columns:20px 1fr 1fr 44px 22px;gap:8px;align-items:center}
 .jh{font-size:12px;color:var(--muted)}
@@ -362,7 +362,7 @@ body.page-ws .pick:not(.settings){display:none!important}
 .ml .lbl{width:100%}
 .mchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 6px 3px 10px;font-weight:600;font-size:13.5px;background:var(--paper)}
 .mchip small{color:var(--muted);font-weight:500}
-body.page-pr .pick:not(.settings){display:none!important}
+body.page-pr .pick:not(.settings):not(.news){display:none!important}
 
 /* ---------- practice redesign ---------- */
 .prwrap{max-width:1400px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
@@ -548,6 +548,104 @@ body.page-ws #quickSave{display:inline-flex!important}
 .wsstatus.mini:hover .full{display:inline}
 .wsstatus.mini:hover .short{display:none}
 @keyframes miniIn{from{opacity:0;transform:translate(-50%,-4px) scale(.96)}to{opacity:.92;transform:translate(-50%,0)}}
+
+.eiwrap{padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--deform) 8%,transparent);border:1px solid color-mix(in srgb,var(--deform) 30%,var(--line))}
+.eiwrap .num input{width:110px}
+.eibar{flex-basis:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;border-radius:10px;background:var(--panel);border:1px solid var(--line);font-size:14px}
+.eibar .num input{width:120px}
+.eibar .eimsg{color:var(--muted);font-size:13px}
+.eibar.warn{border-color:color-mix(in srgb,var(--moment) 60%,var(--line));background:color-mix(in srgb,var(--moment) 10%,var(--panel))}
+.eibar.warn .eimsg{color:var(--ink);font-weight:600}
+
+/* ---------- what's new ---------- */
+.newsbtn{position:relative}
+.ndot{position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:var(--load);box-shadow:0 0 0 2px var(--panel);animation:pulse 2s var(--ease) infinite}
+.ndot[hidden]{display:none}
+@keyframes pulse{0%{box-shadow:0 0 0 2px var(--panel),0 0 0 2px color-mix(in srgb,var(--load) 45%,transparent)}70%{box-shadow:0 0 0 2px var(--panel),0 0 0 9px transparent}100%{box-shadow:0 0 0 2px var(--panel),0 0 0 9px transparent}}
+.news .pop{left:auto;right:0;transform-origin:top right}
+.newspop{display:block;width:400px;max-width:calc(100vw - 24px);max-height:min(560px,calc(100vh - 110px));overflow-y:auto;padding:0 0 10px}
+.nhead{position:sticky;top:0;z-index:1;padding:14px 16px 10px;background:linear-gradient(135deg,color-mix(in srgb,var(--deform) 14%,var(--panel)),var(--panel) 70%);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}
+.nhead b{font-family:var(--cond);font-size:19px}
+.nhead small{display:block;color:var(--muted);font-size:12.5px;font-weight:500}
+.nday{padding:10px 16px 2px;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--muted)}
+.nitem{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:9px 16px;margin:0 6px;border-radius:10px;animation:fadeUp .3s var(--ease) both}
+.nitem:hover{background:color-mix(in srgb,var(--deform) 6%,transparent)}
+.nitem .ntag{grid-row:span 2;align-self:start;margin-top:2px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;color:#fff;width:78px;text-align:center;box-sizing:border-box}
+.ntag.new{background:var(--deform)} .ntag.improved{background:var(--shear)} .ntag.fixed{background:var(--moment)}
+.nitem b{font-size:14.5px}
+.nitem p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.nitem.unseen b::after{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--load);margin-left:7px;vertical-align:2px}
+.nempty{text-align:center;padding:24px 20px 10px}
+.nempty svg{width:56px;height:56px;color:var(--shear)}
+.nempty b{display:block;font-size:17px;margin-top:6px}
+.nempty p{margin:4px 0 0;color:var(--muted);font-size:13.5px}
+.nmore{display:block;margin:8px auto 2px;border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink)}
+.nmore:hover{border-color:var(--muted)}
+.nold .nitem{opacity:.72}
+@media (max-width:1750px){ .newsbtn span{display:none} }
+
+@media (max-width:1700px){ .badge small{display:none!important} header{gap:10px 12px} header .iconbtn{padding:6px 8px} }
+@media (max-width:1420px){ .pages a{padding:6px 9px!important;font-size:13.5px!important} .pickbtn{padding:5px 10px 5px 8px} }
+@media (max-width:1320px){ .about{width:28px;height:28px} header .spacer{display:none} .news{margin-left:auto} .pages a{padding:5px 7px!important;font-size:13px!important} .badge b{font-size:14px!important} .badge{padding:4px 9px} header{gap:8px 9px!important} }
+@media (max-width:760px){ .newspop .nhead{display:none} .newspop .nday{padding-left:6px} .newspop .nitem{margin:0;padding:9px 6px} }
+
+.dmcard .ccards{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
+.dmcard .ccard{min-width:240px}
+details.vwork{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:var(--paper);padding:8px 10px}
+details.vwork summary{cursor:pointer;font-weight:700;font-size:14px}
+details.vwork .note{margin:6px 0}
+.wtab{overflow-x:auto}
+.work-t td,.work-t th{padding:4px 8px!important;text-align:left!important;white-space:nowrap}
+.work-t td:last-child,.work-t th:last-child{text-align:right!important}
+.work-t td.eqn{font-family:var(--cond);font-weight:600;color:var(--ink)}
+.work-t tr.tot td{border-top:2px solid var(--ink)}
+.segno{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--load);color:#fff;font-size:11.5px;font-weight:800;margin-right:4px}
+
+/* ---------- home ---------- */
+.hometab{display:inline-grid!important;place-items:center;padding:6px 10px!important}
+.hometab svg{width:18px;height:18px}
+body.page-home .work, body.page-home .pick:not(.settings):not(.news), body.page-home #badge, body.page-home #aboutBtn{display:none!important}
+.homeview{flex:1 1 auto;overflow-y:auto;min-height:0}
+.homeview[hidden]{display:none}
+.hwrap{max-width:1180px;margin:0 auto;padding:28px 22px 50px;display:flex;flex-direction:column;gap:22px}
+.hero{position:relative;overflow:hidden;border-radius:22px;padding:34px 34px 30px;border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--deform) 16%,var(--panel)),var(--panel) 55%,color-mix(in srgb,var(--moment) 10%,var(--panel)));box-shadow:var(--shadow)}
+.hero h2{margin:0;font-family:var(--cond);font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:-.01em;max-width:16ch}
+.hero p{margin:12px 0 0;font-size:16.5px;color:var(--muted);max-width:52ch;line-height:1.55}
+.hero .hbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hero .hbtns .btn{padding:11px 18px;font-size:15.5px;border-radius:12px}
+.hero svg.hart{position:absolute;right:-10px;bottom:-6px;width:min(46%,480px);opacity:.9;pointer-events:none}
+.hero .hcontent{position:relative;z-index:1}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.hcard{text-align:left;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:16px 16px 14px;cursor:pointer;display:flex;flex-direction:column;gap:8px;box-shadow:var(--shadow);transition:transform .15s var(--ease),border-color .15s var(--ease),box-shadow .15s var(--ease);animation:fadeUp .35s var(--ease) both}
+.hcard:hover{transform:translateY(-3px);border-color:var(--deform);box-shadow:0 10px 26px rgba(0,0,0,.12)}
+.hcard svg{width:100%;height:70px;color:var(--ink)}
+.hcard b{font-family:var(--cond);font-size:20px}
+.hcard p{margin:0;color:var(--muted);font-size:14px;line-height:1.5;flex:1}
+.hcard .go{color:var(--deform);font-weight:700;font-size:14px}
+.hcard .pc{font-size:11.5px;font-weight:700;color:var(--muted);background:color-mix(in srgb,var(--muted) 14%,transparent);border-radius:999px;padding:2px 8px;align-self:flex-start}
+.hstrip{display:grid;grid-template-columns:1.3fr 1fr;gap:14px}
+.hbox{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:16px}
+.hbox h3{margin:0 0 8px;font-family:var(--cond);font-size:19px;display:flex;justify-content:space-between;align-items:baseline}
+.hbox .nitem{margin:0;padding:6px 0}
+@media (max-width:860px){ .hstrip{grid-template-columns:1fr} .hero{padding:24px 20px} .hero svg.hart{opacity:.25;width:80%} }
+/* ---------- tour ---------- */
+.tour{position:fixed;inset:0;z-index:70}
+.tour[hidden]{display:none}
+.tring{position:fixed;border-radius:12px;box-shadow:0 0 0 4px var(--deform),0 0 0 9999px rgba(8,12,16,.55);transition:all .35s var(--ease);pointer-events:none}
+.tcard{position:fixed;width:min(360px,calc(100vw - 24px));background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px 14px;box-shadow:0 18px 50px rgba(0,0,0,.35);transition:left .35s var(--ease),top .35s var(--ease)}
+.tcard .tstep{font-size:12px;font-weight:700;color:var(--deform);text-transform:uppercase;letter-spacing:.08em}
+.tcard h3{margin:4px 0 6px;font-family:var(--cond);font-size:20px}
+.tcard p{margin:0;color:var(--muted);line-height:1.5;font-size:14.5px}
+.tdots{display:flex;gap:5px;margin:12px 0 10px}
+.tdots i{width:7px;height:7px;border-radius:50%;background:var(--line);transition:all .2s var(--ease)}
+.tdots i.on{background:var(--deform);width:18px;border-radius:4px}
+.tbtns{display:flex;align-items:center;gap:8px}
+
+header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
+@media (max-width:1500px){ .pages a{padding:6px 8px!important;font-size:13.5px!important} .badge b{font-size:14.5px!important} .badge{padding:4px 10px} h1{font-size:20px!important} header{gap:8px 10px!important} }
+@media (max-width:1320px){ h1{font-size:18px!important} .pages a{padding:5px 7px!important;font-size:13px!important} .pickbtn .pk-tx span{font-size:14px} }
+.badge .bshort{display:none}
+@media (max-width:1320px){ .badge .blong{display:none} .badge .bshort{display:inline} }
 </style>
 </head>
 <body>
@@ -555,6 +653,7 @@ body.page-ws #quickSave{display:inline-flex!important}
   <header>
     <div class="brand"><h1>Beam & frame playground</h1><span class="byline">Created by Moarly</span></div>
     <nav class="pages" aria-label="Pages">
+      <a href="#home" data-page="home" class="hometab" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11l8-7 8 7v9h-5v-6H9v6H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></a>
       <a href="#determinate" data-page="det">Determinate</a>
       <a href="#indeterminate" data-page="ind">Indeterminate</a>
       <a href="#workshop" data-page="ws">Workshop</a>
@@ -570,6 +669,13 @@ body.page-ws #quickSave{display:inline-flex!important}
     <div id="badge"></div>
     <button class="about" id="aboutBtn" aria-expanded="false" aria-controls="intro" aria-label="What does determinate or indeterminate mean?" title="What does this mean?">?</button>
     <div class="spacer"></div>
+    <div class="pick news">
+      <button class="iconbtn newsbtn" id="newsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="newsPop" title="What's new" aria-label="What's new">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.6L12 15.2l-1.8-4.6L5.5 9l4.7-1.4z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M18.5 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="currentColor"/></svg>
+        <span>What's new</span><i class="ndot" id="newsDot" hidden></i>
+      </button>
+      <div class="pop newspop" id="newsPop" role="dialog" aria-label="What's new" hidden></div>
+    </div>
     <div class="pick settings">
       <button class="iconbtn" id="setBtn" aria-haspopup="true" aria-expanded="false" aria-controls="setPop" title="Settings: units, colours and theme" aria-label="Settings">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
@@ -579,6 +685,7 @@ body.page-ws #quickSave{display:inline-flex!important}
     </div>
   </header>
   <div class="intro" id="intro" hidden></div>
+  <div class="homeview" id="homeView" hidden></div>
   <main class="work">
     <section class="stage">
       <div class="toolbar">
@@ -734,6 +841,16 @@ body.page-ws #quickSave{display:inline-flex!important}
 </div>
 <div class="sheetback" id="sheetBack" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="tour" id="tour" hidden>
+  <div class="tring" id="tRing"></div>
+  <div class="tcard" id="tCard" role="dialog" aria-live="polite" aria-labelledby="tTitle">
+    <div class="tstep" id="tStep"></div>
+    <h3 id="tTitle"></h3>
+    <p id="tText"></p>
+    <div class="tdots" id="tDots"></div>
+    <div class="tbtns"><button class="link" id="tSkip">Skip tour</button><span class="spacer"></span><button class="btn" id="tBack">Back</button><button class="btn primary" id="tNext">Next</button></div>
+  </div>
+</div>
 <div class="mblock" id="mBlock" hidden>
   <div class="mcardx" role="dialog" aria-labelledby="mTitle">
     <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="10" y="6" width="44" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M4 40h56l-4 4H8z" fill="currentColor" opacity=".85"/><rect x="2" y="16" width="14" height="26" rx="2.5" fill="var(--panel)" stroke="currentColor" stroke-width="2.5"/></svg>
@@ -795,7 +912,7 @@ const PRESETS = [
 const state = {
   preset:null, kind:'beam', spans:[8], W:8, H:4,
   nodes:[], members:[], runs:[], runOf:[], supports:{}, loads:[],
-  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', hinges:{}, cgeo:{nodes:[],members:[],mid:1}, units:'si', eachColor:false, theme:'auto', colors:{}, showBent:true,
+  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', hinges:{}, cgeo:{nodes:[],members:[],mid:1}, units:'si', ccw:true, eachColor:false, theme:'auto', colors:{}, showBent:true,
   settle:{}, diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
 };
 const isBeam = () => state.kind==='beam';
@@ -1166,17 +1283,20 @@ function memberFEM(m){
   const e0=res.els.find(e=>e.t0<1e-9), e1=res.els.find(e=>e.t1>1-1e-9);
   return [-e0.f[2], -e1.f[5]];
 }
+// sign factor: values below are worked out clockwise-positive, then flipped if anticlockwise is positive
+function SG(){ return state.ccw?-1:1; }
+function signName(){ return state.ccw?'anticlockwise positive':'clockwise positive'; }
 function slopeDeflection(){
   const r=state.result; if(!r||r.unstable) return null;
-  const EI=state.E*1e6*state.I*1e-8;
-  const theta=state.nodes.map((_,n)=>-r.u[3*n+2]);
+  const EI=state.E*1e6*state.I*1e-8, g=SG();
+  const theta=state.nodes.map((_,n)=>-r.u[3*n+2]*g);
   const members=state.members.map(([a,b],m)=>{
     const e0=r.els.find(e=>e.m===m&&e.t0<1e-9), e1=r.els.find(e=>e.m===m&&e.t1>1-1e-9);
     const L=memberLen(m), c=(state.nodes[b][0]-state.nodes[a][0])/L, s=(state.nodes[b][1]-state.nodes[a][1])/L;
     const va=-r.u[3*a]*s+r.u[3*a+1]*c, vb=-r.u[3*b]*s+r.u[3*b+1]*c;
-    const psi=-(vb-va)/L;
+    const psi=-(vb-va)/L*g;
     const [fa,fb]=memberFEM(m);
-    return {m,a,b,L,psi,FEMab:fa,FEMba:fb,Mab:-e0.f[2],Mba:-e1.f[5],relA:isHingeNode(a),relB:isHingeNode(b)};
+    return {m,a,b,L,psi,FEMab:fa*g,FEMba:fb*g,Mab:-e0.f[2]*g,Mba:-e1.f[5]*g,relA:isHingeNode(a),relB:isHingeNode(b)};
   });
   return {EI,theta,members};
 }
@@ -1980,9 +2100,18 @@ function renderMaterial(){
   num.oninput=()=>{ const v=parseFloat(num.value); if(!(v>0)) return; state.I=clamp(v/uc(1,'I'),1,1e7); rng.value=Math.log10(state.I); updateEI(); recompute(); };
   num.onchange=()=>{ num.value=showNum(uc(state.I,'I'),1); };
   box.appendChild(iField);
+  const eiw=document.createElement('div'); eiw.className='f eiwrap';
+  eiw.innerHTML=`<div class="fh"><label for="eiDirect"><b>EI</b> (bending stiffness)</label><span class="num"><input id="eiDirect" type="number" inputmode="decimal" step="any" min="1"><span>${uu('EI')}</span></span></div>`;
+  box.prepend(eiw);
+  const ei=eiw.querySelector('input');
+  ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) { updateEI(); return; } setEI(v/uc(1,'EI')); commitHistory(); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
+  ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
   updateEI();
 }
-function updateEI(){ const EI=state.E*1e6*state.I*1e-8; $('#eiNote').textContent=`Bending stiffness EI = ${Math.round(uc(EI,'EI')).toLocaleString()} ${uu('EI')}. Doubling EI halves the deflection.`; }
+function curEI(){ return state.E*1e6*state.I*1e-8; }
+function setEI(v){ if(!(v>0)) return; state.I=v*100/state.E; }
+function updateEI(){ $('#eiNote').textContent='Most questions give EI directly: type it in the EI box above. Moments from loads don\'t depend on EI, but deflections and support settlement do.';
+  const f=$('#eiDirect'); if(f&&document.activeElement!==f) f.value=showNum(uc(curEI(),'EI'),0); }
 
 /* ---------- results & reactions ---------- */
 function renderReactions(){
@@ -2187,12 +2316,12 @@ function renderSDView(){
     <canvas class="mini" id="sdKin" style="height:280px"></canvas>
     <p class="note">The blue line is how the loads bend the structure (exaggerated). Each red tangent shows an unknown joint rotation θ measured from the original member${kin.sway?', and Δ marks joints that move sideways or down':''}${Object.keys(state.settle).some(n=>state.settle[n])?'. A settled support is drawn where it ends up (its original spot is faded); that movement is known, so it isn\'t an unknown':''}.</p></div>`);
   // 2. fixed-end moments
-  cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Treat every member as fixed at both ends and find the end moments its loads cause (clockwise positive).</p>
+  cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Treat every member as fixed at both ends and find the end moments its loads cause (${signName()}).</p>
     <table class="sdt"><tr><th>Member</th><th>L (${uu('len')})</th><th>FEM near (${mu})</th><th>FEM far (${mu})</th></tr>
     ${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.L*Lf,2)}</td><td>${Mv(m.FEMab)}</td><td>${Mv(m.FEMba)}</td></tr>`).join('')}</table></div>`);
   // 3. chord rotations
   const psiKnown=kin.sway===0;
-  cards.push(`<div class="card"><h3><span class="step">3</span>Chord rotations ψ</h3><p>ψ is how much a member's straight line between its ends rotates (clockwise positive): ψ = Δ/L. It comes from support settlement or sway.</p>
+  cards.push(`<div class="card"><h3><span class="step">3</span>Chord rotations ψ</h3><p>ψ is how much a member's straight line between its ends rotates (${signName()}): ψ = Δ/L. It comes from support settlement or sway.</p>
     <table class="sdt"><tr><th>Member</th><th>ψ</th><th>Source</th></tr>${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${Math.abs(m.psi)<1e-9?'0':psiKnown?fmt(m.psi*1000,3)+' mrad':'unknown'}</td><td>${Math.abs(m.psi)<1e-9?'–':psiKnown?'settlement':'sway'}</td></tr>`).join('')}</table></div>`);
   // 4. equations
   let eqs='';
@@ -2217,19 +2346,19 @@ function renderSDView(){
       : `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM`;
     eqs+=`<div class="sdblk"><div class="sm">${hdr}</div>${end(m.a,m.b,m.FEMab,A+B,m.FEMba,m.relA,m.relB)}<br>${end(m.b,m.a,m.FEMba,B+A,m.FEMab,m.relB,m.relA)}</div>`;
   });
-  cards.push(`<div class="card wide"><h3><span class="step">4</span>Slope-deflection equations</h3><p>Write the equation for both ends of every member. Rotations at fixed supports are zero, so they drop out${psiKnown&&sd.members.some(m=>Math.abs(m.psi)>1e-9)?', and known settlement chord rotations are already worked into the numbers':''}. Moments in ${mu}, EI in ${uu('EI')}.</p><div class="eq">${eqs}</div></div>`);
+  cards.push(`<div class="card wide"><h3><span class="step">4</span>Slope-deflection equations</h3><p><b>Sign convention: ${signName()}</b> for moments, rotations θ and chord rotations ψ. Write the equation for both ends of every member. Rotations at fixed supports are zero, so they drop out${psiKnown&&sd.members.some(m=>Math.abs(m.psi)>1e-9)?', and known settlement chord rotations are already worked into the numbers':''}. Moments in ${mu}, EI in ${uu('EI')}.</p><div class="eq">${eqs}</div></div>`);
   // 5. equilibrium
   let eqm='';
   kin.rot.forEach(n=>{
     const ends=[]; sd.members.forEach(m=>{ if(m.a===n) ends.push(`M<sub>${nm(m.a,m.b)}</sub>`); if(m.b===n) ends.push(`M<sub>${nm(m.b,m.a)}</sub>`); });
-    let applied=0; (r.EL||[]).forEach(l=>{ if(l.type!=='moment') return; const [a,b]=state.members[l.m]; const at=l.t<1e-6?a:l.t>1-1e-6?b:-1; if(at===n) applied+=(l.dir==='cw'?1:-1)*l.mag; });
-    eqm+=`Joint ${letter(n)}: ${ends.join(' + ')} = ${Math.abs(applied)>1e-9?fmt(uc(applied,'moment'),2)+' (applied moment, clockwise +)':'0'}<br>`;
+    let applied=0; (r.EL||[]).forEach(l=>{ if(l.type!=='moment') return; const [a,b]=state.members[l.m]; const at=l.t<1e-6?a:l.t>1-1e-6?b:-1; if(at===n) applied+=(l.dir==='cw'?1:-1)*l.mag*SG(); });
+    eqm+=`Joint ${letter(n)}: ${ends.join(' + ')} = ${Math.abs(applied)>1e-9?fmt(uc(applied,'moment'),2)+` (applied moment, ${state.ccw?'anticlockwise':'clockwise'} +)`:'0'}<br>`;
   });
   if(kin.sway) eqm+=`<span class="sm">Plus ${kin.sway} sway equation${kin.sway>1?'s':''}: horizontal equilibrium of each storey, with column shear V = −(M<sub>top</sub> + M<sub>bottom</sub>)/h plus any load on the column.</span>`;
   cards.push(`<div class="card wide"><h3><span class="step">5</span>Joint equilibrium</h3><p>The member end moments around each unknown joint must balance. That gives one equation per unknown rotation.</p><div class="eq">${eqm||'No unknown rotations.'}</div></div>`);
   // 6. solution
   cards.push(`<div class="card wide"><h3><span class="step">6</span>Solve and substitute back</h3><p>Solving the equations gives the rotations${kin.sway?' and sway':''}; putting them back gives every end moment.</p>
-    <table class="sdt"><tr><th>Unknown</th><th>Value</th><th>× EI (${uu('EI')})</th></tr>
+    <table class="sdt"><tr><th>Unknown (${signName()})</th><th>Value</th><th>× EI (${uu('EI')})</th></tr>
     ${kin.rot.map(n=>`<tr><td>${th(n)}</td><td>${fmt(sd.theta[n]*1000,4)} mrad</td><td>${fmt(sd.theta[n]*EI,2)}</td></tr>`).join('')}
     ${!psiKnown?sd.members.filter(m=>Math.abs(m.psi)>1e-9).map(m=>`<tr><td>ψ<sub>${nm(m.a,m.b)}</sub></td><td>${fmt(m.psi*1000,4)} mrad</td><td>${fmt(m.psi*EI,2)}</td></tr>`).join(''):''}</table>
     <table class="sdt" style="margin-top:12px"><tr><th>Member</th><th>M near (${mu})</th><th>M far (${mu})</th></tr>
@@ -2298,12 +2427,12 @@ function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('sh
 /* ---------- share links ---------- */
 const b64e=o=>btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 const b64d=s=>JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g,'+').replace(/_/g,'/')))));
-const PAGE_HASH={det:'determinate',ind:'indeterminate',il:'influence',pr:'practice',ws:'workshop'};
-const HASH_PAGE={determinate:'det',indeterminate:'ind',influence:'det',practice:'pr',workshop:'ws'};
+const PAGE_HASH={det:'determinate',ind:'indeterminate',il:'influence',pr:'practice',ws:'workshop',home:'home'};
+const HASH_PAGE={determinate:'det',indeterminate:'ind',influence:'det',practice:'pr',workshop:'ws',home:'home'};
 function parseHash(){
   const h=location.hash.replace(/^#/,''); const [name,qs]=h.split('?');
   const params=new URLSearchParams(qs||'');
-  return {page:HASH_PAGE[name]||'det', s:params.get('s'), q:params.get('q')};
+  return {page:name?(HASH_PAGE[name]||'home'):'home', s:params.get('s'), q:params.get('q')};
 }
 function baseUrl(){ return location.href.split('#')[0]; }
 async function copyLink(url,msg){
@@ -3073,18 +3202,18 @@ function buildQuestions(def,method){
     } else {
       const sd=slopeDeflection(), kin=kinematic(), EI=uc(sd.EI,'EI');
       const nm=(a,b)=>letter(a)+letter(b);
-      out.intro=`Use the slope-deflection method (clockwise positive for moments and rotations). Unknown rotations: ${kin.rot.map(n=>'θ'+letter(n)).join(', ')||'none'}${kin.sway?`, plus ${kin.sway} sway`:''}.`;
+      out.intro=`Use the slope-deflection method (${signName()} for moments and rotations). Unknown rotations: ${kin.rot.map(n=>'θ'+letter(n)).join(', ')||'none'}${kin.sway?`, plus ${kin.sway} sway`:''}.`;
       const loaded=new Set(state.result.EL.map(l=>l.m));
       sd.members.filter(m=>loaded.has(m.m)&&(Math.abs(m.FEMab)>1e-6||Math.abs(m.FEMba)>1e-6)).slice(0,2).forEach(m=>{
-        out.qs.push({label:`FEM<sub>${nm(m.a,m.b)}</sub>`, sub:`fixed-end moment at ${letter(m.a)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMab,'moment'), hint:'Uniform load: wL²/12. Point load: Pab²/L² (near end) and Pa²b/L² (far end).'});
+        out.qs.push({label:`FEM<sub>${nm(m.a,m.b)}</sub>`, sub:`fixed-end moment at ${letter(m.a)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMab,'moment'), hint:`Uniform load: wL²/12. Point load: Pab²/L² (near end) and Pa²b/L² (far end). With ${signName()}, a downward load on a left-to-right member gives ${state.ccw?'a positive near-end and a negative far-end':'a negative near-end and a positive far-end'} FEM.`});
         out.qs.push({label:`FEM<sub>${nm(m.b,m.a)}</sub>`, sub:`fixed-end moment at ${letter(m.b)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMba,'moment'), hint:'Same member, other end; opposite sign for a symmetric load.'});
       });
-      kin.rot.forEach(n=>out.qs.push({label:`θ${letter(n)} × EI`, sub:`joint rotation at ${letter(n)}, clockwise positive, times EI`, unit:EIu, value:sd.theta[n]*EI, hint:`Write ΣM = 0 at ${letter(n)} using the slope-deflection equations, then solve.`}));
+      kin.rot.forEach(n=>out.qs.push({label:`θ${letter(n)} × EI`, sub:`joint rotation at ${letter(n)}, ${signName()}, times EI`, unit:EIu, value:sd.theta[n]*EI, hint:`Write ΣM = 0 at ${letter(n)} using the slope-deflection equations, then solve.`}));
       let ends=[];
       if(state.kind==='beam'){ if(sd.members.length===1) ends.push([sd.members[0],'a']); else ends.push([sd.members[0],'b']); }
       else { const order=[[0,'a'],[0,'b'],[2,'a'],[2,'b'],[1,'a'],[1,'b']];
         order.forEach(([mi,e])=>{ const m=sd.members[mi]; if(!m||ends.length>=3) return; const v=e==='a'?m.Mab:m.Mba; if(Math.abs(v)>1e-6) ends.push([m,e]); }); }
-      ends.forEach(([m,e])=>{ const lab=e==='a'?nm(m.a,m.b):nm(m.b,m.a); out.qs.push({label:`M<sub>${lab}</sub>`, sub:'member end moment, clockwise positive', unit:mu, value:uc(e==='a'?m.Mab:m.Mba,'moment'), hint:'Substitute the rotations back into the slope-deflection equation for this end.'}); });
+      ends.forEach(([m,e])=>{ const lab=e==='a'?nm(m.a,m.b):nm(m.b,m.a); out.qs.push({label:`M<sub>${lab}</sub>`, sub:`member end moment, ${signName()}`, unit:mu, value:uc(e==='a'?m.Mab:m.Mba,'moment'), hint:'Substitute the rotations back into the slope-deflection equation for this end.'}); });
       out.meta.view='sd';
     }
     out.snap=snapshot(); out.snap.loads=out.snap.loads.map(({id,...r})=>r);
@@ -3198,6 +3327,331 @@ function openPracticeShared(code){
     const Q=buildQuestions(d.def,d.method); if(!Q) return; p.prob={def:d.def,Q,method:d.method}; renderPractice(); toast('Opened shared problem'); }
   catch(e){ toast('That problem link could not be opened'); }
 }
+
+/* ---------- what's new feed ---------- */
+// newest first; items older than a week drop off the main feed
+const UPDATES=[
+  {d:'2026-10-04', tag:'new', t:'Force method by virtual work or tables', p:'Choose how to find Δ and δ: virtual work shows the cuts, each segment\'s M(x) and m(x) and the integrals; deflection tables show each standard formula and the superposition.'},
+  {d:'2026-10-04', tag:'new', t:'Home screen and quick tour', p:'A new home screen to jump into any page, and a 1-minute guided tour. Find the tour again in Settings.'},
+  {d:'2026-10-04', tag:'new', t:'Choose your moment sign convention', p:'Slope-deflection now uses anticlockwise = positive by default. Switch to clockwise + any time in Settings → Moment sign.'},
+  {d:'2026-10-04', tag:'new', t:'Type EI straight from the question', p:'An EI box at the top of Material & section, and an "EI used" box on the Solve page, with a warning when a support settles.'},
+  {d:'2026-10-04', tag:'improved', t:'Settled supports drawn where they end up', p:'Step drawings show a settled support at its new level, its original spot faded, and a "settles 6 mm" label.'},
+  {d:'2026-10-04', tag:'improved', t:'Workshop status stays visible', p:'After fading, the status settles into a small Determinate / Indeterminate badge. Hover it for the full message.'},
+  {d:'2026-10-04', tag:'new', t:'Clear all in the Workshop', p:'Start over in one click. Undo brings everything back if you change your mind.'},
+  {d:'2026-10-04', tag:'fixed', t:'No more overlapping warnings', p:'The Workshop shows one small status message instead of a big banner on top of it.'},
+  {d:'2026-10-03', tag:'new', t:'Save your designs', p:'Name, open, rename, share and delete your beams and frames under My designs in the Workshop. Ctrl+S saves.'},
+  {d:'2026-10-03', tag:'fixed', t:'Delete works everywhere', p:'Deleting a design now asks inside the app, so it works in every browser.'},
+  {d:'2026-10-03', tag:'new', t:'Set any snap spacing', p:'Type your own snap value in the Workshop, use the quick picks, or turn snapping off.'},
+  {d:'2026-10-03', tag:'improved', t:'Phone friendly', p:'Menus open as bottom sheets on phones, and Workshop and Practice point you to a computer.'},
+  {d:'2026-10-03', tag:'improved', t:'Fresh start on every page', p:'Switching pages or structures returns to the Playground with diagrams off.'},
+  {d:'2026-10-03', tag:'new', t:'One Solve page', p:'Pick Force method or Slope-deflection on a single Solve page. In the Workshop it only appears for indeterminate structures.'},
+  {d:'2026-10-03', tag:'new', t:'Determinate practice', p:'Practice now offers Determinate problems solved with equilibrium, including three-hinged frames.'},
+];
+const NEWS_KEY='bfp-news-seen', WEEK=7*24*3600*1000;
+const dOf=s=>{ const [y,m,dd]=s.split('-').map(Number); return new Date(y,m-1,dd); };
+function newsSeen(){ try{ return localStorage.getItem(NEWS_KEY)||''; }catch(e){ return ''; } }
+function recentUpdates(){ const now=Date.now(); return UPDATES.filter(u=>now-dOf(u.d).getTime()<=WEEK); }
+function updateNewsDot(){ const r=recentUpdates(), seen=newsSeen(); $('#newsDot').hidden=!(r.length && r[0].d+r[0].t!==seen); }
+function dayLabel(s){
+  const d=dOf(s), t=new Date(); t.setHours(0,0,0,0);
+  const diff=Math.round((t-d)/86400000);
+  if(diff<=0) return 'Today'; if(diff===1) return 'Yesterday';
+  return d.toLocaleDateString(undefined,{weekday:diff<7?'long':undefined, month:'short', day:'numeric'});
+}
+function renderNews(showOld){
+  const pop=$('#newsPop'), recent=recentUpdates(), older=UPDATES.filter(u=>!recent.includes(u)), seen=newsSeen();
+  const seenIdx=UPDATES.findIndex(u=>u.d+u.t===seen);
+  const tagTxt={new:'New',improved:'Improved',fixed:'Fixed'};
+  const list=(arr,offset=0)=>{ let h='', last='';
+    arr.forEach((u,i)=>{ if(u.d!==last){ h+=`<div class="nday">${dayLabel(u.d)}</div>`; last=u.d; }
+      const idx=UPDATES.indexOf(u), unseen=seenIdx<0?true:idx<seenIdx;
+      h+=`<div class="nitem ${unseen&&!showOld?'unseen':''}" style="animation-delay:${Math.min(i,10)*30}ms"><span class="ntag ${u.tag}">${tagTxt[u.tag]}</span><b>${u.t}</b><p>${u.p}</p></div>`; });
+    return h; };
+  let h=`<div class="sheethead"><b>What's new</b><button class="sheetx" aria-label="Close">×</button></div>
+    <div class="nhead"><div><b>What's new</b><small>New features, improvements and fixes</small></div></div>`;
+  if(recent.length) h+=list(recent);
+  else h+=`<div class="nempty"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="currentColor" opacity=".14"/><path d="M15 24.5l6 6 12-13" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>Nothing new for now</b><p>You're all caught up. New features and fixes will show up here.</p></div>`;
+  if(older.length){
+    h+= showOld ? `<div class="nold">${list(older)}</div><button class="nmore" data-k="less">Hide past updates</button>`
+                : `<button class="nmore" data-k="more">See past updates (${older.length})</button>`;
+  }
+  pop.innerHTML=h;
+  const x=pop.querySelector('.sheetx'); if(x) x.onclick=()=>openNews(false);
+  pop.querySelectorAll('.nmore').forEach(b=>b.onclick=()=>renderNews(b.dataset.k==='more'));
+}
+function openNews(open){
+  const p=$('#newsPop'), b=$('#newsBtn');
+  if(open){ renderNews(false); if(typeof openSettings==='function') openSettings(false); }
+  p.hidden=!open; b.setAttribute('aria-expanded',open);
+  const sb=$('#sheetBack'); if(sb) sb.hidden=!(open&&isMobile());
+  if(open){ const r=recentUpdates(); try{ localStorage.setItem(NEWS_KEY, r.length?r[0].d+r[0].t:(UPDATES[0].d+UPDATES[0].t)); }catch(e){} $('#newsDot').hidden=true; }
+}
+$('#newsBtn').onclick=()=>openNews($('#newsPop').hidden);
+document.addEventListener('pointerdown',e=>{ if(!$('#newsPop').hidden && !e.target.closest('.news')) openNews(false); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#newsPop').hidden){ openNews(false); $('#newsBtn').focus(); } });
+const sbk=$('#sheetBack'); if(sbk) sbk.addEventListener('click',()=>openNews(false));
+updateNewsDot();
+
+/* ---------- force method working: virtual work or deflection tables ---------- */
+state.fm.dm = state.fm.dm || 'vw';
+const pAdd=(a,b)=>{ const n=Math.max(a.length,b.length), o=new Array(n).fill(0); a.forEach((v,i)=>o[i]+=v); b.forEach((v,i)=>o[i]+=v); return o; };
+const pMul=(a,b)=>{ const o=new Array(a.length+b.length-1).fill(0); a.forEach((x,i)=>b.forEach((y,j)=>o[i+j]+=x*y)); return o; };
+const pInt=(c,a,b)=>c.reduce((s,v,k)=>s+v*(b**(k+1)-a**(k+1))/(k+1),0);
+function pShift(c,x0){ // P(x - x0) as a polynomial in x
+  let o=[0]; c.forEach((ck,k)=>{ let term=[1]; for(let i=0;i<k;i++) term=pMul(term,[-x0,1]); o=pAdd(o,term.map(v=>v*ck)); }); return o; }
+const pScale=(c,f,Lf)=>c.map((v,k)=>v*f/(Lf**k));
+function pFmt(c){
+  const mx=Math.max(1e-12,...c.map(Math.abs)); const parts=[];
+  c.forEach((v,k)=>{ if(Math.abs(v)<mx*1e-9||Math.abs(v)<1e-9) return;
+    const a=Math.abs(v), num=k&&Math.abs(a-1)<1e-9?'':String(parseFloat(a.toFixed(a>=100?1:a>=1?3:4)));
+    const term=num+(k===0?'':k===1?'x':`x${k===2?'²':'³'}`); parts.push({neg:v<0,term}); });
+  if(!parts.length) return '0';
+  return parts.map((p,i)=>(i===0?(p.neg?'−':''):(p.neg?' − ':' + '))+p.term).join('');
+}
+// polynomials of one element, in terms of x measured from the start of its member
+function elPolys(el){
+  const L=el.L, p=el.qt0, d=el.qt1-el.qt0, x0=el.t0*el.mLen, f=el.f;
+  return { x0, x1:el.t1*el.mLen, M:pShift([-f[2], f[1], p/2, d/(6*L)],x0), V:pShift([f[1], p, d/(2*L)],x0) };
+}
+function segments(R){
+  // one segment per element (they break at loads, supports and joints); same mesh in every case
+  const segs=[]; R.P0.els.forEach((el,k)=>{ segs.push({k, m:el.m, el}); });
+  return segs;
+}
+function vwTable(R,i,j){ // j = null → Δ_i0 (M0 · m_i); else δ_ij (m_i · m_j)
+  const Lf=uc(1,'len'), Mf=uc(1,'moment'), Ff=uc(1,'force'), rot=rd=>rd.d===2;
+  const mScale=rd=>rot(rd)?1:Lf; // m per unit X: length for a force, dimensionless for a moment
+  const segs=segments(R); let total=0, rows='', n=0;
+  segs.forEach(sg=>{
+    const e0=R.P0.els[sg.k], ei=R.U[i].els[sg.k];
+    const A=elPolys(j==null?e0:R.U[j].els[sg.k]), Bp=elPolys(ei);
+    const fa = j==null ? pScale(A.M,Mf,Lf) : pScale(A.M,mScale(R.reds[j]),Lf);
+    const fb = pScale(Bp.M,mScale(R.reds[i]),Lf);
+    const x0=A.x0*Lf, x1=A.x1*Lf, val=pInt(pMul(fa,fb),x0,x1);
+    total+=val; n++;
+    const [a,b]=state.members[sg.m];
+    rows+=`<tr><td><span class="segno">${n}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td><td class="eqn">${pFmt(fa)}</td><td class="eqn">${pFmt(fb)}</td><td>${fmtEI(val)}</td></tr>`;
+  });
+  return {rows,total};
+}
+function vwBlock(R,i,j){
+  const {rows,total}=vwTable(R,i,j), rd=R.reds[i];
+  const target = j==null ? R.D0[i]*(rd.d===2?1:uc(1,'len'))*uc(R.EI,'EI') : R.F[i][j]*(rd.d===2?1:uc(1,'len'))/(R.reds[j].d===2?uc(1,'moment'):uc(1,'force'))*uc(R.EI,'EI');
+  const settle = j==null ? target-total : 0;
+  const nm = j==null ? `Δ${sub(i+1)}${sub(0)}` : `δ${sub(i+1)}${sub(j+1)}`;
+  const A = j==null ? `M${sub(0)}(x)` : `m${sub(j+1)}(x)`, B=`m${sub(i+1)}(x)`;
+  return `<details class="vwork" open><summary>Virtual work: ${nm} × EI = ∫ ${A}·${B} dx</summary>
+    <p class="note">x is measured from the first joint of each member (A→B means from A). Moments in ${uu('moment')}, x in ${uu('len')}, sagging positive.</p>
+    <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>${A}</th><th>${B}</th><th>∫ ${A==='M₀(x)'?'M₀':A.replace('(x)','')}·${B.replace('(x)','')} dx</th></tr>${rows}
+    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="4">Settlement of the supports you kept (moves the primary structure without bending it)</td><td>${fmtEI(settle)}</td></tr>`:''}
+    <tr class="tot"><td colspan="4"><b>${nm} × EI</b></td><td><b>${fmtEI(total+settle)}</b></td></tr></table></div>
+    <p class="status ${Math.abs(total+settle-target)<1e-3*Math.max(1,Math.abs(target))?'ok':'bad'}" style="margin-top:6px">${Math.abs(total+settle-target)<1e-3*Math.max(1,Math.abs(target))?'Same as the value above ✓':'Check: the value above is '+fmtEI(target)}</p></details>`;
+}
+
+/* ---------- deflection tables (beams with a simply supported or cantilever primary) ---------- */
+function tablesSetup(R){
+  if(!isBeam()) return {err:'Deflection tables are set up here for beams. For frames, use Virtual work.'};
+  const xs=state.nodes.map(p=>p[0]), minx=Math.min(...xs), maxx=Math.max(...xs), L=maxx-minx;
+  const supp=Object.entries(R.prim).filter(([n,d])=>d.some(k=>k!==0)).map(([n,d])=>({n:+n,d,x:state.nodes[n][0]-minx}));
+  let kind=null, fixedLeft=true;
+  if(supp.length===2 && supp.every(s=>!s.d.includes(2)) && supp.some(s=>Math.abs(s.x)<1e-9) && supp.some(s=>Math.abs(s.x-L)<1e-9)) kind='ss';
+  else if(supp.length===1 && supp[0].d.includes(1) && supp[0].d.includes(2) && (Math.abs(supp[0].x)<1e-9||Math.abs(supp[0].x-L)<1e-9)){ kind='cant'; fixedLeft=Math.abs(supp[0].x)<1e-9; }
+  if(!kind) return {err:'Deflection tables need the primary structure to be a simply supported beam (supports only at the two ends) or a cantilever. Pick redundants that leave one of those (Choose for me usually does), or use Virtual work.'};
+  if(R.EL.some(l=>l.type==='moment')) return {err:'This beam has an applied moment, which the tables here don\'t cover. Use Virtual work.'};
+  if(kind==='ss' && R.reds.some(rd=>rd.d===2)) return {err:'With a simply supported primary, pick vertical reactions as redundants to use the tables.'};
+  return {kind, fixedLeft, L, minx};
+}
+// downward deflection (and clockwise slope) at x for a downward unit point load at a
+function tPoint(kind,fl,L,a,x,EI){
+  if(kind==='ss'){ const b=L-a; return {v: x<=a ? b*x*(L*L-b*b-x*x)/(6*L*EI) : a*(L-x)*(L*L-a*a-(L-x)**2)/(6*L*EI)}; }
+  const A=fl?a:L-a, X=fl?x:L-x;
+  const v = X<=A ? X*X*(3*A-X)/(6*EI) : A*A*(3*X-A)/(6*EI);
+  const th = (X<=A ? X*(2*A-X)/(2*EI) : A*A/(2*EI))*(fl?1:-1); // clockwise positive
+  return {v, th};
+}
+// upward deflection and anticlockwise rotation at x for an anticlockwise unit couple at a (cantilever)
+function tCouple(fl,L,a,x,EI){
+  const A=fl?a:L-a, X=fl?x:L-x, s=fl?1:-1;
+  const v = (X<=A ? X*X/(2*EI) : A*(2*X-A)/(2*EI))*s;
+  const th = X<=A ? X/EI : A/EI;
+  return {v, th};
+}
+function tablesBlock(R,i,j){
+  const S=tablesSetup(R); if(S.err) return `<details class="vwork" open><summary>Deflection tables</summary><p class="status bad">${S.err}</p></details>`;
+  const EI=1, rd=R.reds[i], xi=state.nodes[rd.n][0]-S.minx, Lf=uc(1,'len'), EIu=uc(R.EI,'EI')/R.EI;
+  const caseName = S.kind==='ss'?'simply supported beam':`cantilever fixed at ${S.fixedLeft?'the left':'the right'}`;
+  const want = rd.d===2?'rotation (anticlockwise +)':'deflection (up +)';
+  const eff = (r)=> rd.d===2 ? -(r.th||0) : -r.v; // convert table (down, clockwise) to our + directions
+  const fmtL=v=>fmt(v*Lf,2);
+  let rows='', total=0;
+  const conv=v=>v*(rd.d===2?1:Lf)*EIu*(Lf**2)/1; // value×EI in SI → display: Δ·EI scales with force·len^(3 or 2)
+  const toDisp=(vSI,kindFJ)=>{ // vSI: displacement×EI per unit force in SI; scale by load magnitude already applied
+    const F=uc(1,'force'); return vSI*F*(Lf**(rd.d===2?2:3)); };
+  if(j==null){
+    // work from the loads as entered (a load across several spans stays one load)
+    state.loads.forEach(l=>{
+      const sgn=l.dir==='up'?-1:1;
+      if(l.type==='point'){
+        const ax=l.s;
+        const r=tPoint(S.kind,S.fixedLeft,S.L,ax,xi,1), val=eff(r)*l.mag*sgn;
+        total+=val;
+        const fx = S.kind==='ss' ? (xi<=ax?'P·b·x·(L² − b² − x²) / 6L':'P·a·(L−x)·(L² − a² − (L−x)²) / 6L')
+          : rd.d===2 ? (xi<=ax?'P·x·(2a − x) / 2':'P·a² / 2') : (xi<=ax?'P·x²·(3a − x) / 6':'P·a²·(3x − a) / 6');
+        rows+=`<tr><td>${q(l.mag,'force')} ${l.dir==='up'?'up':'down'} at ${fmtL(ax)} ${uu('len')}</td><td>Point load on a ${caseName}</td><td class="eqn">${fx}</td><td>a = ${fmtL(S.fixedLeft||S.kind==='ss'?ax:S.L-ax)}${S.kind==='ss'?`, b = ${fmtL(S.L-ax)}`:''}, x = ${fmtL(S.kind==='cant'&&!S.fixedLeft?S.L-xi:xi)}, L = ${fmtL(S.L)}</td><td>${fmtEI(toDisp(val))}</td></tr>`;
+      } else {
+        let s0=l.sa, s1=l.sb, w0=l.mag, w1=l.mag2??l.mag;
+        // integrate the point-load case over the load (split at x so each part is smooth)
+        const cuts=[s0, ...(xi>s0&&xi<s1?[xi]:[]), s1]; let val=0;
+        for(let c=0;c<cuts.length-1;c++){ const p0=cuts[c], p1=cuts[c+1], N=200, h=(p1-p0)/N;
+          for(let k=0;k<=N;k++){ const s=p0+k*h, wgt=(k===0||k===N)?1:(k%2?4:2), w=w0+(w1-w0)*(s-s0)/((s1-s0)||1);
+            val+=wgt*h/3*w*eff(tPoint(S.kind,S.fixedLeft,S.L,s,xi,1)); } }
+        val*=(l.dir==='up'?-1:1); total+=val;
+        const full = Math.abs(s0)<1e-9 && Math.abs(s1-S.L)<1e-9 && Math.abs(w0-w1)<1e-9;
+        const fx = full ? (S.kind==='ss' ? 'w·x·(L³ − 2L·x² + x³) / 24' : rd.d===2 ? 'w·(x³ − 3L·x² + 3L²·x) / 6' : 'w·x²·(6L² − 4L·x + x²) / 24')
+                        : '∫ w(s) · [point-load formula] ds';
+        const wtxt = Math.abs(w0-w1)<1e-9 ? q(w0,'dist') : `${fmt(uc(w0,'dist'),1)} → ${q(w1,'dist')}`;
+        rows+=`<tr><td>${wtxt} from ${fmtL(s0)} to ${fmtL(s1)} ${uu('len')}</td><td>${full?'Uniform load, full span':'Distributed load (superposition of point loads)'}</td><td class="eqn">${fx}</td><td>x = ${fmtL(xi)}, L = ${fmtL(S.L)}</td><td>${fmtEI(toDisp(val))}</td></tr>`;
+      }
+    });
+  } else {
+    const rj=R.reds[j], aj=state.nodes[rj.n][0]-S.minx;
+    let val, fx;
+    if(rj.d===2){ const r=tCouple(S.fixedLeft,S.L,aj,xi,1); val= rd.d===2?r.th:r.v; fx = rd.d===2?(xi<=aj?'C·x':'C·a'):(xi<=aj?'C·x² / 2':'C·a·(2x − a) / 2'); }
+    else { const r=tPoint(S.kind,S.fixedLeft,S.L,aj,xi,1); val=-eff(r); fx = S.kind==='ss' ? (xi<=aj?'P·b·x·(L² − b² − x²) / 6L':'P·a·(L−x)·(L² − a² − (L−x)²) / 6L') : rd.d===2 ? (xi<=aj?'P·x·(2a − x) / 2':'P·a² / 2') : (xi<=aj?'P·x²·(3a − x) / 6':'P·a²·(3x − a) / 6'); }
+    total=val;
+    const F=rj.d===2?uc(1,'moment'):uc(1,'force'), disp=val*(rd.d===2?1:Lf)/F*uc(1,'EI');
+    rows+=`<tr><td>Unit ${rj.d===2?'moment (anticlockwise)':'force (up)'} at ${redName(rj)}, ${fmtL(aj)} ${uu('len')} from the left</td><td>${rj.d===2?'Couple':'Point load'} on a ${caseName}</td><td class="eqn">${fx}</td><td>a = ${fmtL(aj)}, x = ${fmtL(xi)}, L = ${fmtL(S.L)}</td><td>${fmtEI(disp)}</td></tr>`;
+    return `<details class="vwork" open><summary>Deflection tables: δ${sub(i+1)}${sub(j+1)} × EI, the ${want} at ${redName(rd)}</summary>
+      <div class="wtab"><table class="sdt work-t"><tr><th>Load</th><th>Table case</th><th>Formula (× 1/EI)</th><th>Values</th><th>× EI</th></tr>${rows}
+      <tr class="tot"><td colspan="4"><b>δ${sub(i+1)}${sub(j+1)} × EI</b></td><td><b>${fmtEI(disp)}</b></td></tr></table></div>
+      ${(()=>{ const tgt=R.F[i][j]*(rd.d===2?1:Lf)/(rj.d===2?uc(1,'moment'):uc(1,'force'))*uc(R.EI,'EI'); const ok=Math.abs(disp-tgt)<1e-3*Math.max(1,Math.abs(tgt)); return `<p class="status ${ok?'ok':'bad'}" style="margin-top:6px">${ok?'Same as the value above ✓':'Check: the value above is '+fmtEI(tgt)}</p>`; })()}</details>`;
+  }
+  const target=R.D0[i]*(rd.d===2?1:Lf)*uc(R.EI,'EI'), sum=toDisp(total), settle=target-sum;
+  return `<details class="vwork" open><summary>Deflection tables: Δ${sub(i+1)}${sub(0)} × EI, the ${want} at ${redName(rd)}</summary>
+    <p class="note">Superposition: add the effect of each load on the ${caseName}, using the standard table formulas (they give downward deflection${rd.d===2?' and clockwise slope':''} for a downward load, so the sign is flipped to match ${rd.d===2?'anticlockwise':'upward'} positive).</p>
+    <div class="wtab"><table class="sdt work-t"><tr><th>Load</th><th>Table case</th><th>Formula (× 1/EI)</th><th>Values</th><th>× EI</th></tr>${rows}
+    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="4">Settlement of the supports you kept (rigid-body movement)</td><td>${fmtEI(settle)}</td></tr>`:''}
+    <tr class="tot"><td colspan="4"><b>Δ${sub(i+1)}${sub(0)} × EI</b></td><td><b>${fmtEI(sum+settle)}</b></td></tr></table></div>
+    <p class="status ${Math.abs(sum+settle-target)<1e-3*Math.max(1,Math.abs(target))?'ok':'bad'}" style="margin-top:6px">${Math.abs(sum+settle-target)<1e-3*Math.max(1,Math.abs(target))?'Same as the value above ✓':'Close to the value above (rounding in the integration).'}</p></details>`;
+}
+
+/* ---------- add the picker, cuts drawing and working to the force method page ---------- */
+function enhanceFM(R){
+  const prim=$('#fmPrim'); if(!prim) return;
+  const beam=isBeam(), dm=beam?state.fm.dm:'vw';   // frames always use virtual work; a beam keeps your choice
+  const pick=document.createElement('div'); pick.className='card wide dmcard';
+  pick.innerHTML=`<h3>${beam?'How do you want to find Δ and δ?':'Finding Δ and δ by virtual work'}</h3>
+    <div class="ccards">
+      <button class="ccard" data-dm="vw" aria-pressed="${dm==='vw'}"><span class="ct"><b>Virtual work</b><small>cut into segments, write M(x), integrate ∫ M·m dx</small></span></button>
+      ${beam?`<button class="ccard" data-dm="tables" aria-pressed="${dm==='tables'}"><span class="ct"><b>Beam deflection tables</b><small>standard formulas and superposition</small></span></button>`:''}
+    </div>
+    ${beam?'':'<p class="note">Frames are solved with virtual work here. Deflection tables are for beams.</p>'}
+    ${dm==='vw'?`<p>Each member is split into segments wherever a load starts or stops, or a support or joint sits. In each segment the moment is one smooth equation. Below, the cut at each segment is marked and numbered, with x measured from the first joint of the member.</p><canvas class="mini" id="fmCuts" style="height:240px"></canvas>`
+      :`<p>Look up the deflection (or slope) of the primary structure in standard tables for each load, then add them up (superposition). The working for each value is shown under the steps below.</p>`}`;
+  prim.closest('.card').after(pick);
+  pick.querySelectorAll('[data-dm]').forEach(b=>b.onclick=()=>{ state.fm.dm=b.dataset.dm; renderFM(); });
+  // working under step 3 and each unit-load step
+  const add=(canvasId,html)=>{ const c=$(canvasId); if(!c) return; const card=c.closest('.card'); const div=document.createElement('div'); div.innerHTML=html; card.appendChild(div); };
+  const block=(i,j)=> dm==='vw'?vwBlock(R,i,j):tablesBlock(R,i,j);
+  add('#fmM0', R.reds.map((_,i)=>block(i,null)).join(''));
+  R.reds.forEach((_,j)=>add(`#fmU${j}`, R.reds.map((_,i)=>block(i,j)).join('')));
+  if(dm==='vw') requestAnimationFrame(()=>drawCuts(R));
+}
+function drawCuts(R){
+  const cv=$('#fmCuts'); if(!cv) return;
+  renderMini(cv,{restr:R.prim, EL:R.EL, loadLabels:true, after:()=>{
+    // x arrows from the start of each member
+    state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); const L=Math.hypot(x2-x1,y2-y1), ux=(x2-x1)/L, uy=(y2-y1)/L, nx=-uy, ny=ux;
+      const off=isBeam()?18:16, sx=x1+nx*off+ux*8, sy=y1+ny*off+uy*8; arrow(sx,sy,sx+ux*34,sy+uy*34,C.deform,1.8,7); label('x',sx+ux*42,sy+uy*42,C.deform,'center',13,800); });
+    // numbered cuts at the middle of each segment
+    let n=0; R.P0.els.forEach(el=>{ n++; const [a,b]=state.members[el.m], A=state.nodes[a], B=state.nodes[b], t=(el.t0+el.t1)/2;
+      const [px,py]=toS(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t), [x1,y1]=toS(...A), [x2,y2]=toS(...B), L=Math.hypot(x2-x1,y2-y1)||1, nx=-(y2-y1)/L, ny=(x2-x1)/L;
+      ctx.save(); ctx.strokeStyle=C.load; ctx.lineWidth=2; ctx.setLineDash([4,3]); ctx.beginPath(); ctx.moveTo(px-nx*14,py-ny*14); ctx.lineTo(px+nx*14,py+ny*14); ctx.stroke(); ctx.restore();
+      ctx.beginPath(); ctx.arc(px+nx*26,py+ny*26,10,0,Math.PI*2); ctx.fillStyle=C.load; ctx.fill();
+      setFont(12,800); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(String(n),px+nx*26,py+ny*26+0.5); });
+  }});
+}
+
+/* ---------- home screen ---------- */
+const HOME_ART=`<svg class="hart" viewBox="0 0 480 220" aria-hidden="true">
+  <path d="M40 120 Q 140 190 240 120 Q 340 50 440 120" fill="none" stroke="var(--deform)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M40 120 H440" stroke="var(--muted)" stroke-width="2" stroke-dasharray="8 7"/>
+  ${[60,100,140,180,220].map(x=>`<path d="M${x} 60 v34" stroke="var(--load)" stroke-width="2.5"/><path d="M${x-6} 88 l6 9 l6-9z" fill="var(--load)"/>`).join('')}
+  <path d="M56 60 H224" stroke="var(--load)" stroke-width="2.5"/>
+  <path d="M40 124 l-14 22 h28z M240 124 l-14 22 h28z M440 124 l-14 22 h28z" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M100 180 Q 170 150 240 170 T 380 160" fill="none" stroke="var(--moment)" stroke-width="3" opacity=".6"/>
+</svg>`;
+const HCARDS=[
+  {p:'det', t:'Determinate', d:'Beams and frames you can solve with equilibrium alone. Drag loads, change supports and watch the reactions, moments and deflections update.', art:'<svg viewBox="0 0 200 70"><path d="M20 30h160" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M20 32l-10 15h20zM180 32l-10 15h20z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M100 4v22" stroke="var(--load)" stroke-width="3"/><path d="M94 22l6 8 6-8z" fill="var(--load)"/><path d="M20 30 Q100 62 180 30" fill="none" stroke="var(--deform)" stroke-width="3"/></svg>'},
+  {p:'ind', t:'Indeterminate', d:'Continuous beams and portal frames. Solve them step by step with the force method or slope-deflection, and see every diagram.', art:'<svg viewBox="0 0 200 70"><path d="M15 30h170" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><path d="M15 32l-9 14h18zM72 32l-9 14h18zM128 32l-9 14h18zM185 32l-9 14h18z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M15 30 Q43 52 72 30 Q100 12 128 30 Q156 52 185 30" fill="none" stroke="var(--deform)" stroke-width="3"/></svg>'},
+  {p:'ws', t:'Workshop', d:'Build your own beam or frame: draw members, add supports, hinges and loads, then solve it. Save and share your designs.', pc:true, art:'<svg viewBox="0 0 200 70"><path d="M50 62l10-46h80l12 46" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="140" cy="16" r="5" fill="var(--panel)" stroke="currentColor" stroke-width="2.5"/><path d="M40 64h20M142 64h20" stroke="currentColor" stroke-width="3"/><circle cx="60" cy="16" r="4" fill="var(--deform)"/><path d="M60 16l30-10" stroke="var(--deform)" stroke-width="2" stroke-dasharray="4 3"/></svg>'},
+  {p:'pr', t:'Practice', d:'Fresh exam-style problems every time, including past-paper style frames. Enter your answers and check them instantly.', pc:true, art:'<svg viewBox="0 0 200 70"><rect x="40" y="8" width="120" height="54" rx="8" fill="none" stroke="currentColor" stroke-width="3"/><path d="M56 26h50M56 40h70" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".6"/><circle cx="138" cy="44" r="10" fill="var(--shear)"/><path d="M133 44l4 4 7-8" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>'},
+];
+function renderHome(){
+  const box=$('#homeView'), toured=(()=>{ try{ return !!localStorage.getItem('bfp-toured'); }catch(e){ return false; } })();
+  const recent=recentUpdates().slice(0,3), nd=(typeof designs!=='undefined'?designs.length:0);
+  box.innerHTML=`<div class="hwrap">
+    <section class="hero"><div class="hcontent">
+      <h2>Learn structures by playing with them</h2>
+      <p>Drag loads, change supports and watch beams and frames bend in real time. Then work through the force method or slope-deflection step by step, or test yourself in Practice.</p>
+      <div class="hbtns"><button class="btn primary" data-go="det">Start exploring</button><button class="btn" id="hTour">${toured?'Take the tour again':'Take the 1-minute tour'}</button></div>
+    </div>${HOME_ART}</section>
+    <div class="hgrid">${HCARDS.map((c,i)=>`<button class="hcard" data-go="${c.p}" style="animation-delay:${i*60}ms">${c.art}<b>${c.t}</b><p>${c.d}</p>${c.pc&&isMobile()?'<span class="pc">Best on a computer</span>':''}<span class="go">Open ${c.t} →</span></button>`).join('')}</div>
+    <div class="hstrip">
+      <div class="hbox"><h3>What's new <button class="link" id="hNews">See all</button></h3>${recent.length?recent.map(u=>`<div class="nitem"><span class="ntag ${u.tag}">${{new:'New',improved:'Improved',fixed:'Fixed'}[u.tag]}</span><b>${u.t}</b><p>${u.p}</p></div>`).join(''):'<p class="note">Nothing new for now. You\'re all caught up.</p>'}</div>
+      <div class="hbox"><h3>Good to know</h3>
+        <p class="note">• Everything updates live as you edit.<br>• Switch units, colours, theme and the moment sign convention in <b>Settings</b>.<br>• ${nd?`You have <b>${nd}</b> saved design${nd>1?'s':''} in the Workshop.`:'Save your own designs in the Workshop and share them with a link.'}<br>• Undo with Ctrl+Z, share any structure with the link button.</p></div>
+    </div></div>`;
+  box.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>setPage(b.dataset.go,false));
+  $('#hTour').onclick=startTour;
+  $('#hNews').onclick=()=>openNews(true);
+}
+
+document.querySelector('.brand h1').style.cursor='pointer'; document.querySelector('.brand h1').onclick=()=>setPage('home',false);
+
+/* ---------- guided tour ---------- */
+const TOUR=[
+  {sel:'.pages', t:'Four pages', p:'Determinate and Indeterminate have ready-made structures, the Workshop lets you build your own, and Practice gives you problems to solve. The house icon brings you back here.'},
+  {sel:'#presetBtn', t:'Pick a structure', p:'Choose from beams and frames. Your edits to each one are saved automatically, and the reset button puts it back.'},
+  {sel:'#badge', t:'Determinate or not?', p:'This shows whether the structure is determinate, and if not, its degree of indeterminacy.'},
+  {sel:'#wrap', t:'Play with it', p:'Drag the red loads, click a joint to change its support, scroll to zoom and drag empty space to move around. Click the structure to check the forces at any point.'},
+  {sel:'#diag', t:'Diagrams', p:'Overlay the bending moment, shear force or axial force diagram on the structure.'},
+  {sel:'#viewSeg', t:'Solve it step by step', p:'Open Solve to work through the force method (with virtual work or deflection tables) or slope-deflection, with every diagram and equation.'},
+  {sel:'.tabs', t:'Edit, check, results', p:'Change loads, supports, sizes and EI under Edit. Check a point gives exact values anywhere, and Results lists the reactions.'},
+  {sel:'#editGrp', t:'Undo, reset, share', p:'Undo and redo your changes, reset the structure, or copy a link to share exactly what you built.'},
+  {sel:'#newsBtn', t:"What's new", p:'New features and fixes appear here. A red dot means something new.'},
+  {sel:'#setBtn', t:'Make it yours', p:'Units (SI or US), colours, light or dark theme, and your moment sign convention.'},
+];
+let tourI=0, tourSteps=[];
+function visible(el){ if(!el) return false; const r=el.getBoundingClientRect(); return r.width>2&&r.height>2&&getComputedStyle(el).visibility!=='hidden'; }
+function startTour(){
+  setPage('ind',false);
+  setTimeout(()=>{
+    tourSteps=TOUR.filter(s=>visible(document.querySelector(s.sel)));
+    tourI=0; $('#tour').hidden=false; showTourStep();
+  },350);
+}
+function endTour(done){ $('#tour').hidden=true; try{ localStorage.setItem('bfp-toured','1'); }catch(e){} if(done) toast("You're all set. Enjoy!"); }
+function showTourStep(){
+  const s=tourSteps[tourI], el=document.querySelector(s.sel); if(!el){ endTour(); return; }
+  const r=el.getBoundingClientRect(), pad=6, ring=$('#tRing'), card=$('#tCard');
+  const big=r.height>window.innerHeight*0.5;
+  Object.assign(ring.style,{left:(r.left-pad)+'px',top:(r.top-pad)+'px',width:(r.width+2*pad)+'px',height:(r.height+2*pad)+'px'});
+  $('#tStep').textContent=`Step ${tourI+1} of ${tourSteps.length}`; $('#tTitle').textContent=s.t; $('#tText').textContent=s.p;
+  $('#tDots').innerHTML=tourSteps.map((_,i)=>`<i class="${i===tourI?'on':''}"></i>`).join('');
+  $('#tBack').disabled=tourI===0; $('#tNext').textContent=tourI===tourSteps.length-1?'Finish':'Next';
+  const cw=card.offsetWidth||360, ch=card.offsetHeight||200, vw=window.innerWidth, vh=window.innerHeight;
+  let top = big ? r.top+40 : (r.bottom+14+ch<vh ? r.bottom+14 : Math.max(12,r.top-14-ch));
+  let left = big ? r.left+40 : Math.min(Math.max(12, r.left+r.width/2-cw/2), vw-cw-12);
+  card.style.top=top+'px'; card.style.left=left+'px';
+  $('#tNext').focus();
+}
+$('#tNext').onclick=()=>{ if(tourI<tourSteps.length-1){ tourI++; showTourStep(); } else endTour(true); };
+$('#tBack').onclick=()=>{ if(tourI>0){ tourI--; showTourStep(); } };
+$('#tSkip').onclick=()=>endTour(false);
+document.addEventListener('keydown',e=>{ if($('#tour').hidden) return;
+  if(e.key==='Escape') endTour(false); else if(e.key==='ArrowRight') $('#tNext').click(); else if(e.key==='ArrowLeft') $('#tBack').click(); });
+window.addEventListener('resize',()=>{ if(!$('#tour').hidden) showTourStep(); });
 
 /* ---------- mini diagrams for the force method ---------- */
 const SUBS='₀₁₂₃₄₅₆₇₈₉';
@@ -3328,7 +3782,10 @@ function renderMini(canvas,opt){
         ctx.beginPath(); ctx.arc(dx,dy,4.5,0,Math.PI*2); ctx.fillStyle=C.deform; ctx.fill(); ctx.strokeStyle=C.paper; ctx.lineWidth=1.5; ctx.stroke();
         if(dl.d!==2 && Math.hypot(dx-ox,dy-oy)>8){ ctx.save(); ctx.strokeStyle=C.deform; ctx.lineWidth=1.2; ctx.setLineDash([2,3]); ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(dx,dy); ctx.stroke(); ctx.restore(); }
         const right = dx < w-150;
-        pill(dl.text, clamp(dx+(right?1:-1)*(16+ctx.measureText(dl.text).width/2), 60, w-60), clamp(dy + (dy<oy?-1:1)*(14+stack*24), 14, h-14), C.deform, 12);
+        // stack several labels at one joint; flip the stack upward if it would run off the bottom
+        const count=(opt.deltas||[]).filter(x=>x.n===dl.n).length; let dir=dy<oy?-1:1;
+        if(dir>0 && dy+14+(count-1)*24>h-14) dir=-1; if(dir<0 && dy-14-(count-1)*24<14) dir=1;
+        pill(dl.text, clamp(dx+(right?1:-1)*(16+ctx.measureText(dl.text).width/2), 60, w-60), clamp(dy + dir*(14+stack*24), 14, h-14), C.deform, 12);
       });
     }
     // unknown rotations: tangent to the bent shape and the angle it makes with the original member
@@ -3368,6 +3825,7 @@ function renderMini(canvas,opt){
       setFont(12,700); const tw=ctx.measureText(txt).width;
       const src=state.loads.find(x=>x.id===l.id);
       pillQ.push({t:txt, x:px-ds[0]*(34+tw/2), y:py-ds[1]*38, c:src?loadColor(src):C.load}); }); }
+    if(opt.after) opt.after(w,h);
     pillQ.forEach(P=>pill(P.t, clamp(P.x,50,w-50), clamp(P.y,14,h-14), P.c, 12));
     labels.forEach(L=>pill(L.t,L.x,L.y,L.col,11.5));
   });
@@ -3387,7 +3845,7 @@ function updateIntro(){
   const formula = det.beamMode ? `${det.ry} vertical and moment reactions − 2${det.c?` − ${det.c} (hinge)`:''} = ${det.n}` : det.c ? `3m + r − 3j − c = 3(${det.m}) + ${det.r} − 3(${det.j}) − ${det.c} = ${det.full}` : `3m + r − 3j = 3(${det.m}) + ${det.r} − 3(${det.j}) = ${det.full}`;
   if(unstable){ cls='bad'; head='Unstable'; smallTxt='It can move freely, so it can\'t carry load.'; }
   else if(det.n<=0){ head='Statically determinate'; smallTxt=formula; if(state.page==='ind') link='<a href="#determinate" data-keep>Open on the Determinate page</a>'; }
-  else { cls='ind'; head=`Indeterminate to degree ${det.n}`; smallTxt=formula+(det.beamMode&&det.full!==det.n?` (${det.full} if horizontal reactions count)`:''); if(state.page==='det') link='<a href="#indeterminate" data-keep>Open on the Indeterminate page</a>'; }
+  else { cls='ind'; head=`Indeterminate<span class="blong"> to degree ${det.n}</span><span class="bshort">, n = ${det.n}</span>`; smallTxt=formula+(det.beamMode&&det.full!==det.n?` (${det.full} if horizontal reactions count)`:''); if(state.page==='det') link='<a href="#indeterminate" data-keep>Open on the Indeterminate page</a>'; }
   $('#badge').innerHTML=`<div class="badge ${cls}" title="${smallTxt.replace(/"/g,'&quot;')}"><b>${head}</b><small>${smallTxt}</small>${link}</div>`;
   $('#intro').innerHTML=INTRO[state.page];
   $('#badge').querySelectorAll('[data-keep]').forEach(a=>a.onclick=e=>{ e.preventDefault(); setPage(a.getAttribute('href')==='#indeterminate'?'ind':'det',true); });
@@ -3396,7 +3854,8 @@ function setPage(page,keep){
   state.page=page;
   const want='#'+PAGE_HASH[page];
   if(location.hash.split('?')[0]!==want) history.replaceState(null,'',want);
-  document.body.classList.toggle('page-il',page==='il'); document.body.classList.toggle('page-pr',page==='pr'); document.body.classList.toggle('page-ws',page==='ws');
+  document.body.classList.toggle('page-il',page==='il'); document.body.classList.toggle('page-pr',page==='pr'); document.body.classList.toggle('page-ws',page==='ws'); document.body.classList.toggle('page-home',page==='home');
+  $('#homeView').hidden=page!=='home';
   document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
   { const cur=document.querySelector(`.pages a[data-page="${page}"]`), nav=document.querySelector('.pages'); if(cur&&nav&&nav.scrollWidth>nav.clientWidth) nav.scrollLeft=cur.offsetLeft-(nav.clientWidth-cur.offsetWidth)/2; }
   $('#viewSeg').hidden=!(page==='ind'||page==='ws');
@@ -3405,6 +3864,7 @@ function setPage(page,keep){
   $('#prView').hidden=page!=='pr'; $('#wrap').hidden=page==='pr';
   $('#secDesigns').hidden=page!=='ws'; if(page==='ws') renderDesigns();
   updateMobileBlock();
+  if(page==='home'){ renderHome(); return; }
   if(page==='pr'){ renderPractice(); return; }
   if(page==='il'){ ilFieldsKey=''; state.il.qty=null; state.il.s=null; state.il.x=null; showTab('edit'); }
   renderPresets();
@@ -3441,9 +3901,17 @@ document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.
 function solveHead(){
   const m=state.view;
   const c=(v,t,s)=>`<button class="ccard" data-solve="${v}" aria-pressed="${m===v}"><span class="ci">${ICONS[v]}</span><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
-  return `<div class="solvehead"><h3>Solve this structure</h3><div class="ccards">${c('fm','Force method','redundants & compatibility')}${c('sd','Slope-deflection','rotations & end moments')}</div><p>Pick a method. Each one walks through every step, and both give the same final answer.</p></div>`;
+  const settled=Object.keys(state.settle).some(n=>state.settle[n]&&state.supports[n]);
+  const eiBox=`<div class="eibar ${settled?'warn':''}"><b>EI used:</b><span class="num"><input class="eiSolve" aria-label="EI used in this solution" type="number" inputmode="decimal" step="any" min="1" value="${showNum(uc(curEI(),'EI'),0)}"><span>${uu('EI')}</span></span>
+    <span class="eimsg">${settled?'⚠ A support settles, so the answers depend on EI. Make sure this matches the EI in your question.':'Moments from loads don\'t depend on EI; it only changes deflections and settlement effects.'}</span></div>`;
+  return `<div class="solvehead"><h3>Solve this structure</h3><div class="ccards">${c('fm','Force method','redundants & compatibility')}${c('sd','Slope-deflection','rotations & end moments')}</div><p>Pick a method. Each one walks through every step, and both give the same final answer.</p>${eiBox}</div>`;
 }
-function wireSolveHead(box){ box.querySelectorAll('[data-solve]').forEach(b=>b.onclick=()=>setView(b.dataset.solve)); }
+function wireSolveHead(box){
+  box.querySelectorAll('[data-solve]').forEach(b=>b.onclick=()=>setView(b.dataset.solve));
+  const ei=box.querySelector('.eiSolve'); if(!ei) return;
+  ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) return; setEI(v/uc(1,'EI')); commitHistory(); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
+  ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
+}
 $('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else renderFM(); };
 $('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); if(state.view==='sd') renderSDView(); else renderFM(); };
 $('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else renderFM(); };
@@ -3491,11 +3959,11 @@ function renderFM(){
     cards.push(`<div class="card"><h3><span class="step">2</span>Primary structure</h3><p>Remove the redundants. They become unknown forces X acting on a structure you can already solve.</p><canvas class="mini" id="fmPrim"></canvas></div>`);
     // step 3 M0
     let d0rows=reds.map((rd,i)=>`<tr><td>Δ${sub(i+1)}${sub(0)} at ${redName(rd)}<small>${rd.d===2?'rotation, anticlockwise positive':'deflection, '+(rd.d===1?'up':'right')+' positive'}</small></td><td>${fmtEI(D0[i]*EI)} / EI<small>= ${dispTxt(R.D0[i],rd.d)}</small></td></tr>`).join('');
-    cards.push(`<div class="card"><h3><span class="step">3</span>Real loads on the primary structure</h3><p>With the redundants gone, the real loads bend the primary structure, and each redundant's location moves by Δ. By virtual work, Δ${sub(1)}${sub(0)} = ∫ M${sub(0)}·m${sub(1)} / EI dx.</p><canvas class="mini" id="fmM0"></canvas><table class="vals">${d0rows}</table></div>`);
+    cards.push(`<div class="card wide"><h3><span class="step">3</span>Real loads on the primary structure</h3><p>With the redundants gone, the real loads bend the primary structure, and each redundant's location moves by Δ. By virtual work, Δ${sub(1)}${sub(0)} = ∫ M${sub(0)}·m${sub(1)} / EI dx.</p><canvas class="mini" id="fmM0"></canvas><table class="vals">${d0rows}</table></div>`);
     // unit cases
     reds.forEach((rd,j)=>{
       const rows=reds.map((ri,i)=>`<tr><td>δ${sub(i+1)}${sub(j+1)}<small>at ${redName(ri)} due to X${sub(j+1)} = 1</small></td><td>${fmtEI(Fd[i][j]*EI)} / EI<small>= ${ri.d===2?fmt(R.F[i][j]*1000/(rd.d===2?Mf:Ff),5)+' mrad':fmt(uc(R.F[i][j],'defl')/(rd.d===2?Mf:Ff),5)+' '+uu('defl')} per ${rd.d===2?uu('moment'):uu('force')}</small></td></tr>`).join('');
-      cards.push(`<div class="card"><h3><span class="step">${4+j}</span>Unit load X${sub(j+1)} = 1 (m${sub(j+1)})</h3><p>Now apply only a unit ${rd.d===2?'moment':'force'} where ${redName(rd)} acts. It bends the structure the other way; the movement it causes is δ. By virtual work, δ${sub(1)}${sub(j+1)} = ∫ m${sub(1)}·m${sub(j+1)} / EI dx.</p><canvas class="mini" id="fmU${j}"></canvas><table class="vals">${rows}</table></div>`);
+      cards.push(`<div class="card wide"><h3><span class="step">${4+j}</span>Unit load X${sub(j+1)} = 1 (m${sub(j+1)})</h3><p>Now apply only a unit ${rd.d===2?'moment':'force'} where ${redName(rd)} acts. It bends the structure the other way; the movement it causes is δ. By virtual work, δ${sub(1)}${sub(j+1)} = ∫ m${sub(1)}·m${sub(j+1)} / EI dx.</p><canvas class="mini" id="fmU${j}"></canvas><table class="vals">${rows}</table></div>`);
     });
     // compatibility
     const step=4+n;
@@ -3524,6 +3992,7 @@ function renderFM(){
   const auto=$('#fmAuto'); if(auto) auto.onclick=()=>{ state.fm.sel=null; renderFM(); };
   if(ok){
     const reds=R.reds;
+    enhanceFM(R);
     renderMini($('#fmPrim'),{restr:R.prim, EL:R.EL, marks:reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`X${sub(i+1)}`,dashed:true}))});
     renderMini($('#fmM0'),{restr:R.prim, EL:R.EL, res:R.P0, samples:R.P0.elSamples,
       deltas:reds.map((rd,i)=>({n:rd.n,d:rd.d,text:`Δ${sub(i+1)}${sub(0)} = ${dispTxt(R.D0[i],rd.d)}`}))});
@@ -3544,7 +4013,7 @@ function renderSD(){
   const box=$('#sd'), sd=slopeDeflection();
   if(!sd){ box.innerHTML='<p class="empty">No values while the structure can move freely.</p>'; return; }
   const EI=uc(sd.EI,'EI'), M=v=>fmt(uc(v,'moment'),2), nm=(a,b)=>letter(a)+letter(b);
-  let h=`<p class="note">Clockwise positive, as used in M<sub>AB</sub> = (2EI/L)(2θ<sub>A</sub> + θ<sub>B</sub> − 3ψ) + FEM<sub>AB</sub>.</p>`;
+  let h=`<p class="note">${state.ccw?'Anticlockwise':'Clockwise'} positive, as used in M<sub>AB</sub> = (2EI/L)(2θ<sub>A</sub> + θ<sub>B</sub> − 3ψ) + FEM<sub>AB</sub>.</p>`;
   h+=`<table class="sdt"><tr><th>Joint</th><th>θ (mrad)</th><th>θ × EI (${uu('EI')})</th></tr>`+
     state.nodes.map((_,n)=>`<tr><td>${letter(n)}</td><td>${fmt(sd.theta[n]*1000,3)}</td><td>${fmt(sd.theta[n]*EI,2)}</td></tr>`).join('')+`</table>`;
   h+=`<table class="sdt" style="margin-top:10px"><tr><th>Member</th><th>FEM near</th><th>FEM far</th><th>M near</th><th>M far</th></tr>`+
@@ -3594,10 +4063,10 @@ function loadSettings(){
     if(s.units==='si'||s.units==='us') state.units=s.units;
     if(['auto','light','dark'].includes(s.theme)) state.theme=s.theme;
     if(s.colors&&typeof s.colors==='object') state.colors=s.colors;
-    state.eachColor=!!s.eachColor; }catch(e){}
+    state.eachColor=!!s.eachColor; if(typeof s.ccw==='boolean') state.ccw=s.ccw; }catch(e){}
   applyTheme(); applyColors();
 }
-function saveSettings(){ try{ localStorage.setItem('bfp-settings',JSON.stringify({units:state.units,theme:state.theme,colors:state.colors,eachColor:state.eachColor})); }catch(e){} }
+function saveSettings(){ try{ localStorage.setItem('bfp-settings',JSON.stringify({units:state.units,theme:state.theme,colors:state.colors,eachColor:state.eachColor,ccw:state.ccw})); }catch(e){} }
 function applyTheme(){ if(state.theme==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=state.theme; }
 function applyColors(){ const st=document.documentElement.style; COLOR_KEYS.forEach(([k])=>{ if(state.colors[k]) st.setProperty('--'+k,state.colors[k]); else st.removeProperty('--'+k); }); }
 function refreshAll(){
@@ -3609,6 +4078,7 @@ function renderSettings(){
   const pop=$('#setPop');
   const seg=(name,opts,cur)=>`<div class="seg" role="group" aria-label="${name}">${opts.map(([v,t])=>`<button data-${name}="${v}" aria-pressed="${cur===v}">${t}</button>`).join('')}</div>`;
   let h=`<div class="sheethead"><b>Settings</b><button class="sheetx" aria-label="Close">×</button></div><h4>Units</h4>${seg('units',[['si','SI (kN, m)'],['us','US (kip, ft)']],state.units)}`;
+  h+=`<h4>Moment sign</h4>${seg('sign',[['ccw','Anticlockwise +'],['cw','Clockwise +']],state.ccw?'ccw':'cw')}`;
   h+=`<h4>Theme</h4>${seg('theme',[['auto','Auto'],['light','Light'],['dark','Dark']],state.theme)}`;
   h+=`<h4>Colours</h4>`;
   COLOR_KEYS.forEach(([k,lab])=>{
@@ -3619,14 +4089,16 @@ function renderSettings(){
       <input type="color" data-ck="${k}" value="${cur||'#888888'}" aria-label="${lab}: custom colour" title="Custom colour"></div></div>`;
   });
   h+=`<label class="tgl"><input type="checkbox" id="eachTgl" ${state.eachColor?'checked':''}> Give each load its own colour</label>`;
-  h+=`<div class="setfoot"><button class="link" id="resetColors">Reset colours</button><span class="note" style="margin:0">Saved on this device</span></div>`;
+  h+=`<div class="setfoot"><button class="link" id="resetColors">Reset colours</button><button class="link" id="tourLink">Take the tour</button></div>`;
   pop.innerHTML=h;
   pop.querySelector('.sheetx').onclick=()=>openSettings(false);
   pop.querySelectorAll('[data-units]').forEach(b=>b.onclick=()=>{ if(state.units===b.dataset.units) return; state.units=b.dataset.units; renderSettings(); refreshAll(); });
+  pop.querySelectorAll('[data-sign]').forEach(b=>b.onclick=()=>{ state.ccw=b.dataset.sign==='ccw'; saveSettings(); renderSettings(); if(state.page==='pr'&&state.pr.prob){ const pp=state.pr.prob; pp.Q=buildQuestions(pp.def,pp.method)||pp.Q; renderPractice(); } recompute(); toast(state.ccw?'Anticlockwise is now positive':'Clockwise is now positive'); });
   pop.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{ state.theme=b.dataset.theme; applyTheme(); saveSettings(); renderSettings(); requestAnimationFrame(()=>{ readColors(); recompute(); if(state.view==='fm') renderFM(); }); });
   pop.querySelectorAll('.sw').forEach(b=>b.onclick=()=>{ const k=b.dataset.ck; if(b.dataset.c) state.colors[k]=b.dataset.c; else delete state.colors[k]; applyColors(); renderSettings(); refreshColors(); });
   pop.querySelectorAll('input[type=color]').forEach(inp=>inp.oninput=()=>{ state.colors[inp.dataset.ck]=inp.value; applyColors(); refreshColors(); inp.closest('.sws').querySelectorAll('.sw').forEach(s=>s.setAttribute('aria-pressed','false')); });
   $('#eachTgl').onchange=e=>{ state.eachColor=e.target.checked; renderSettings(); renderLoads(); refreshColors(); };
+  $('#tourLink').onclick=()=>{ openSettings(false); startTour(); };
   $('#resetColors').onclick=()=>{ state.colors={}; state.eachColor=false; applyColors(); renderSettings(); renderLoads(); refreshColors(); };
 }
 function refreshColors(){ saveSettings(); readColors(); document.querySelectorAll('.load').forEach(el=>{ const l=state.loads.find(x=>x.id===+el.dataset.id); if(l) el.style.setProperty('--lc', state.eachColor?loadColor(l):`var(--${l.type==='point'?'pload':l.type==='udl'?'dload':'mload'})`); }); updateLegend(); draw(); if(state.view==='fm') renderFM(); }
