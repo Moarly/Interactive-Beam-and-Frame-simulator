@@ -509,6 +509,27 @@ body.page-ws #quickSave{display:inline-flex!important}
   .work,.stage,.toolbar{min-width:0;max-width:100%}
   .toolbar{overflow-x:auto}
 }
+
+.sheethead{display:none}
+.sheetback{position:fixed;inset:0;background:rgba(10,14,18,.4);z-index:29;animation:fadeIn .15s var(--ease)}
+.sheetback[hidden]{display:none}
+@media (max-width:760px){
+  .pick .pop{position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:auto!important;max-width:none!important;max-height:78vh;overflow-y:auto;
+    border-radius:18px 18px 0 0;padding:6px 14px calc(16px + env(safe-area-inset-bottom,0px));z-index:30;animation:sheetUp .22s var(--ease);box-shadow:0 -10px 30px rgba(0,0,0,.25)}
+  #presets.pop{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px;align-content:start}
+  .pick .pop .sheethead{display:flex;grid-column:1/-1;justify-content:space-between;align-items:center;position:sticky;top:-6px;background:var(--panel);padding:12px 0 8px;margin-bottom:2px;z-index:1}
+  .pick .pop .sheethead::before{content:"";position:absolute;left:50%;top:4px;width:40px;height:4px;border-radius:4px;background:var(--line);transform:translateX(-50%)}
+  .sheethead b{font-size:17px;font-family:var(--cond)}
+  .sheetx{border:0;background:color-mix(in srgb,var(--muted) 15%,transparent);width:34px;height:34px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;color:var(--ink)}
+  #presets .preset{min-width:0;width:100%;padding:12px 8px 10px}
+  #presets .preset svg{width:84px;height:44px}
+  #presets .preset span{font-size:14.5px;white-space:normal;text-align:center;line-height:1.2}
+  .setpop .crow{grid-template-columns:1fr}
+  .setpop .sws{flex-wrap:wrap}
+  .setpop .sw,.setpop .sws input[type=color]{width:28px;height:28px}
+  .setpop .seg button{padding:10px 6px;font-size:14px}
+}
+@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
 </style>
 </head>
 <body>
@@ -692,6 +713,7 @@ body.page-ws #quickSave{display:inline-flex!important}
     </aside>
   </main>
 </div>
+<div class="sheetback" id="sheetBack" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="mblock" id="mBlock" hidden>
   <div class="mcardx" role="dialog" aria-labelledby="mTitle">
@@ -1703,7 +1725,8 @@ function makeField({label,unit,kind,min,max,step,value,hardMin=min,hardMax=max,d
 
 /* ---------- presets bar ---------- */
 function renderPresets(){
-  const nav=$('#presets'); nav.innerHTML='';
+  const nav=$('#presets'); nav.innerHTML='<div class="sheethead"><b>Choose a structure</b><button class="sheetx" aria-label="Close">×</button></div>';
+  nav.querySelector('.sheetx').onclick=()=>openPresets(false);
   PRESETS.filter(p=>p.id!=='custom' && (state.page==='il' ? p.kind==='beam' : p.page===state.page)).forEach(p=>{
     const g=p.kind==='beam' ? (()=>{ const nodes=[[0,0]]; let x=0; p.spans.forEach(s=>{x+=s;nodes.push([x,0]);}); return {nodes,members:p.spans.map((_,i)=>[i,i+1])}; })() : p.gen(p.W,p.H);
     let minx=Infinity,maxx=-Infinity,miny=Infinity,maxy=-Infinity;
@@ -3493,7 +3516,7 @@ function updatePresetBtn(){
 }
 function openPresets(open){
   const pop=$('#presets'), btn=$('#presetBtn');
-  pop.hidden=!open; btn.setAttribute('aria-expanded',open);
+  pop.hidden=!open; btn.setAttribute('aria-expanded',open); $('#sheetBack').hidden=!(open&&isMobile());
   if(open){ const cur=pop.querySelector('[aria-pressed="true"]')||pop.querySelector('.preset'); if(cur) cur.focus(); }
 }
 $('#presetBtn').onclick=()=>openPresets($('#presets').hidden);
@@ -3533,7 +3556,7 @@ function refreshAll(){
 function renderSettings(){
   const pop=$('#setPop');
   const seg=(name,opts,cur)=>`<div class="seg" role="group" aria-label="${name}">${opts.map(([v,t])=>`<button data-${name}="${v}" aria-pressed="${cur===v}">${t}</button>`).join('')}</div>`;
-  let h=`<h4>Units</h4>${seg('units',[['si','SI (kN, m)'],['us','US (kip, ft)']],state.units)}`;
+  let h=`<div class="sheethead"><b>Settings</b><button class="sheetx" aria-label="Close">×</button></div><h4>Units</h4>${seg('units',[['si','SI (kN, m)'],['us','US (kip, ft)']],state.units)}`;
   h+=`<h4>Theme</h4>${seg('theme',[['auto','Auto'],['light','Light'],['dark','Dark']],state.theme)}`;
   h+=`<h4>Colours</h4>`;
   COLOR_KEYS.forEach(([k,lab])=>{
@@ -3546,6 +3569,7 @@ function renderSettings(){
   h+=`<label class="tgl"><input type="checkbox" id="eachTgl" ${state.eachColor?'checked':''}> Give each load its own colour</label>`;
   h+=`<div class="setfoot"><button class="link" id="resetColors">Reset colours</button><span class="note" style="margin:0">Saved on this device</span></div>`;
   pop.innerHTML=h;
+  pop.querySelector('.sheetx').onclick=()=>openSettings(false);
   pop.querySelectorAll('[data-units]').forEach(b=>b.onclick=()=>{ if(state.units===b.dataset.units) return; state.units=b.dataset.units; renderSettings(); refreshAll(); });
   pop.querySelectorAll('[data-theme]').forEach(b=>b.onclick=()=>{ state.theme=b.dataset.theme; applyTheme(); saveSettings(); renderSettings(); requestAnimationFrame(()=>{ readColors(); recompute(); if(state.view==='fm') renderFM(); }); });
   pop.querySelectorAll('.sw').forEach(b=>b.onclick=()=>{ const k=b.dataset.ck; if(b.dataset.c) state.colors[k]=b.dataset.c; else delete state.colors[k]; applyColors(); renderSettings(); refreshColors(); });
@@ -3554,7 +3578,7 @@ function renderSettings(){
   $('#resetColors').onclick=()=>{ state.colors={}; state.eachColor=false; applyColors(); renderSettings(); renderLoads(); refreshColors(); };
 }
 function refreshColors(){ saveSettings(); readColors(); document.querySelectorAll('.load').forEach(el=>{ const l=state.loads.find(x=>x.id===+el.dataset.id); if(l) el.style.setProperty('--lc', state.eachColor?loadColor(l):`var(--${l.type==='point'?'pload':l.type==='udl'?'dload':'mload'})`); }); updateLegend(); draw(); if(state.view==='fm') renderFM(); }
-function openSettings(open){ const p=$('#setPop'), b=$('#setBtn'); if(open) renderSettings(); p.hidden=!open; b.setAttribute('aria-expanded',open); }
+function openSettings(open){ const p=$('#setPop'), b=$('#setBtn'); if(open) renderSettings(); p.hidden=!open; b.setAttribute('aria-expanded',open); $('#sheetBack').hidden=!(open&&isMobile()); }
 $('#setBtn').onclick=()=>openSettings($('#setPop').hidden);
 document.addEventListener('pointerdown',e=>{ if(!$('#setPop').hidden && !e.target.closest('.settings')) openSettings(false); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#setPop').hidden){ openSettings(false); $('#setBtn').focus(); } });
