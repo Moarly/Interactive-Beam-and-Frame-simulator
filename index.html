@@ -447,6 +447,7 @@ details.coords summary{cursor:pointer;color:var(--muted);font-size:13px;font-wei
 .cgroup[hidden]{display:none!important}
 
 body.page-ws #badge{display:none!important}
+body.mblocked .work{visibility:hidden}
 .solvehead{grid-column:1/-1;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:linear-gradient(135deg,color-mix(in srgb,var(--deform) 12%,var(--panel)),var(--panel) 65%);box-shadow:var(--shadow)}
 .solvehead h3{margin:0;font-family:var(--cond);font-size:20px}
 .solvehead p{margin:0;color:var(--muted);font-size:13.5px;flex-basis:100%}
@@ -477,6 +478,37 @@ body.page-ws #quickSave{display:inline-flex!important}
 .askbox p{margin:0 0 14px;font-size:15px;font-weight:600}
 .askbtns{display:flex;justify-content:flex-end;gap:8px}
 .btn.danger{background:var(--load);border-color:var(--load);color:#fff}
+
+.snapctl{display:inline-flex;align-items:center;gap:6px}
+.snapctl .sl{font-size:14px;color:var(--muted)}
+.snapctl .num input{width:56px}
+.snapq{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.snapq button{border:0;border-right:1px solid var(--line);background:var(--panel);padding:4px 8px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--ink)}
+.snapq button:last-child{border-right:0}
+.snapq button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+.mblock{position:fixed;left:0;right:0;bottom:0;top:var(--hdr,64px);z-index:40;background:var(--paper);display:grid;place-items:center;padding:20px;overflow:auto}
+.mblock[hidden]{display:none}
+.mcardx{max-width:420px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:26px 22px;box-shadow:var(--shadow);animation:fadeUp .3s var(--ease)}
+.mcardx svg{width:84px;height:64px;color:var(--deform);margin-bottom:6px}
+.mcardx h2{margin:0 0 8px;font-family:var(--cond);font-size:22px}
+.mcardx p{margin:0 0 16px;color:var(--muted);line-height:1.55}
+.mbtns{display:flex;flex-direction:column;gap:8px}
+.mbtns .btn{padding:11px 14px;font-size:15px}
+
+@media (max-width:760px){
+  html,body{overflow-x:hidden;max-width:100%}
+  header{gap:8px!important;padding:8px 10px!important}
+  .brand{flex:1 1 auto}
+  .pages{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .pages::-webkit-scrollbar{display:none}
+  .pages a{padding:6px 10px!important;font-size:13.5px!important;white-space:nowrap;flex:1 0 auto;text-align:center}
+  h1{font-size:18px!important}
+  .mcardx{max-width:100%;padding:22px 16px}
+  .mblock{padding:14px}
+  .work,.stage,.toolbar{min-width:0;max-width:100%}
+  .toolbar{overflow-x:auto}
+}
 </style>
 </head>
 <body>
@@ -526,7 +558,11 @@ body.page-ws #quickSave{display:inline-flex!important}
             <button data-tool="hinge" aria-pressed="false" title="Add or remove internal hinges"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h6M15 12h6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="2"/></svg>Hinge</button>
             <button data-tool="delete" aria-pressed="false" title="Delete joints or members"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12M9 7V5h6v2M8 7l1 12h6l1-12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>Delete</button>
           </div>
-          <label class="tool">Snap <select id="gridSel" style="width:auto"><option value="0.25">0.25</option><option value="0.5" selected>0.5</option><option value="1">1</option></select></label>
+          <div class="snapctl" title="Points you click snap to this spacing. Type any value, or 0 to turn snapping off.">
+            <span class="sl">Snap</span>
+            <span class="num"><input type="number" id="gridIn" min="0" step="0.05" value="0.5" inputmode="decimal" aria-label="Snap spacing"><span id="gridU">m</span></span>
+            <div class="snapq" role="group" aria-label="Quick snap values"></div>
+          </div>
           <select id="tplSel" style="width:auto" aria-label="Start from a template"></select>
         </div>
         <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
@@ -657,6 +693,17 @@ body.page-ws #quickSave{display:inline-flex!important}
   </main>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="mblock" id="mBlock" hidden>
+  <div class="mcardx" role="dialog" aria-labelledby="mTitle">
+    <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="10" y="6" width="44" height="28" rx="3" fill="none" stroke="currentColor" stroke-width="3"/><path d="M4 40h56l-4 4H8z" fill="currentColor" opacity=".85"/><rect x="2" y="16" width="14" height="26" rx="2.5" fill="var(--panel)" stroke="currentColor" stroke-width="2.5"/></svg>
+    <h2 id="mTitle"></h2>
+    <p id="mText"></p>
+    <div class="mbtns">
+      <button class="btn primary" id="mGo"></button>
+      <button class="btn" id="mCopy">Copy link for my computer</button>
+    </div>
+  </div>
+</div>
 <div class="askback" id="askBack" hidden>
   <div class="askbox" role="alertdialog" aria-modal="true" aria-labelledby="askMsg">
     <p id="askMsg"></p>
@@ -2027,6 +2074,7 @@ function applySnapshot(sn){
   clampLoads();
 }
 function loadPreset(id, opts={}){
+  if(id!==state.preset && typeof resetViewState==='function' && state.runs) resetViewState();
   if(!opts.noSave) rememberCurrent();
   const p=PRESETS.find(x=>x.id===id);
   state.preset=id; state.fm.sel=null; state.result=null;
@@ -2251,6 +2299,25 @@ function ask(msg,yesText='OK'){
   });
 }
 
+/* ---------- phones: Workshop and Practice need a bigger screen ---------- */
+const MQ_MOBILE=matchMedia('(max-width: 760px), (pointer: coarse) and (hover: none) and (max-width: 1100px)');
+function isMobile(){ return MQ_MOBILE.matches; }
+function updateMobileBlock(){
+  const blk=$('#mBlock'), on=isMobile() && (state.page==='ws'||state.page==='pr');
+  blk.hidden=!on; document.body.classList.toggle('mblocked',on);
+  if(!on) return;
+  const hdr=document.querySelector('header'); document.documentElement.style.setProperty('--hdr',(hdr?hdr.offsetHeight:64)+'px');
+  const ws=state.page==='ws';
+  $('#mTitle').textContent=ws?'The Workshop needs a bigger screen':'Practice works best on a computer';
+  $('#mText').textContent=ws?'Building beams and frames takes precise clicking and dragging, so the Workshop is made for a laptop or desktop with a mouse or trackpad. Please open it on your computer.'
+                            :'Practice problems have detailed drawings and several answer boxes side by side, so they are made for a laptop or desktop screen. Please open Practice on your computer.';
+  $('#mGo').textContent='Explore beams on this phone instead';
+  $('#mGo').onclick=()=>setPage('det',false);
+  $('#mCopy').onclick=()=>copyLink(location.href,'Link copied, open it on your computer');
+}
+MQ_MOBILE.addEventListener('change',updateMobileBlock);
+window.addEventListener('resize',()=>{ if(!$('#mBlock').hidden) updateMobileBlock(); });
+
 /* ---------- influence lines ---------- */
 state.il={qty:null, s:null, x:null, P:10};
 let ilCache={key:'',xs:[],vals:[]}, ilFieldsKey='', ilSField=null, ilXField=null, ilPField=null;
@@ -2405,7 +2472,7 @@ const TEMPLATES=[
   {name:'Past paper frame 5', nodes:[[0,0],[2,4],[8,4],[9,1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'point',m:0,t:1,mag:60,dir:'left'},{type:'udl',m:1,mag:18}]},
 ];
 function loadTemplate(i){
-  const t=TEMPLATES[i]; commitHistory(); state.design=null;
+  const t=TEMPLATES[i]; commitHistory(); state.design=null; resetViewState();
   state.cgeo={nodes:t.nodes.map(p=>[...p]), members:t.members.map(([a,b],k)=>({a,b,id:k+1})), mid:t.members.length+1};
   state.supports={...t.supports}; state.hinges={...(t.hinges||{})}; state.settle={}; state.loads=[]; state.runs=[];
   rebuildGeometry(false);
@@ -2480,7 +2547,9 @@ function moveJoint(n,x,y){
 function snapPoint(p){
   const nh=hits.find(h=>h.kind==='node'&&Math.hypot(h.x-p.x,h.y-p.y)<14);
   if(nh) return {node:nh.n, x:state.nodes[nh.n][0], y:state.nodes[nh.n][1]};
-  const [wx,wy]=fromS(p.x,p.y), g=ws.grid; return {node:null, x:r2(Math.round(wx/g)*g), y:r2(Math.round(wy/g)*g)};
+  const [wx,wy]=fromS(p.x,p.y), g=ws.grid;
+  if(!(g>0)) return {node:null, x:r2(wx), y:r2(wy)};
+  return {node:null, x:+(Math.round(wx/g)*g).toFixed(6), y:+(Math.round(wy/g)*g).toFixed(6)};
 }
 function memberAtScreen(p){
   let best=-1, bd=10;
@@ -2556,7 +2625,18 @@ document.querySelectorAll('#buildSeg button').forEach(b=>b.onclick=()=>{ ws.tool
   document.querySelectorAll('#buildSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b)); draw();
   const tips={select:'Drag joints and loads. Click a joint to change its support.',member:'Click two points to draw a member. Keep clicking to chain them; Esc stops.',support:'Click a joint to cycle its support.',hinge:'Click a joint where members meet to add or remove a hinge.',delete:'Click a joint or member to delete it.'};
   toast(tips[ws.tool]); });
-$('#gridSel').onchange=e=>{ ws.grid=+e.target.value; };
+// snap spacing: any value (in the current length unit), quick picks, or 0 for off
+function updateSnapUI(){
+  const f=uc(1,'len'), us=state.units==='us', quick=us?[0.5,1,2]:[0.25,0.5,1];
+  $('#gridU').textContent=uu('len');
+  const inp=$('#gridIn'); if(document.activeElement!==inp) inp.value=ws.grid>0?showNum(ws.grid*f,4):0;
+  inp.step=us?0.25:0.05;
+  const box=document.querySelector('.snapq');
+  box.innerHTML=quick.map(v=>`<button data-v="${v}" aria-pressed="${Math.abs(ws.grid*f-v)<1e-6}">${v}</button>`).join('')+`<button data-v="0" aria-pressed="${!(ws.grid>0)}" title="Snapping off">Off</button>`;
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{ ws.grid=+b.dataset.v/f; updateSnapUI(); toast(ws.grid>0?`Snapping to ${b.dataset.v} ${uu('len')}`:'Snapping off'); });
+}
+$('#gridIn').addEventListener('input',e=>{ const v=parseFloat(e.target.value); if(!isFinite(v)||v<0) return; ws.grid=v/uc(1,'len'); updateSnapUI(); });
+$('#gridIn').addEventListener('change',()=>updateSnapUI());
 $('#tplSel').innerHTML='<option value="">Start from…</option>'+TEMPLATES.map((t,i)=>`<option value="${i}">${t.name}</option>`).join('');
 $('#tplSel').onchange=async e=>{ const v=e.target.value; e.target.value=''; if(v==='') return; if(state.cgeo.nodes.length && !(await ask('Replace your current structure? You can undo this.','Replace'))) return; loadTemplate(+v); };
 
@@ -2600,6 +2680,7 @@ function setMemberGeom(mi,len,angDeg){
   state.loads.forEach(syncLoadRow); recompute();
 }
 function renderJoints(){
+  updateSnapUI();
   const box=$('#size'); box.innerHTML='';
   const cg=state.cgeo;
   if(!cg.members.length){
@@ -2703,7 +2784,7 @@ function openDesign(id){
   const sn={...d.sn, loads:d.sn.loads.map(l=>({...l,id:uid++}))};
   applySnapshot(sn); state.baseScale=null; resetCam(); ws.frozen=null;
   renderSize(); renderSupports(); renderLoads(); renderMaterial(); renderProbe();
-  recompute(); commitHistory(); setView('play');
+  recompute(); commitHistory(); resetViewState();
   state.design={id:d.id,name:d.name}; designSavedKey=curKey(); renderDesigns();
   toast(`Opened "${d.name}"`);
 }
@@ -3242,11 +3323,13 @@ function setPage(page,keep){
   if(location.hash.split('?')[0]!==want) history.replaceState(null,'',want);
   document.body.classList.toggle('page-il',page==='il'); document.body.classList.toggle('page-pr',page==='pr'); document.body.classList.toggle('page-ws',page==='ws');
   document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
+  { const cur=document.querySelector(`.pages a[data-page="${page}"]`), nav=document.querySelector('.pages'); if(cur&&nav&&nav.scrollWidth>nav.clientWidth) nav.scrollLeft=cur.offsetLeft-(nav.clientWidth-cur.offsetWidth)/2; }
   $('#viewSeg').hidden=!(page==='ind'||page==='ws');
   $('#sdSec').hidden=true; $('#ilSec').hidden=page!=='il';
-  if(!(page==='ind'||page==='ws')) setView('play'); else setView(state.view);
+  resetViewState();
   $('#prView').hidden=page!=='pr'; $('#wrap').hidden=page==='pr';
   $('#secDesigns').hidden=page!=='ws'; if(page==='ws') renderDesigns();
+  updateMobileBlock();
   if(page==='pr'){ renderPractice(); return; }
   if(page==='il'){ ilFieldsKey=''; state.il.qty=null; state.il.s=null; state.il.x=null; showTab('edit'); }
   renderPresets();
@@ -3257,6 +3340,15 @@ function setPage(page,keep){
 document.querySelectorAll('.pages a').forEach(a=>a.onclick=e=>{ e.preventDefault(); if(a.dataset.page!==state.page) setPage(a.dataset.page,false); });
 window.addEventListener('hashchange',()=>{ const h=parseHash(); if(h.page!==state.page) setPage(h.page,false); if(h.s) openShared(h.s); if(h.q&&h.page==='pr') openPracticeShared(h.q); });
 
+// back to the plain drawing: Playground view, no diagram overlays, no solve diagrams
+function resetViewState(){
+  state.diagram='none'; diagK=1;
+  document.querySelectorAll('#diag button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.d==='none'?'true':'false'));
+  state.fm.showM=state.fm.showV=state.fm.showN=false;
+  ['#fmM','#fmV','#fmN'].forEach(s=>$(s).setAttribute('aria-pressed','false'));
+  setView('play');
+  updateLegend();
+}
 function setView(v){
   state.view=v;
   $('#buildGrp').hidden=!(state.page==='ws'&&v==='play'); ws.start=null; updateWsStatus();
