@@ -418,7 +418,7 @@ body.page-pr .pick:not(.settings):not(.news){display:none!important}
 .prbtns.sub{margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}
 @media (max-width:1100px){ .prgrid{grid-template-columns:1fr} .card.answers{position:static} }
 
-.zoomctl{position:absolute;right:12px;top:42px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow);z-index:3}
+.zoomctl{position:absolute;right:12px;top:64px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel);box-shadow:var(--shadow);z-index:3}
 .zoomctl button{width:34px;height:32px;border:0;border-bottom:1px solid var(--line);background:transparent;cursor:pointer;font-size:18px;font-weight:700;color:var(--ink);display:grid;place-items:center}
 .zoomctl button:last-child{border-bottom:0}
 .zoomctl button:hover{background:color-mix(in srgb,var(--deform) 12%,transparent)}
@@ -646,6 +646,62 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
 @media (max-width:1320px){ h1{font-size:18px!important} .pages a{padding:5px 7px!important;font-size:13px!important} .pickbtn .pk-tx span{font-size:14px} }
 .badge .bshort{display:none}
 @media (max-width:1320px){ .badge .blong{display:none} .badge .bshort{display:inline} }
+
+.vwpick{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-basis:100%}
+.vwpick .lbl2{font-weight:600;color:var(--muted)}
+.vwpick .seg{display:inline-flex;box-shadow:none}
+.vwpick .seg button[aria-pressed="true"]{background:var(--deform);color:#fff}
+.vwpick select{width:auto}
+.vwpick .num input{width:70px}
+.rchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+.rchip{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:3px 10px;font-family:var(--cond);font-weight:600;font-size:14px}
+
+.dwpick{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}
+.dwq button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.dwloc{display:inline-flex;align-items:center;gap:8px;font-weight:600}
+.dwloc select{width:auto;min-width:170px}
+.dwposf{min-width:260px;margin:0}
+.rchips{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.rchip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-family:var(--cond);font-weight:700;font-size:14px;background:var(--paper)}
+.dwans{margin-top:12px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--deform);background:color-mix(in srgb,var(--deform) 9%,var(--panel));display:flex;flex-direction:column;gap:6px}
+.dwans .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.07em;font-weight:700;color:var(--deform);margin:0}
+.dwans .eq{font-family:var(--cond);font-size:20px}
+.dwans .eq b{color:var(--deform)}
+
+.eicalc{border:1px solid color-mix(in srgb,var(--deform) 35%,var(--line));border-radius:12px;padding:10px 12px;margin-bottom:10px;background:color-mix(in srgb,var(--deform) 6%,var(--panel))}
+.eicalc .eh b{display:block;font-size:14.5px}
+.eicalc .eh small{color:var(--muted);font-size:12.5px}
+.eicalc .erow{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;margin-top:8px}
+.eicalc .erow label{font-family:var(--cond);font-weight:800;font-size:16px}
+.eicalc .erow .num input{width:100%}
+.eicalc .erow select{width:auto;min-width:118px}
+.eicalc .econv{margin-top:8px;font-size:12.5px;line-height:1.6;color:var(--muted);font-family:var(--cond)}
+.eicalc .econv b{color:var(--ink);font-size:14px}
+#secMat h2{display:flex;justify-content:space-between;align-items:baseline}
+#secMat h2 .link{font-family:var(--font);font-size:13px;font-weight:600}
+
+/* ---------- make Solve easy to find ---------- */
+#viewSeg .solvebtn{display:inline-flex;align-items:center;gap:6px;background:var(--deform);color:#fff;font-weight:700}
+#viewSeg .solvebtn svg{width:16px;height:16px}
+#viewSeg .solvebtn:hover{filter:brightness(1.08)}
+#viewSeg .solvebtn[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+#viewSeg button[data-v="play"][aria-pressed="false"]::before{content:"← Back to ";font-weight:600}
+.solvefab{position:absolute;right:12px;top:12px;z-index:4;display:inline-flex;align-items:center;gap:8px;padding:9px 14px 9px 12px;border:0;border-radius:999px;cursor:pointer;
+  background:var(--deform);color:#fff;font-weight:700;font-size:14.5px;box-shadow:0 6px 18px color-mix(in srgb,var(--deform) 40%,transparent);transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+.solvefab[hidden]{display:none}
+.solvefab svg{width:17px;height:17px}
+.solvefab b{transition:transform .15s var(--ease)}
+.solvefab:hover{transform:translateY(-1px);box-shadow:0 10px 24px color-mix(in srgb,var(--deform) 50%,transparent)}
+.solvefab:hover b{transform:translateX(3px)}
+.solvefab.hello{animation:fabHello 1.6s var(--ease) 2}
+@keyframes fabHello{0%,100%{box-shadow:0 6px 18px color-mix(in srgb,var(--deform) 40%,transparent)}50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--deform) 22%,transparent),0 6px 18px color-mix(in srgb,var(--deform) 40%,transparent)}}
+@media (max-width:760px){ .solvefab span{display:none} .solvefab{padding:9px 12px} }
+
+/* Solve lives on the floating button; the toolbar switch only appears as a way back from the Solve page */
+#viewSeg .solvebtn{display:none!important}
+body:not(.in-solve) #viewSeg{display:none!important}
+body.in-solve #viewSeg button[data-v="play"]{background:var(--panel);color:var(--ink);font-weight:700}
+body.in-solve #viewSeg{box-shadow:none}
 </style>
 </head>
 <body>
@@ -714,7 +770,7 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
         </div>
         <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
           <button data-v="play" aria-pressed="true">Playground</button>
-          <button data-v="solve" aria-pressed="false">Solve</button>
+          <button data-v="solve" aria-pressed="false" class="solvebtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h12M6 5l6 7-6 7h12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Solve step by step</button>
         </div>
         <div class="seg" id="diag" role="group" aria-label="Diagram">
           <button data-d="none" aria-pressed="true">No diagram</button>
@@ -744,6 +800,7 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
         <div class="banner" id="banner"></div>
         <div class="tip" id="tip"></div>
         <div class="rlegend" id="rlegend" aria-label="Support reactions"></div>
+        <button class="solvefab" id="solveFab" hidden title="Work through the solution step by step"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h12M6 5l6 7-6 7h12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Solve step by step</span><b aria-hidden="true">→</b></button>
         <div class="zoomctl" id="zoomCtl" role="group" aria-label="Zoom">
           <button id="zIn" title="Zoom in (or scroll)" aria-label="Zoom in">+</button>
           <button id="zOut" title="Zoom out (or scroll)" aria-label="Zoom out">−</button>
@@ -753,6 +810,7 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
       </div>
       <div class="fmview" id="fmView" hidden></div>
       <div class="fmview" id="sdView" hidden></div>
+      <div class="fmview" id="vwView" hidden></div>
       <div class="fmview" id="prView" hidden></div>
     </section>
     <button class="ptoggle" id="panelToggle" aria-expanded="true" aria-controls="sidePanel" title="Hide the side panel" aria-label="Hide the side panel">
@@ -809,7 +867,7 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
           </div>
         </div>
         <div class="sec" id="secMat">
-          <h2>Material & section</h2>
+          <h2>Material & section <button class="link" id="matReset" title="Put E, I and the material back to how this structure started">Reset</button></h2>
           <div class="f"><span class="lbl">Material</span><select id="mat"></select></div>
           <div id="matFields"></div>
           <p class="note" id="eiNote"></p>
@@ -2085,7 +2143,7 @@ let eField=null, iField=null;
 function renderMaterial(){
   const sel=$('#mat'); sel.innerHTML=Object.entries(MATERIALS).map(([k,v])=>`<option value="${k}">${v.label}${v.E?` (${q(v.E,'E',0)})`:''}</option>`).join('');
   sel.value=state.mat;
-  sel.onchange=e=>{ state.mat=e.target.value; if(MATERIALS[state.mat].E){ state.E=MATERIALS[state.mat].E; eField.set(state.E); } updateEI(); recompute(); };
+  sel.onchange=e=>{ commitHistory(); state.mat=e.target.value; if(MATERIALS[state.mat].E){ state.E=MATERIALS[state.mat].E; } renderMaterial(); recompute(); };
   const box=$('#matFields'); box.innerHTML='';
   eField=makeField({label:'Stiffness of material (E)', kind:'E', min:1, max:250, step:1, hardMin:0.1, hardMax:1000, value:state.E,
     onChange:v=>{ state.E=v; const m=Object.entries(MATERIALS).find(([k,x])=>x.E===v); state.mat=m?m[0]:'custom'; sel.value=state.mat; updateEI(); recompute(); }});
@@ -2100,17 +2158,20 @@ function renderMaterial(){
   num.oninput=()=>{ const v=parseFloat(num.value); if(!(v>0)) return; state.I=clamp(v/uc(1,'I'),1,1e7); rng.value=Math.log10(state.I); updateEI(); recompute(); };
   num.onchange=()=>{ num.value=showNum(uc(state.I,'I'),1); };
   box.appendChild(iField);
+  const custom=state.mat==='custom';
+  if(custom){ eField.remove(); iField.remove(); }
   const eiw=document.createElement('div'); eiw.className='f eiwrap';
   eiw.innerHTML=`<div class="fh"><label for="eiDirect"><b>EI</b> (bending stiffness)</label><span class="num"><input id="eiDirect" type="number" inputmode="decimal" step="any" min="1"><span>${uu('EI')}</span></span></div>`;
   box.prepend(eiw);
+  if(custom) box.prepend(eiCalc());
   const ei=eiw.querySelector('input');
-  ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) { updateEI(); return; } setEI(v/uc(1,'EI')); commitHistory(); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
+  ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) { updateEI(); return; } commitHistory(); setEI(v/uc(1,'EI')); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
   ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
   updateEI();
 }
 function curEI(){ return state.E*1e6*state.I*1e-8; }
 function setEI(v){ if(!(v>0)) return; state.I=v*100/state.E; }
-function updateEI(){ $('#eiNote').textContent='Most questions give EI directly: type it in the EI box above. Moments from loads don\'t depend on EI, but deflections and support settlement do.';
+function updateEI(){ $('#eiNote').textContent=state.mat==='custom' ? 'Type E and I in the units from your question, or type EI directly if it\'s given in '+uu('EI')+'. Moments from loads don\'t depend on EI, but deflections and settlement do.' : 'Pick Custom to type E and I in any units, or type EI directly above. Moments from loads don\'t depend on EI, but deflections and settlement do.';
   const f=$('#eiDirect'); if(f&&document.activeElement!==f) f.value=showNum(uc(curEI(),'EI'),0); }
 
 /* ---------- results & reactions ---------- */
@@ -2197,7 +2258,8 @@ $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); historyTouch(); if(state.page==='il') ensureIL(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateReacLegend(); updateProbeOut(); updateIntro(); updateWsStatus(); if(state.page==='ws') updateDesignState(); if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else draw(); if(state.page==='il') updateIL(); }
+function recompute(){ state.result=solve(); historyTouch(); if(state.page==='il') ensureIL(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateReacLegend(); updateProbeOut(); updateIntro(); updateWsStatus(); if(state.page==='ws') updateDesignState(); if(state.view==='vw' && !detSolvable()) setView('play'); else if((state.view==='fm'||state.view==='sd') && detSolvable() && state.page!=='ind') setView('vw'); updateSolveFab();
+  if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else draw(); if(state.page==='il') updateIL(); }
 /* ---------- saved structures: every preset remembers its edits ---------- */
 const SAVE_KEY='bfp-structures';
 let saved={}, defaults={}, lastPreset={}, saveTimer=0;
@@ -2268,6 +2330,46 @@ function resetPreset(){
   rememberCurrent();
 }
 
+
+/* ---------- E and I in any units → EI in kNm² ---------- */
+const E_UNITS=[['GPa',1e6,'GPa (kN/mm²)'],['MPa',1e3,'MPa (N/mm²)'],['kPa',1,'kPa (kN/m²)'],['Pa',1e-3,'Pa (N/m²)'],['ksi',6894.757,'ksi'],['psi',6.894757,'psi']];
+const I_UNITS=[['mm4',1e-12,'mm⁴'],['e6mm4',1e-6,'×10⁶ mm⁴'],['cm4',1e-8,'cm⁴'],['m4',1,'m⁴'],['e6m4',1e-6,'×10⁻⁶ m⁴'],['in4',4.162314e-7,'in⁴'],['ft4',8.630975e-3,'ft⁴']];
+state.eiu=state.eiu||{E:'GPa',I:'e6mm4'};
+function sci(v){ if(v===0) return '0'; const e=Math.floor(Math.log10(Math.abs(v))); if(e>=-2&&e<=5) return (+v.toPrecision(5)).toLocaleString(); const m=v/10**e; return `${+m.toPrecision(4)}×10${String(e).replace('-','⁻').replace(/\d/g,d=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; }
+function eiCalc(){
+  const w=document.createElement('div'); w.className='eicalc';
+  const eu=E_UNITS.find(u=>u[0]===state.eiu.E)||E_UNITS[0], iu=I_UNITS.find(u=>u[0]===state.eiu.I)||I_UNITS[0];
+  const Ek=state.E*1e6, Im=state.I*1e-8;  // kN/m², m⁴
+  w.innerHTML=`<div class="eh"><b>E and I from your question</b><small>Pick the units the question uses. EI is converted to ${uu('EI')} for you.</small></div>
+    <div class="erow"><label>E</label><span class="num"><input type="number" step="any" min="0" inputmode="decimal" data-k="E" value="${+(Ek/eu[1]).toPrecision(6)}" aria-label="E value"></span>
+      <select data-k="Eu" aria-label="Units of E">${E_UNITS.map(u=>`<option value="${u[0]}" ${u[0]===eu[0]?'selected':''}>${u[2]}</option>`).join('')}</select></div>
+    <div class="erow"><label>I</label><span class="num"><input type="number" step="any" min="0" inputmode="decimal" data-k="I" value="${+(Im/iu[1]).toPrecision(6)}" aria-label="I value"></span>
+      <select data-k="Iu" aria-label="Units of I">${I_UNITS.map(u=>`<option value="${u[0]}" ${u[0]===iu[0]?'selected':''}>${u[2]}</option>`).join('')}</select></div>
+    <div class="econv" aria-live="polite"></div>`;
+  const eIn=w.querySelector('[data-k=E]'), iIn=w.querySelector('[data-k=I]'), eSel=w.querySelector('[data-k=Eu]'), iSel=w.querySelector('[data-k=Iu]');
+  const show=()=>{ const eU=E_UNITS.find(u=>u[0]===eSel.value), iU=I_UNITS.find(u=>u[0]===iSel.value), E=parseFloat(eIn.value), I=parseFloat(iIn.value);
+    if(!(E>0)||!(I>0)){ w.querySelector('.econv').textContent='Enter positive values for E and I.'; return null; }
+    const Ek=E*eU[1], Im=I*iU[1], EI=Ek*Im;
+    w.querySelector('.econv').innerHTML=`E = ${sci(E)} ${eU[2].split(' ')[0]} = ${sci(Ek)} kN/m²<br>I = ${sci(I)} ${iU[2]} = ${sci(Im)} m⁴<br><b>EI = ${sci(Ek)} × ${sci(Im)} = ${Math.round(uc(EI,'EI')).toLocaleString()} ${uu('EI')}</b>`;
+    return {Ek,Im}; };
+  const apply=(commit)=>{ const r=show(); if(!r) return; state.E=r.Ek/1e6; state.I=r.Im*1e8; state.mat='custom';
+    const ei=$('#eiDirect'); if(ei&&document.activeElement!==ei) ei.value=showNum(uc(curEI(),'EI'),0);
+    recompute(); if(commit){ commitHistory(); renderMaterial(); } };
+  eIn.oninput=()=>apply(false); iIn.oninput=()=>apply(false);
+  eIn.onchange=()=>apply(true); iIn.onchange=()=>apply(true);
+  // changing a unit keeps the physical value the same and just re-expresses it
+  eSel.onchange=()=>{ const old=E_UNITS.find(u=>u[0]===state.eiu.E), nu=E_UNITS.find(u=>u[0]===eSel.value); const v=parseFloat(eIn.value); if(v>0) eIn.value=+(v*old[1]/nu[1]).toPrecision(6); state.eiu.E=eSel.value; show(); };
+  iSel.onchange=()=>{ const old=I_UNITS.find(u=>u[0]===state.eiu.I), nu=I_UNITS.find(u=>u[0]===iSel.value); const v=parseFloat(iIn.value); if(v>0) iIn.value=+(v*old[1]/nu[1]).toPrecision(6); state.eiu.I=iSel.value; show(); };
+  setTimeout(show,0);
+  return w;
+}
+
+// reset E, I and material to the structure's starting values
+$('#matReset').onclick=()=>{
+  const d=defaults[state.preset]; commitHistory();
+  state.mat=d?d.mat:'steel'; state.E=d?d.E:200; state.I=d?d.I:8000; state.eiu={E:'GPa',I:'e6mm4'};
+  renderMaterial(); recompute(); toast('Material reset');
+};
 
 /* ---------- slope-deflection view ---------- */
 function kinematic(){
@@ -2817,18 +2919,18 @@ $('#zOut').onclick=()=>zoomAt(W/2,Hh/2,0.8);
 $('#zFit').onclick=()=>{ resetCam(); ws.frozen=null; draw(); };
 
 /* ---------- workshop status chip ---------- */
-function wsSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable && determinacy().n>0); }
+function wsSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable); }
 function updateWsStatus(){ updateWsStatusInner(); chipFade(); }
 function updateWsStatusInner(){
   const el=$('#wsStatus'); if(!el) return;
-  if(state.page==='ws'){ const ok=wsSolvable(); $('#viewSeg').hidden=!ok; if(!ok && (state.view==='fm'||state.view==='sd')) setView('play'); }
+  if(state.page==='ws'){ const ok=wsSolvable(); $('#viewSeg').hidden=!ok; if(!ok && (state.view==='fm'||state.view==='sd'||state.view==='vw')) setView('play'); }
   if(state.page!=='ws'||state.view!=='play'){ el.hidden=true; return; }
   el.hidden=false;
   const r=state.result, det=determinacy();
   if(!state.members.length){ el.className='wsstatus empty'; el.innerHTML='Nothing built yet <small>pick Member and click to draw from (0, 0)</small>'; return; }
   if(!Object.keys(state.supports).length){ el.className='wsstatus bad'; el.innerHTML='No supports yet <small>pick Support and click a joint</small>'; return; }
   if(!r||r.unstable){ el.className='wsstatus bad'; el.innerHTML='Unstable <small>it can move freely; add or change a support</small>'; return; }
-  if(det.n<=0){ el.className='wsstatus ok'; el.innerHTML='<span class="full">✓ Statically determinate <small>equilibrium alone solves it</small></span><span class="short"><i class="dot"></i>Determinate</span>'; el.title='Statically determinate: equilibrium alone solves it'; return; }
+  if(det.n<=0){ el.className='wsstatus ok'; el.innerHTML='<span class="full">✓ Statically determinate <small>use Solve for deflections by virtual work</small></span><span class="short"><i class="dot"></i>Determinate</span>'; el.title='Statically determinate: equilibrium alone solves it'; return; }
   el.className='wsstatus ind'; el.innerHTML=`<span class="full">Statically indeterminate, degree ${det.n} <small>use Solve to work it out</small></span><span class="short"><i class="dot"></i>Indeterminate, degree <b>${det.n}</b></span>`; el.title=`Statically indeterminate to degree ${det.n}: use Solve to work it out`;
 }
 
@@ -3331,6 +3433,9 @@ function openPracticeShared(code){
 /* ---------- what's new feed ---------- */
 // newest first; items older than a week drop off the main feed
 const UPDATES=[
+  {d:'2026-10-04', tag:'improved', t:'Solve is easier to find', p:'A highlighted "Solve step by step" button in the toolbar and a floating Solve button on the drawing take you straight to the working.'},
+  {d:'2026-10-04', tag:'new', t:'Enter E and I in any units', p:'Type E in GPa, MPa, kPa, ksi or psi and I in mm⁴, ×10⁶ mm⁴, cm⁴, m⁴ or in⁴. The app shows the conversion and works out EI in kNm² for you.'},
+  {d:'2026-10-04', tag:'new', t:'Deflections by virtual work', p:'Determinate beams and frames now have a Solve page: pick vertical deflection, horizontal deflection or rotation at any joint or point, and see M(x), the unit load\'s m(x) and the integrals.'},
   {d:'2026-10-04', tag:'new', t:'Force method by virtual work or tables', p:'Choose how to find Δ and δ: virtual work shows the cuts, each segment\'s M(x) and m(x) and the integrals; deflection tables show each standard formula and the superposition.'},
   {d:'2026-10-04', tag:'new', t:'Home screen and quick tour', p:'A new home screen to jump into any page, and a 1-minute guided tour. Find the tour again in Settings.'},
   {d:'2026-10-04', tag:'new', t:'Choose your moment sign convention', p:'Slope-deflection now uses anticlockwise = positive by default. Switch to clockwise + any time in Settings → Moment sign.'},
@@ -3427,7 +3532,7 @@ function vwTable(R,i,j){ // j = null → Δ_i0 (M0 · m_i); else δ_ij (m_i · m
     const A=elPolys(j==null?e0:R.U[j].els[sg.k]), Bp=elPolys(ei);
     const fa = j==null ? pScale(A.M,Mf,Lf) : pScale(A.M,mScale(R.reds[j]),Lf);
     const fb = pScale(Bp.M,mScale(R.reds[i]),Lf);
-    const x0=A.x0*Lf, x1=A.x1*Lf, val=pInt(pMul(fa,fb),x0,x1);
+    const x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(fa,fb),x0,x1));
     total+=val; n++;
     const [a,b]=state.members[sg.m];
     rows+=`<tr><td><span class="segno">${n}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td><td class="eqn">${pFmt(fa)}</td><td class="eqn">${pFmt(fb)}</td><td>${fmtEI(val)}</td></tr>`;
@@ -3572,6 +3677,143 @@ function drawCuts(R){
   }});
 }
 
+/* ---------- determinate structures: deflection by virtual work ---------- */
+state.dw={loc:null, q:'v'};
+function dwDefaultLoc(){
+  const r=state.result, R=restraintsFrom(state.supports);
+  let best=null, bv=-1;
+  state.nodes.forEach((p,n)=>{ const d=R[n]||[]; if(d.includes(1)&&d.includes(0)) return; const u=r.nodeDisp[n], v=Math.hypot(u[0],u[1]); if(v>bv){ bv=v; best=n; } });
+  if(best!=null && bv>1e-12) return {type:'node', n:best};
+  return {type:'mem', m:0, t:0.5};
+}
+function dwValidLoc(l){ if(!l) return false; if(l.type==='node') return l.n<state.nodes.length; return l.m<state.members.length; }
+// a member end (m, t) that sits on joint n
+function memberAt(n){ const i=state.members.findIndex(([a,b])=>a===n||b===n); return i<0?null:{m:i, t:state.members[i][0]===n?0:1}; }
+function locMT(l){ return l.type==='node' ? memberAt(l.n) : {m:l.m, t:l.t}; }
+function locName(l){
+  if(l.type==='node') return `joint ${letter(l.n)}`;
+  const [a,b]=state.members[l.m]; return `${q(l.t*memberLen(l.m),'len',2)} from ${letter(a)} on ${letter(a)}${letter(b)}`;
+}
+function unitLoad(l,qty){
+  const mt=locMT(l); if(!mt) return null;
+  if(qty==='r') return {id:-77, type:'moment', m:mt.m, t:mt.t, mag:1, dir:state.ccw?'ccw':'cw'};
+  return {id:-77, type:'point', m:mt.m, t:mt.t, mag:1, dir:qty==='v'?'down':'right'};
+}
+function exactAt(res,l){
+  // displacement and rotation of the real structure at the location
+  if(l.type==='node'){ const u=res.nodeDisp[l.n]; return {dx:u[0], dy:u[1], rot:res.u[3*l.n+2]}; }
+  const e=res.els.find(x=>x.m===l.m&&l.t>=x.t0-1e-9&&l.t<=x.t1+1e-9); const v=evalEl(e,clamp((l.t-e.t0)/((e.t1-e.t0)||1),0,1)*e.L); return {dx:v.dx, dy:v.dy, rot:v.rot};
+}
+function dwCompute(){
+  const r=state.result; if(!r||r.unstable) return {err:'The structure is unstable. Add or change a support first.'};
+  const det=determinacy(); if(det.n>0) return {err:'This structure is indeterminate. Use the force method or slope-deflection instead.'};
+  const key=state.preset+'|'+state.nodes.length+'|'+state.members.length;
+  if(state.dw.key!==key){ state.dw.key=key; state.dw.loc=dwDefaultLoc();
+    // start with whichever way that point actually moves the most
+    const L=state.dw.loc; if(L.type==='node'){ const u=state.result.nodeDisp[L.n]; state.dw.q = (!isBeam() && Math.abs(u[0])>Math.abs(u[1])) ? 'h' : 'v'; } }
+  if(isBeam()&&state.dw.q==='h') state.dw.q='v';
+  if(!dwValidLoc(state.dw.loc)) state.dw.loc=dwDefaultLoc();
+  const l=state.dw.loc, qty=state.dw.q, U=unitLoad(l,qty); if(!U) return {err:'Pick a joint that is part of a member.'};
+  const zero=r.EL.map(e=>({...e, mag:0, wa:0, wb:0, mag2:0}));
+  const real=solve({EL:[...r.EL, {...U, id:-78, mag:0}]});
+  const virt=solve({EL:[...zero, U], settle:{}});
+  if(real.unstable||virt.unstable) return {err:'Could not set up the virtual load here.'};
+  return {l, qty, U, real, virt, exact:exactAt(r,l)};
+}
+function dwHead(){
+  const settled=Object.keys(state.settle).some(n=>state.settle[n]&&state.supports[n]);
+  return `<div class="solvehead"><h3>Deflection by virtual work</h3><p>For a determinate structure, equilibrium gives the forces directly. To find how far a point moves or rotates, apply a unit load there and use Δ = ∫ M·m / EI dx.</p>
+    <div class="eibar ${settled?'warn':''}"><b>EI used:</b><span class="num"><input class="eiSolve" aria-label="EI used in this solution" type="number" inputmode="decimal" step="any" min="1" value="${showNum(uc(curEI(),'EI'),0)}"><span>${uu('EI')}</span></span>
+      <span class="eimsg">${settled?'⚠ A support settles: that adds a rigid-body term, shown in the working.':'Deflections and rotations scale with 1/EI, so make sure this matches your question.'}</span></div></div>`;
+}
+function renderVW(){
+  const box=$('#vwView'); if(!box||box.hidden) return;
+  const D=dwCompute();
+  if(D.err){ box.innerHTML=`<div class="fm-grid">${dwHead()}<div class="card wide"><p class="status bad">${D.err}</p></div></div>`; wireSolveHead(box); return; }
+  const {l,qty,real,virt,exact}=D, Lf=uc(1,'len'), Mf=uc(1,'moment'), EId=uc(curEI(),'EI');
+  const mF = qty==='r' ? 1 : Lf; // m per unit force has length units; per unit moment none
+  // segment tables
+  let rowsM='', rowsm='', rowsI='', total=0, k=0;
+  real.els.forEach((e,i)=>{ const ev=virt.els[i]; if(!ev) return; k++;
+    const A=elPolys(e), B=elPolys(ev), [a,b]=state.members[e.m];
+    const Md=pScale(A.M,Mf,Lf), md=pScale(B.M,mF,Lf), x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(Md,md),x0,x1)); total+=val;
+    const seg=`<td><span class="segno">${k}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td>`;
+    rowsM+=`<tr>${seg}<td class="eqn">${pFmt(Md)}</td><td class="eqn">${pFmt(pScale(A.V,uc(1,'force'),Lf))}</td></tr>`;
+    rowsm+=`<tr>${seg}<td class="eqn">${pFmt(md)}</td></tr>`;
+    rowsI+=`<tr>${seg}<td class="eqn">${pFmt(Md)}</td><td class="eqn">${pFmt(md)}</td><td>${fmtEI(val)}</td></tr>`;
+  });
+  // the answer, and the exact value from the stiffness solution to check against
+  const exactSI = qty==='v' ? -exact.dy : qty==='h' ? exact.dx : exact.rot*(state.ccw?1:-1);
+  const exactEIdisp = exactSI*(qty==='r'?1:Lf)*EId;   // Δ×EI in display units
+  const settleTerm = exactEIdisp - total;
+  const hasSettle = Math.abs(settleTerm) > 1e-6*Math.max(1,Math.abs(exactEIdisp));
+  const ans = (total+(hasSettle?settleTerm:0))/EId; // display length (or rad)
+  const ansTxt = qty==='r' ? `${fmt(Math.abs(ans)*1000,3)} mrad (${fmt(Math.abs(ans)*180/Math.PI,4)}°) ${ans>=0?(state.ccw?'anticlockwise':'clockwise'):(state.ccw?'clockwise':'anticlockwise')}`
+    : `${q(Math.abs(ans)/Lf,'defl',3)} ${qty==='v'?(ans>=0?'downward':'upward'):(ans>=0?'to the right':'to the left')}`;
+  const ok=Math.abs(total+(hasSettle?settleTerm:0)-exactEIdisp)<1e-3*Math.max(1,Math.abs(exactEIdisp));
+  const what = qty==='v'?'vertical deflection':qty==='h'?'horizontal deflection':'rotation';
+  const unitTxt = qty==='r' ? `a unit moment (1 ${uu('moment')}, ${state.ccw?'anticlockwise':'clockwise'})` : `a unit load (1 ${uu('force')}, ${qty==='v'?'downward':'to the right'})`;
+  const rx=(res,virtual)=>res.reactions.slice().sort((a,b)=>a.n-b.n).map(re=>re.dofs.slice().sort().map(d=>{ const v=[re.Rx,re.Ry,re.Mz][d], L=letter(re.n);
+      const nm=d===0?`${L}<sub>x</sub>`:d===1?`${L}<sub>y</sub>`:`M<sub>${L}</sub>`;
+      return `<span class="rchip">${nm} = ${virtual?fmt(uc(v,d===2?'moment':'force')/(qty==='r'?Mf:uc(1,'force')),3):q(v,d===2?'moment':'force',2)}</span>`; }).join('')).join('');
+  // location picker
+  const joints=state.nodes.map((_,n)=>`<option value="n${n}" ${l.type==='node'&&l.n===n?'selected':''}>Joint ${letter(n)}</option>`).join('');
+  const mems=state.members.map(([a,b],i)=>`<option value="m${i}" ${l.type==='mem'&&l.m===i?'selected':''}>Point on ${letter(a)}${letter(b)}</option>`).join('');
+  box.innerHTML=`<div class="fm-grid">${dwHead()}
+    <div class="card wide"><h3><span class="step">1</span>What do you want to find?</h3>
+      <div class="dwpick">
+        <div class="seg dwq" role="group" aria-label="Quantity">${[['v','Vertical deflection'],...(isBeam()?[]:[['h','Horizontal deflection']]),['r','Rotation']].map(([v,t])=>`<button data-q="${v}" aria-pressed="${qty===v}">${t}</button>`).join('')}</div>
+        <label class="dwloc">at <select id="dwLoc">${joints}${mems}</select></label>
+        <span id="dwPos"></span>
+      </div>
+      <p class="note">Use <b>Moment diagram</b> and <b>Shear diagram</b> in the toolbar to show the real and virtual diagrams. Real loads give the bending moment M(x). A virtual ${unitTxt} at ${locName(l)} gives m(x). Then the ${what} there is Δ = ∫ M·m / EI dx, summed over every segment.</p></div>
+    <div class="card"><h3><span class="step">2</span>Real system: M(x)</h3><p>Reactions from equilibrium:</p><div class="rchips">${rx(real,false)}</div>
+      <canvas class="mini" id="dwReal" style="height:250px"></canvas>
+      ${state.fm.showM?`<h4 class="sub">Bending moment M (${uu('moment')})</h4><canvas class="mini" id="dwRealM" style="height:220px"></canvas>`:''}
+      ${state.fm.showV?`<h4 class="sub">Shear force V (${uu('force')})</h4><canvas class="mini" id="dwRealV" style="height:220px"></canvas>`:''}
+      <details class="vwork" open><summary>Moment and shear in each segment (x from the first joint of each member)</summary><div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range (${uu('len')})</th><th>M(x) (${uu('moment')})</th><th>V(x) (${uu('force')})</th></tr>${rowsM}</table></div></details></div>
+    <div class="card"><h3><span class="step">3</span>Virtual system: m(x)</h3><p>Remove the real loads and apply ${unitTxt} at ${locName(l)}. Virtual reactions (per unit load):</p><div class="rchips">${rx(virt,true)}</div>
+      <canvas class="mini" id="dwVirt" style="height:250px"></canvas>
+      ${state.fm.showM?`<h4 class="sub">Virtual moment m${qty==='r'?'':' ('+uu('len')+')'}</h4><canvas class="mini" id="dwVirtM" style="height:220px"></canvas>`:''}
+      ${state.fm.showV?`<h4 class="sub">Virtual shear v</h4><canvas class="mini" id="dwVirtV" style="height:220px"></canvas>`:''}
+      ${!state.fm.showM&&!state.fm.showV?'':''}
+      <details class="vwork" open><summary>Virtual moment in each segment</summary><div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range (${uu('len')})</th><th>m(x)${qty==='r'?'':' ('+uu('len')+')'}</th></tr>${rowsm}</table></div></details></div>
+    <div class="card wide"><h3><span class="step">4</span>Virtual work: Δ = ∫ M·m / EI dx</h3>
+      <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>M(x)</th><th>m(x)</th><th>∫ M·m dx</th></tr>${rowsI}
+      ${hasSettle?`<tr><td colspan="4">Support settlement (virtual reactions × settlement, a rigid-body term)</td><td>${fmtEI(settleTerm)}</td></tr>`:''}
+      <tr class="tot"><td colspan="4"><b>EI × Δ</b></td><td><b>${fmtEI(total+(hasSettle?settleTerm:0))}</b></td></tr></table></div>
+      <div class="dwans"><span class="lbl">${what[0].toUpperCase()+what.slice(1)} at ${locName(l)}</span>
+        <span class="eq">Δ = ${fmtEI(total+(hasSettle?settleTerm:0))} / ${Math.round(EId).toLocaleString()} = <b>${ansTxt}</b></span>
+        <span class="status ${ok?'ok':'bad'}">${ok?'Matches the full stiffness analysis ✓':'Check: the stiffness analysis gives a slightly different value'}</span></div>
+      <p class="note">A positive result means the point moves the same way as the unit load (${qty==='v'?'down':qty==='h'?'right':(state.ccw?'anticlockwise':'clockwise')}).</p></div>
+  </div>`;
+  wireSolveHead(box);
+  box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ state.dw.q=b.dataset.q; renderVW(); });
+  $('#dwLoc').onchange=e=>{ const v=e.target.value; state.dw.loc = v[0]==='n' ? {type:'node',n:+v.slice(1)} : {type:'mem',m:+v.slice(1),t:0.5}; renderVW(); };
+  if(l.type==='mem'){ const L=memberLen(l.m); const f=makeField({label:'Distance along member', kind:'len', min:0, max:L, step:0.05, hardMax:L, value:r2(l.t*L), onChange:v=>{}, onCommit:v=>{ state.dw.loc={type:'mem',m:l.m,t:clamp(v/L,0,1)}; renderVW(); }}); f.classList.add('dwposf'); $('#dwPos').appendChild(f); }
+  const restr=restraintsFrom(state.supports);
+  const cutsAfter=()=>{ let n=0; real.els.forEach(el=>{ n++; const [a,b]=state.members[el.m], A=state.nodes[a], B=state.nodes[b], t=(el.t0+el.t1)/2;
+      const [px,py]=toS(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t), [x1,y1]=toS(...A), [x2,y2]=toS(...B), Ls=Math.hypot(x2-x1,y2-y1)||1, nx=-(y2-y1)/Ls, ny=(x2-x1)/Ls;
+      ctx.save(); ctx.strokeStyle=C.load; ctx.lineWidth=1.6; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(px-nx*11,py-ny*11); ctx.lineTo(px+nx*11,py+ny*11); ctx.stroke(); ctx.restore();
+      ctx.beginPath(); ctx.arc(px+nx*22,py+ny*22,8.5,0,Math.PI*2); ctx.fillStyle=C.load; ctx.fill(); setFont(10.5,800); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(String(n),px+nx*22,py+ny*22+0.5); }); };
+  renderMini($('#dwReal'),{restr, EL:state.result.EL, loadLabels:true, after:cutsAfter});
+  renderMini($('#dwVirt'),{restr, EL:[D.U], after:cutsAfter});
+  if(state.fm.showM){ renderMini($('#dwRealM'),{restr, samples:real.elSamples, diag:'M'}); renderMini($('#dwVirtM'),{restr, samples:virt.elSamples, diag:'M'}); }
+  if(state.fm.showV){ renderMini($('#dwRealV'),{restr, samples:real.elSamples, diag:'V'}); renderMini($('#dwVirtV'),{restr, samples:virt.elSamples, diag:'V'}); }
+}
+new ResizeObserver(()=>{ const b=$('#vwView'); if(b&&!b.hidden) renderVW(); }).observe($('#vwView'));
+function solveTarget(){ return detSolvable()?'vw':(state.solveMethod||'fm'); }
+function detSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable && determinacy().n<=0); }
+
+function updateSolveFab(){
+  const fab=$('#solveFab'); if(!fab) return;
+  const show = !$('#viewSeg').hidden && state.view==='play' && state.page!=='il';
+  if(show && fab.hidden){ fab.classList.remove('hello'); void fab.offsetWidth; fab.classList.add('hello'); }
+  fab.hidden=!show;
+  if(show){ const r=state.result, det=r&&!r.unstable?determinacy():null; fab.querySelector('span').textContent = det&&det.n<=0 ? 'Solve: deflections by virtual work' : 'Solve step by step'; }
+}
+$('#solveFab').onclick=()=>setView(solveTarget());
+
 /* ---------- home screen ---------- */
 const HOME_ART=`<svg class="hart" viewBox="0 0 480 220" aria-hidden="true">
   <path d="M40 120 Q 140 190 240 120 Q 340 50 440 120" fill="none" stroke="var(--deform)" stroke-width="6" stroke-linecap="round"/>
@@ -3616,7 +3858,7 @@ const TOUR=[
   {sel:'#badge', t:'Determinate or not?', p:'This shows whether the structure is determinate, and if not, its degree of indeterminacy.'},
   {sel:'#wrap', t:'Play with it', p:'Drag the red loads, click a joint to change its support, scroll to zoom and drag empty space to move around. Click the structure to check the forces at any point.'},
   {sel:'#diag', t:'Diagrams', p:'Overlay the bending moment, shear force or axial force diagram on the structure.'},
-  {sel:'#viewSeg', t:'Solve it step by step', p:'Open Solve to work through the force method (with virtual work or deflection tables) or slope-deflection, with every diagram and equation.'},
+  {sel:'#solveFab', t:'Solve it step by step', p:'Open Solve to work through the force method (with virtual work or deflection tables) or slope-deflection, with every diagram and equation.'},
   {sel:'.tabs', t:'Edit, check, results', p:'Change loads, supports, sizes and EI under Edit. Check a point gives exact values anywhere, and Results lists the reactions.'},
   {sel:'#editGrp', t:'Undo, reset, share', p:'Undo and redo your changes, reset the structure, or copy a link to share exactly what you built.'},
   {sel:'#newsBtn', t:"What's new", p:'New features and fixes appear here. A red dot means something new.'},
@@ -3858,7 +4100,7 @@ function setPage(page,keep){
   $('#homeView').hidden=page!=='home';
   document.querySelectorAll('.pages a').forEach(a=>a.setAttribute('aria-current',a.dataset.page===page?'page':'false'));
   { const cur=document.querySelector(`.pages a[data-page="${page}"]`), nav=document.querySelector('.pages'); if(cur&&nav&&nav.scrollWidth>nav.clientWidth) nav.scrollLeft=cur.offsetLeft-(nav.clientWidth-cur.offsetWidth)/2; }
-  $('#viewSeg').hidden=!(page==='ind'||page==='ws');
+  $('#viewSeg').hidden=!(page==='ind'||page==='ws'||page==='det');
   $('#sdSec').hidden=true; $('#ilSec').hidden=page!=='il';
   resetViewState();
   $('#prView').hidden=page!=='pr'; $('#wrap').hidden=page==='pr';
@@ -3888,16 +4130,18 @@ function setView(v){
   state.view=v;
   $('#buildGrp').hidden=!(state.page==='ws'&&v==='play'); ws.start=null; updateWsStatus();
   if(v==='fm'||v==='sd') state.solveMethod=v;
-  document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='solve'?(v==='fm'||v==='sd'):b.dataset.v===v)?'true':'false'));
-  const fm=v==='fm', sdv=v==='sd', other=fm||sdv;
-  $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv;
+  document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='solve'?(v==='fm'||v==='sd'||v==='vw'):b.dataset.v===v)?'true':'false'));
+  const fm=v==='fm', sdv=v==='sd', vwv=v==='vw', other=fm||sdv||vwv;
+  document.body.classList.toggle('in-solve',other);
+  $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv; $('#vwView').hidden=!vwv;
   ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=other);
   $('#exag').closest('.tool').hidden=other;
-  $('#fmM').hidden=!other; $('#fmV').hidden=!other; $('#fmN').hidden=!other||isBeam();
+  $('#fmM').hidden=!other; $('#fmV').hidden=!other; $('#fmN').hidden=!(fm||sdv)||isBeam();
   $('#sideWrap').hidden = other ? !state.fm.showM : state.diagram!=='M';
-  if(fm) renderFM(); else if(sdv) renderSDView(); else resize();
+  updateSolveFab();
+  if(fm) renderFM(); else if(sdv) renderSDView(); else if(vwv) renderVW(); else resize();
 }
-document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v==='solve'?(state.solveMethod||'fm'):b.dataset.v));
+document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v==='solve'?(detSolvable()?'vw':(state.solveMethod||'fm')):b.dataset.v));
 function solveHead(){
   const m=state.view;
   const c=(v,t,s)=>`<button class="ccard" data-solve="${v}" aria-pressed="${m===v}"><span class="ci">${ICONS[v]}</span><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
@@ -3912,9 +4156,9 @@ function wireSolveHead(box){
   ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) return; setEI(v/uc(1,'EI')); commitHistory(); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
   ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
 }
-$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else renderFM(); };
+$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else renderFM(); };
 $('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); if(state.view==='sd') renderSDView(); else renderFM(); };
-$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else renderFM(); };
+$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else renderFM(); };
 
 /* ---------- force method view ---------- */
 function fmtEI(v,dec=2){ const a=Math.abs(v); return (v<0?'−':'')+a.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
