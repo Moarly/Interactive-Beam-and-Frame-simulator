@@ -530,6 +530,9 @@ body.page-ws #quickSave{display:inline-flex!important}
   .setpop .seg button{padding:10px 6px;font-size:14px}
 }
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
+.clearbtn{display:inline-flex;align-items:center;gap:6px;color:var(--load)}
+.clearbtn svg{width:16px;height:16px}
+.clearbtn:hover{border-color:var(--load)}
 </style>
 </head>
 <body>
@@ -585,6 +588,7 @@ body.page-ws #quickSave{display:inline-flex!important}
             <div class="snapq" role="group" aria-label="Quick snap values"></div>
           </div>
           <select id="tplSel" style="width:auto" aria-label="Start from a template"></select>
+          <button class="btn clearbtn" id="wsClear" title="Remove everything and start again (you can undo this)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 13h8l1-13" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/><path d="M10 11v6M14 11v6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Clear all</button>
         </div>
         <div class="seg view" id="viewSeg" role="group" aria-label="View" hidden>
           <button data-v="play" aria-pressed="true">Playground</button>
@@ -2238,13 +2242,13 @@ new ResizeObserver(()=>{ if(!$('#sdView').hidden) renderSDView(); }).observe($('
 const HIST={}; let histTimer=0, histMuted=false;
 function hist(){ const id=state.preset; return HIST[id]||(HIST[id]={stack:[],idx:-1}); }
 function historyTouch(){
-  if(histMuted || !state.preset || !state.runs.length || state.page==='pr') return;
+  if(histMuted || !state.preset || (!state.runs.length && state.preset!=='custom') || state.page==='pr') return;
   clearTimeout(histTimer); histTimer=setTimeout(commitHistory,350);
   updateHistoryBtns();
 }
 function commitHistory(){
   clearTimeout(histTimer);
-  if(!state.preset || !state.runs.length) return;
+  if(!state.preset || (!state.runs.length && state.preset!=='custom')) return;
   const h=hist(), sn=snapshot();
   if(h.idx>=0 && cmpKey(h.stack[h.idx])===cmpKey(sn)) return;
   h.stack=h.stack.slice(0,h.idx+1); h.stack.push(sn); if(h.stack.length>80) h.stack.shift(); h.idx=h.stack.length-1;
@@ -2761,6 +2765,12 @@ function renderJoints(){
     box.appendChild(d);
   }
 }
+
+$('#wsClear').onclick=async()=>{
+  if(!state.cgeo.nodes.length){ toast('Nothing to clear'); return; }
+  if(!(await ask('Clear everything in the Workshop? You can undo this.','Clear all'))) return;
+  loadTemplate(0); toast('Cleared. Undo brings it back');
+};
 
 /* ---------- workshop: saved designs ---------- */
 const DKEY='bfp-designs';
