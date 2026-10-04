@@ -533,6 +533,21 @@ body.page-ws #quickSave{display:inline-flex!important}
 .clearbtn{display:inline-flex;align-items:center;gap:6px;color:var(--load)}
 .clearbtn svg{width:16px;height:16px}
 .clearbtn:hover{border-color:var(--load)}
+.wsstatus{transition:opacity .25s var(--ease),transform .25s var(--ease)}
+.wsstatus.fade{opacity:0;transform:translate(-50%,-6px);pointer-events:none;transition:opacity 1.6s var(--ease),transform 1.6s var(--ease)}
+
+.wsstatus .short{display:none}
+.wsstatus.fading{opacity:0;transform:translate(-50%,-4px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.wsstatus.mini{padding:4px 11px;font-size:12.5px;font-weight:600;gap:6px;box-shadow:none;border-width:1px;border-color:color-mix(in srgb,currentColor 35%,var(--line));
+  background:color-mix(in srgb,var(--panel) 72%,transparent);backdrop-filter:blur(6px);opacity:.92;cursor:default;animation:miniIn .6s var(--ease)}
+.wsstatus.mini .full{display:none}
+.wsstatus.mini .short{display:inline-flex;align-items:center;gap:6px}
+.wsstatus.mini .short b{font-family:var(--cond);font-size:13.5px}
+.wsstatus .dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,currentColor 18%,transparent)}
+.wsstatus.mini:hover{opacity:1}
+.wsstatus.mini:hover .full{display:inline}
+.wsstatus.mini:hover .short{display:none}
+@keyframes miniIn{from{opacity:0;transform:translate(-50%,-4px) scale(.96)}to{opacity:.92;transform:translate(-50%,0)}}
 </style>
 </head>
 <body>
@@ -1995,7 +2010,7 @@ function updateReacLegend(){
 function updateReadout(){
   const r=state.result, ro=$('#readout'), ban=$('#banner');
   if(!r||r.unstable){
-    ban.style.display='block'; ban.textContent= (state.page==='ws'&&!state.members.length) ? '' : (state.page==='ws'&&!Object.keys(state.supports).length) ? 'Add supports: pick the Support tool, then click a joint.' : 'This structure can move freely, so it has no stable shape. Add a support, or change a roller to pinned or fixed.'; if(!ban.textContent) ban.style.display='none';
+    ban.style.display='block'; ban.textContent= (state.page==='ws'&&!state.members.length) ? '' : (state.page==='ws'&&!Object.keys(state.supports).length) ? 'Add supports: pick the Support tool, then click a joint.' : 'This structure can move freely, so it has no stable shape. Add a support, or change a roller to pinned or fixed.'; if(!ban.textContent||state.page==='ws') ban.style.display='none';
     ro.innerHTML='<p class="empty">No results while the structure can move freely.</p>'; $('#exagOut').textContent='–'; updateLegend(); return;
   }
   ban.style.display='none';
@@ -2170,7 +2185,7 @@ function renderSDView(){
     ${pinNodes.length?`<p>Tip: at a pinned or roller end (${pinNodes.map(letter).join(', ')}) you can use the modified equation M = (3EI/L)(θ − ψ) + FEM′ to remove that rotation from the unknowns.</p>`:''}
     ${kin.sway?`<p>This structure can sway, so the chord rotations ψ of the columns are unknown too, and you need one extra equation per sway (horizontal equilibrium, written with column shears).</p>`:''}
     <canvas class="mini" id="sdKin" style="height:280px"></canvas>
-    <p class="note">The blue line is how the loads bend the structure (exaggerated). Each red tangent shows an unknown joint rotation θ measured from the original member${kin.sway?', and Δ marks joints that move sideways or down':''}.</p></div>`);
+    <p class="note">The blue line is how the loads bend the structure (exaggerated). Each red tangent shows an unknown joint rotation θ measured from the original member${kin.sway?', and Δ marks joints that move sideways or down':''}${Object.keys(state.settle).some(n=>state.settle[n])?'. A settled support is drawn where it ends up (its original spot is faded); that movement is known, so it isn\'t an unknown':''}.</p></div>`);
   // 2. fixed-end moments
   cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Treat every member as fixed at both ends and find the end moments its loads cause (clockwise positive).</p>
     <table class="sdt"><tr><th>Member</th><th>L (${uu('len')})</th><th>FEM near (${mu})</th><th>FEM far (${mu})</th></tr>
@@ -2229,7 +2244,7 @@ function renderSDView(){
   const restr=restraintsFrom(state.supports);
   // markers: rotation arcs at unknown joints, sway arrow at a free top joint
   const md=r.maxDisp||1;
-  const moves=state.nodes.map((_,n)=>n).filter(n=>{ const d=restr[n]||[]; if(d.includes(0)&&d.includes(1)) return false; return Math.hypot(r.nodeDisp[n][0],r.nodeDisp[n][1])>0.02*md; });
+  const moves=state.nodes.map((_,n)=>n).filter(n=>{ const d=restr[n]||[]; if(d.includes(0)&&d.includes(1)) return false; if(state.settle[n]&&d.includes(1)) return false; return Math.hypot(r.nodeDisp[n][0],r.nodeDisp[n][1])>0.02*md; });
   renderMini($('#sdKin'),{restr, EL:r.EL, res:r, thetas:kin.rot, deltas:moves.map(n=>({n,d:1,text:`Δ${letter(n)}`}))});
   renderMini($('#sdBent'),{restr, EL:r.EL, res:r});
   if(state.fm.showM) renderMini($('#sdM'),{restr, samples:r.elSamples, diag:'M'});
@@ -2674,7 +2689,8 @@ $('#zFit').onclick=()=>{ resetCam(); ws.frozen=null; draw(); };
 
 /* ---------- workshop status chip ---------- */
 function wsSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable && determinacy().n>0); }
-function updateWsStatus(){
+function updateWsStatus(){ updateWsStatusInner(); chipFade(); }
+function updateWsStatusInner(){
   const el=$('#wsStatus'); if(!el) return;
   if(state.page==='ws'){ const ok=wsSolvable(); $('#viewSeg').hidden=!ok; if(!ok && (state.view==='fm'||state.view==='sd')) setView('play'); }
   if(state.page!=='ws'||state.view!=='play'){ el.hidden=true; return; }
@@ -2683,8 +2699,8 @@ function updateWsStatus(){
   if(!state.members.length){ el.className='wsstatus empty'; el.innerHTML='Nothing built yet <small>pick Member and click to draw from (0, 0)</small>'; return; }
   if(!Object.keys(state.supports).length){ el.className='wsstatus bad'; el.innerHTML='No supports yet <small>pick Support and click a joint</small>'; return; }
   if(!r||r.unstable){ el.className='wsstatus bad'; el.innerHTML='Unstable <small>it can move freely; add or change a support</small>'; return; }
-  if(det.n<=0){ el.className='wsstatus ok'; el.innerHTML='✓ Statically determinate <small>equilibrium alone solves it</small>'; return; }
-  el.className='wsstatus ind'; el.innerHTML=`Statically indeterminate, degree ${det.n} <small>use Solve to work it out</small>`;
+  if(det.n<=0){ el.className='wsstatus ok'; el.innerHTML='<span class="full">✓ Statically determinate <small>equilibrium alone solves it</small></span><span class="short"><i class="dot"></i>Determinate</span>'; el.title='Statically determinate: equilibrium alone solves it'; return; }
+  el.className='wsstatus ind'; el.innerHTML=`<span class="full">Statically indeterminate, degree ${det.n} <small>use Solve to work it out</small></span><span class="short"><i class="dot"></i>Indeterminate, degree <b>${det.n}</b></span>`; el.title=`Statically indeterminate to degree ${det.n}: use Solve to work it out`;
 }
 
 /* ---------- member editor: length and angle instead of coordinates ---------- */
@@ -2771,6 +2787,22 @@ $('#wsClear').onclick=async()=>{
   if(!(await ask('Clear everything in the Workshop? You can undo this.','Clear all'))) return;
   loadTemplate(0); toast('Cleared. Undo brings it back');
 };
+
+let chipKey='', chipTimer=0, chipTimer2=0;
+function chipFade(){
+  const el=$('#wsStatus'); if(!el||el.hidden){ chipKey=''; return; }
+  const full=el.querySelector('.full'), key=el.className.replace(/\s*(fade|fading|mini)/g,'')+'|'+(full?full.textContent:el.textContent);
+  if(key===chipKey) return;
+  chipKey=key; clearTimeout(chipTimer); clearTimeout(chipTimer2);
+  el.classList.remove('fade','fading','mini');
+  chipTimer=setTimeout(()=>{
+    if(el.querySelector('.short')){
+      // determinate / indeterminate: settle into a small, quiet badge that stays
+      el.classList.add('fading');
+      chipTimer2=setTimeout(()=>{ el.classList.remove('fading'); el.classList.add('mini'); },650);
+    } else el.classList.add('fade');
+  },4000);
+}
 
 /* ---------- workshop: saved designs ---------- */
 const DKEY='bfp-designs';
@@ -3238,7 +3270,17 @@ function renderMini(canvas,opt){
       ctx.save(); ctx.setLineDash([5,4]); ctx.strokeStyle=C.muted; ctx.lineWidth=1.4; members(); ctx.restore();
     } else { ctx.strokeStyle=C.ink; ctx.lineWidth=2.2; ctx.lineCap='round'; members(); }
     // supports
-    Object.entries(opt.restr||{}).forEach(([n,d])=>{ const [x,y]=toS(...state.nodes[n]); drawSupport(typeFromDofs(d),x,y,+n); });
+    Object.entries(opt.restr||{}).forEach(([n,d])=>{
+      n=+n; const p=state.nodes[n], mm=state.settle[n];
+      if(bent && mm && d.includes(1)){
+        const u=opt.res.nodeDisp[n], [ox,oy]=toS(...p), [x,y]=toS(p[0]+u[0]*D, p[1]+u[1]*D);
+        ctx.save(); ctx.globalAlpha=0.3; drawSupport(typeFromDofs(d),ox,oy,n); ctx.restore();
+        ctx.save(); ctx.setLineDash([3,3]); ctx.strokeStyle=C.load; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(ox,oy+4); ctx.lineTo(x,y-4); ctx.stroke(); ctx.restore();
+        const ay=Math.min(oy,y)+Math.abs(y-oy)/2; if(Math.abs(y-oy)>18){ arrow(ox+14,oy+2,ox+14,y-2,C.load,1.6,7); }
+        drawSupport(typeFromDofs(d),x,y,n);
+        pillQ.push({t:`${letter(n)} ${mm>0?'settles':'lifts'} ${q(Math.abs(mm),'settle',1)}`, x:x+(x<w-150?62:-62), y:ay, c:C.load});
+      } else { const [x,y]=toS(...p); drawSupport(typeFromDofs(d),x,y,n); }
+    });
     state.nodes.forEach((p,n)=>{ const [x,y]=toS(...p); if(isHingeNode(n)){ ctx.beginPath(); ctx.arc(x,y,5.5,0,Math.PI*2); ctx.fillStyle=C.paper; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.stroke(); } else { ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle=C.ink; ctx.fill(); }
       const [ax,ay]=memberAway(n), L=Math.hypot(ax,ay)||1; label(letter(n), x+(ax/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?10:0), y-(ay/L)*16-(opt.restr&&opt.restr[n]&&opt.restr[n].length?8:0), C.muted,'center',12,700); });
     // loads
