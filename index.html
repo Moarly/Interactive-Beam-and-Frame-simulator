@@ -4309,10 +4309,33 @@ function xpBuild(){
   });
   doc.innerHTML=html;
 }
+// print a clean, standalone copy of the document so it flows over as many pages as it needs
+function xpDocHTML(){
+  const title=(XP.title||'Solution').replace(/[<>]/g,'');
+  const css=[...document.querySelectorAll('style')].map(x=>x.textContent).join('\n');
+  const links=[...document.querySelectorAll('link[rel=stylesheet]')].map(l=>l.outerHTML).join('');
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${title}</title>${links}<style>${css}</style>
+<style>
+@page{size:A4;margin:14mm}
+html,body{height:auto!important;min-height:0!important;overflow:visible!important;background:#fff!important;display:block!important;position:static!important}
+body{margin:0!important;padding:0!important;color:#1b1b1b}
+.paper{width:auto!important;max-width:none!important;margin:0!important;padding:0!important;box-shadow:none!important;border-radius:0!important}
+.paper .xsec{break-inside:auto}
+.paper img.xfig,.paper .xeqt,.paper .xcut,.paper .card,.paper .xwork,.paper table{break-inside:avoid}
+.paper h2,.paper h3,.paper h4,.paper .tramo{break-after:avoid}
+</style></head><body><div class="paper">${$('#expDoc').innerHTML}</div></body></html>`;
+}
 function xpPrint(){
-  const t=document.title; document.title=(XP.title||'Solution').replace(/[\\/:*?"<>|]/g,'');
-  try{ window.print(); } catch(e){ toast('Printing is blocked here. Open the site in its own tab to export.'); }
-  setTimeout(()=>{ document.title=t; },500);
+  const old=document.querySelector('iframe.xpframe'); if(old) old.remove();
+  const ifr=document.createElement('iframe'); ifr.className='xpframe'; ifr.setAttribute('aria-hidden','true');
+  ifr.style.cssText='position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0;pointer-events:none';
+  document.body.appendChild(ifr);
+  const d=ifr.contentDocument; d.open(); d.write(xpDocHTML()); d.close();
+  const go=()=>{ try{ ifr.contentWindow.focus(); ifr.contentWindow.print(); }catch(e){ toast('Printing is blocked here. Open the site in its own tab to export.'); } };
+  // wait for the images (and the serif font) before printing
+  const imgs=[...d.images]; let left=imgs.filter(i=>!i.complete).length;
+  const ready=()=>{ (d.fonts&&d.fonts.ready?d.fonts.ready:Promise.resolve()).then(()=>setTimeout(go,150)); };
+  if(!left) ready(); else imgs.forEach(i=>{ if(!i.complete) i.onload=i.onerror=()=>{ if(--left===0) ready(); }; });
 }
 $('#exportBtn').onclick=xpOpen;
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#xp').hidden) xpClose(); });
