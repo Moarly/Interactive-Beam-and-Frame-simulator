@@ -702,7 +702,111 @@ header .iconbtn span{display:none} header .iconbtn{padding:7px 8px}
 body:not(.in-solve) #viewSeg{display:none!important}
 body.in-solve #viewSeg button[data-v="play"]{background:var(--panel);color:var(--ink);font-weight:700}
 body.in-solve #viewSeg{box-shadow:none}
+
+/* ---------- export preview ---------- */
+.editgrp .ib.exp{color:var(--deform)}
+.xp{position:fixed;inset:0;z-index:80;display:grid;grid-template-columns:300px 1fr;background:color-mix(in srgb,var(--paper) 70%,#555)}
+.xp[hidden]{display:none}
+.xpside{background:var(--panel);border-right:1px solid var(--line);padding:18px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+.xpside h3{margin:0;font-family:var(--cond);font-size:22px}
+.xlbl{display:flex;flex-direction:column;gap:4px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;font-weight:700;color:var(--muted)}
+.xlbl input{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--field);font-size:14px;text-transform:none;letter-spacing:0;font-weight:600;color:var(--ink)}
+.xgrp{display:flex;flex-direction:column;gap:6px;padding-top:10px;border-top:1px solid var(--line)}
+.xrad{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.xrow{display:flex;flex-direction:column;gap:6px}.xrow select{width:100%}
+.xchk{display:flex;gap:9px;align-items:flex-start;cursor:pointer;font-size:14px}
+.xchk input{margin-top:3px;accent-color:var(--deform)}
+.xchk small{display:block;color:var(--muted);font-size:12px}
+.xpmain{overflow-y:auto;padding:28px}
+.xpscratch{position:fixed;left:-10000px;top:0;width:820px}
+.xpscratch canvas{width:820px;display:block}
+.paper{width:min(860px,100%);margin:0 auto;background:#fff;color:#1a1f24;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.3);padding:44px 48px;font-size:14px;line-height:1.55;
+  --ink:#1a1f24;--muted:#5d6872;--line:#d7dde3;--panel:#fff;--paper:#fff;--field:#fff}
+.paper .xhead{display:flex;justify-content:space-between;gap:20px;border-bottom:3px solid #1a1f24;padding-bottom:12px;margin-bottom:6px}
+.paper .xtitle{font-family:var(--cond);font-size:28px;font-weight:800;line-height:1.1}
+.paper .xsub{color:#5d6872;font-size:13px;margin-top:4px}
+.paper .xdate{text-align:right;font-size:13px;color:#5d6872}.paper .xdate span{font-weight:700;color:#1a1f24}
+.paper .xsec{margin-top:22px}
+.paper h2{font-family:var(--cond);font-size:21px;margin:0 0 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #d7dde3;padding-bottom:4px}
+.paper .xn{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#1a1f24;color:#fff;font-size:14px}
+.paper h3{font-family:var(--cond);font-size:17px;margin:14px 0 6px}
+.paper h4{font-size:14px;margin:12px 0 4px}
+.paper h5{font-size:13.5px;margin:10px 0 4px}
+.paper img.xfig{width:100%;display:block;border:1px solid #e3e8ec;border-radius:6px;margin:6px 0;break-inside:avoid}
+.paper .xeq,.paper .eq{font-family:var(--cond);font-size:15px;background:#f4f6f8;border:1px solid #e3e8ec;border-radius:6px;padding:8px 12px;margin:6px 0;break-inside:avoid}
+.paper .xlist{margin:6px 0;padding-left:20px}
+.paper .card{border:0;box-shadow:none;padding:0;margin:0 0 14px;background:transparent;break-inside:avoid-page}
+.paper .card h3 .step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#e9edf1;font-size:12px;margin-right:6px}
+.paper .fm-grid{display:block}
+.paper .sdt{width:100%;border-collapse:collapse;font-size:13px}
+.paper .sdt th,.paper .sdt td{border-bottom:1px solid #e3e8ec;padding:4px 6px;text-align:left}
+.paper .xwork{border:1px solid #e3e8ec;border-radius:6px;padding:8px 10px;margin:8px 0;break-inside:avoid}
+.paper .status{font-size:13px}
+.paper .note{color:#5d6872}
+.paper .xcut{break-inside:avoid;margin:10px 0 16px}
+.paper .dwans{border-color:#1a1f24;background:#f4f6f8}
+@media (max-width:900px){ .xp{grid-template-columns:1fr} .xpside{max-height:45vh} .xpmain{padding:10px} .paper{padding:22px} }
+@media print{
+  @page{size:A4;margin:14mm}
+  body.xp-open > *:not(#xp){display:none!important}
+  body.xp-open{background:#fff!important}
+  .xp{position:static!important;display:block!important;background:#fff!important}
+  .xpside,.xpscratch{display:none!important}
+  .xpmain{overflow:visible!important;padding:0!important}
+  .paper{width:auto!important;box-shadow:none!important;border-radius:0!important;padding:0!important}
+  .paper .xsec{break-before:auto}
+  .paper h2{break-after:avoid}
+}
+
+/* ---------- textbook-style export ---------- */
+.paper{font-family:"STIX Two Text","Latin Modern Roman","CMU Serif","Cambria","Times New Roman",serif;font-size:14.5px;color:#1b1b1b}
+.paper .xtitlebox{text-align:center;border-left:4px solid #3b4aa3;background:#f4f5fb;padding:14px 18px 12px;margin-bottom:10px}
+.paper .xtitle{font-family:inherit;font-size:27px;font-weight:600;color:#33409a;letter-spacing:.01em}
+.paper .xkind{font-family:"Barlow",sans-serif;font-size:12px;font-weight:700;letter-spacing:.12em;color:#33409a;margin-top:2px}
+.paper .xby{font-style:italic;font-size:12.5px;color:#4a4a4a;margin-top:2px}
+.paper .xunits{text-align:center;font-size:13px;color:#333;margin:6px 0 4px}
+.paper h2{font-family:inherit;font-size:20px;font-weight:600;color:#33409a;border-bottom:1.5px solid #2f8a8a;padding-bottom:3px;margin:22px 0 10px;display:block}
+.paper h3{font-family:inherit;color:#33409a;font-weight:600}
+.paper h4,.paper h5{font-family:inherit}
+.paper .xcap{text-align:center;font-style:italic;font-size:13px;color:#333;margin:2px 0 10px}
+.paper img.xfig{border:0;margin:4px auto}
+.paper .xeqt{border-collapse:collapse;margin:8px auto;font-size:15px}
+.paper .xeqt td{padding:3px 6px;vertical-align:middle;white-space:nowrap}
+.paper .xeqt td.l{text-align:right}
+.paper .xeqt td.a{text-align:center;color:#333}
+.paper .xeqt td.n{color:#333;font-size:13.5px;padding-left:10px}
+.paper .xbox{border:1.3px solid #33409a;padding:1px 6px;font-weight:500}
+.paper .tramo{margin:16px 0 6px;font-size:14.5px}
+.paper .tramo b{color:#2f8a8a;font-weight:600}
+.paper .tramo span{font-style:italic;font-size:13.5px;color:#333}
+.paper .xeqt.c{margin:4px auto 6px}
+.paper .frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;line-height:1.1;margin:0 2px;font-size:13px}
+.paper .frac span:first-child{border-bottom:1px solid #1b1b1b;padding:0 2px}
+.paper .brace{font-size:30px;font-weight:300;vertical-align:middle;margin-right:4px;line-height:1}
+.paper .bv{display:inline-block;vertical-align:middle;line-height:1.35;font-size:14px}
+.paper .card h3 .step{background:#33409a;color:#fff}
+.paper .sdt th{font-family:inherit;color:#33409a}
+.paper .work-t td.eqn,.paper .xeq,.paper .eq{font-family:inherit}
+.paper .xeq,.paper .eq{background:#fafbfd;border-color:#e2e6f3}
+.paper .xfoot{display:flex;justify-content:space-between;border-top:1px solid #33409a;margin-top:26px;padding-top:6px;font-size:12px;font-variant:small-caps;color:#33409a}
+.paper .xcut{break-inside:avoid}
+@media print{ .paper h3,.paper h4,.paper .tramo{break-after:avoid} }
+.paper .wtab{overflow:visible}
+.paper .work-t{font-size:12px;table-layout:auto}
+.paper .work-t{width:100%!important}
+.paper .work-t td,.paper .work-t th{white-space:normal!important}
+.paper .work-t td:last-child,.paper .work-t th:last-child{white-space:nowrap!important}
+.paper .xwork,.paper .vwork{width:auto!important;max-width:none!important}
+
+/* textbook equations also on the Statics page */
+.st-eq .xeqt{border-collapse:collapse;margin:8px auto;font-family:"STIX Two Text","Times New Roman",serif;font-size:15.5px}
+.st-eq .xeqt td{padding:3px 8px;white-space:nowrap}
+.st-eq .xeqt td.l{text-align:right}.st-eq .xeqt td.n{color:var(--muted);font-size:13.5px}
+.st-eq .xbox{border:1.4px solid var(--deform);padding:1px 7px;border-radius:3px}
+.st-eq .xcap{text-align:center;font-style:italic;color:var(--muted)}
+.st-eq img.xfig,.st-diag img.xfig{width:100%;border-radius:8px;display:block}
 </style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 </head>
 <body>
 <div class="app">
@@ -750,6 +854,7 @@ body.in-solve #viewSeg{box-shadow:none}
           <button class="ib" id="redoBtn" disabled title="Redo (Ctrl+Shift+Z)" aria-label="Redo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7h4V3" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.7 7A8 8 0 1 0 20 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></button>
           <button class="ib" id="resetBtn" disabled title="Nothing to reset yet" aria-label="Reset this structure to its original setup"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M4 4v4.5h4.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button class="ib" id="quickSave" title="Save this design (Ctrl+S)" aria-label="Save this design" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M8 4v5h7V4M8 20v-6h8v6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg></button>
+          <button class="ib exp" id="exportBtn" title="Export the full solution (preview, then PDF)" aria-label="Export solution"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M14 3v5h5M12 11v6M9.5 14.5L12 17l2.5-2.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Export</span></button>
           <button class="ib share" id="shareBtn" title="Copy a link to this exact structure" aria-label="Share a link to this structure"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7.1 0l3-3a5 5 0 0 0-7.1-7.1l-1 1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M14 10a5 5 0 0 0-7.1 0l-3 3a5 5 0 0 0 7.1 7.1l1-1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg><span>Share</span></button>
         </div>
         <div class="buildgrp" id="buildGrp" hidden>
@@ -811,6 +916,7 @@ body.in-solve #viewSeg{box-shadow:none}
       <div class="fmview" id="fmView" hidden></div>
       <div class="fmview" id="sdView" hidden></div>
       <div class="fmview" id="vwView" hidden></div>
+      <div class="fmview" id="stView" hidden></div>
       <div class="fmview" id="prView" hidden></div>
     </section>
     <button class="ptoggle" id="panelToggle" aria-expanded="true" aria-controls="sidePanel" title="Hide the side panel" aria-label="Hide the side panel">
@@ -899,6 +1005,11 @@ body.in-solve #viewSeg{box-shadow:none}
 </div>
 <div class="sheetback" id="sheetBack" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="xp" id="xp" hidden role="dialog" aria-label="Export preview">
+  <aside class="xpside" id="xpSide"></aside>
+  <div class="xpmain"><div class="paper" id="expDoc"></div></div>
+</div>
+<div id="xpScratch" class="xpscratch" aria-hidden="true"></div>
 <div class="tour" id="tour" hidden>
   <div class="tring" id="tRing"></div>
   <div class="tcard" id="tCard" role="dialog" aria-live="polite" aria-labelledby="tTitle">
@@ -2258,8 +2369,8 @@ $('#wobble').onclick=e=>{ wobbleOn=!wobbleOn; e.currentTarget.setAttribute('aria
 
 /* ---------- state flow ---------- */
 function fitScale(){ const r=state.result; if(r&&!r.unstable&&r.maxDisp>1e-12) state.baseScale=0.1*structSpan().span/r.maxDisp; }
-function recompute(){ state.result=solve(); historyTouch(); if(state.page==='il') ensureIL(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateReacLegend(); updateProbeOut(); updateIntro(); updateWsStatus(); if(state.page==='ws') updateDesignState(); if(state.view==='vw' && !detSolvable()) setView('play'); else if((state.view==='fm'||state.view==='sd') && detSolvable() && state.page!=='ind') setView('vw'); updateSolveFab();
-  if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else draw(); if(state.page==='il') updateIL(); }
+function recompute(){ state.result=solve(); historyTouch(); if(state.page==='il') ensureIL(); if(state.runs.length&&state.preset&&defaults[state.preset]){ saved[state.preset]=snapshot(); persist(); updateEditedMarks(); } if(state.baseScale==null) fitScale(); updateReadout(); renderReactions(); updateReacLegend(); updateProbeOut(); updateIntro(); updateWsStatus(); if(state.page==='ws') updateDesignState(); if((state.view==='vw'||state.view==='st') && !detSolvable()) setView('play'); else if((state.view==='fm'||state.view==='sd') && detSolvable() && state.page!=='ind') setView(detTarget()); updateSolveFab();
+  if(state.view==='fm') renderFM(); else if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else if(state.view==='st') renderST(); else draw(); if(state.page==='il') updateIL(); }
 /* ---------- saved structures: every preset remembers its edits ---------- */
 const SAVE_KEY='bfp-structures';
 let saved={}, defaults={}, lastPreset={}, saveTimer=0;
@@ -3433,6 +3544,8 @@ function openPracticeShared(code){
 /* ---------- what's new feed ---------- */
 // newest first; items older than a week drop off the main feed
 const UPDATES=[
+  {d:'2026-10-04', tag:'new', t:'Solve determinate structures by statics', p:'Solve now offers Statics (free-body diagram, numbered equilibrium equations, boxed reactions, diagrams) or Virtual work for deflections. The export has the same choice.'},
+  {d:'2026-10-04', tag:'new', t:'Export the full solution as a PDF', p:'The new Export button opens a preview of a complete worked solution (problem, free-body diagram, equilibrium, method working, cuts with N, V and M, diagrams and summary), then saves it as a PDF.'},
   {d:'2026-10-04', tag:'improved', t:'Solve is easier to find', p:'A highlighted "Solve step by step" button in the toolbar and a floating Solve button on the drawing take you straight to the working.'},
   {d:'2026-10-04', tag:'new', t:'Enter E and I in any units', p:'Type E in GPa, MPa, kPa, ksi or psi and I in mm⁴, ×10⁶ mm⁴, cm⁴, m⁴ or in⁴. The app shows the conversion and works out EI in kNm² for you.'},
   {d:'2026-10-04', tag:'new', t:'Deflections by virtual work', p:'Determinate beams and frames now have a Solve page: pick vertical deflection, horizontal deflection or rotation at any joint or point, and see M(x), the unit load\'s m(x) and the integrals.'},
@@ -3660,7 +3773,7 @@ function enhanceFM(R){
   const block=(i,j)=> dm==='vw'?vwBlock(R,i,j):tablesBlock(R,i,j);
   add('#fmM0', R.reds.map((_,i)=>block(i,null)).join(''));
   R.reds.forEach((_,j)=>add(`#fmU${j}`, R.reds.map((_,i)=>block(i,j)).join('')));
-  if(dm==='vw') requestAnimationFrame(()=>drawCuts(R));
+  if(dm==='vw'){ drawCuts(R); requestAnimationFrame(()=>drawCuts(R)); }
 }
 function drawCuts(R){
   const cv=$('#fmCuts'); if(!cv) return;
@@ -3722,14 +3835,14 @@ function dwCompute(){
 }
 function dwHead(){
   const settled=Object.keys(state.settle).some(n=>state.settle[n]&&state.supports[n]);
-  return `<div class="solvehead"><h3>Deflection by virtual work</h3><p>For a determinate structure, equilibrium gives the forces directly. To find how far a point moves or rotates, apply a unit load there and use Δ = ∫ M·m / EI dx.</p>
+  return `<div class="solvehead"><h3>Solve this structure</h3>${detPicker()}<p>For a determinate structure, equilibrium gives the forces directly. To find how far a point moves or rotates, apply a unit load there and use Δ = ∫ M·m / EI dx.</p>
     <div class="eibar ${settled?'warn':''}"><b>EI used:</b><span class="num"><input class="eiSolve" aria-label="EI used in this solution" type="number" inputmode="decimal" step="any" min="1" value="${showNum(uc(curEI(),'EI'),0)}"><span>${uu('EI')}</span></span>
       <span class="eimsg">${settled?'⚠ A support settles: that adds a rigid-body term, shown in the working.':'Deflections and rotations scale with 1/EI, so make sure this matches your question.'}</span></div></div>`;
 }
 function renderVW(){
   const box=$('#vwView'); if(!box||box.hidden) return;
   const D=dwCompute();
-  if(D.err){ box.innerHTML=`<div class="fm-grid">${dwHead()}<div class="card wide"><p class="status bad">${D.err}</p></div></div>`; wireSolveHead(box); return; }
+  if(D.err){ box.innerHTML=`<div class="fm-grid">${dwHead()}<div class="card wide"><p class="status bad">${D.err}</p></div></div>`; wireSolveHead(box); wireDetPicker(box); return; }
   const {l,qty,real,virt,exact}=D, Lf=uc(1,'len'), Mf=uc(1,'moment'), EId=uc(curEI(),'EI');
   const mF = qty==='r' ? 1 : Lf; // m per unit force has length units; per unit moment none
   // segment tables
@@ -3787,7 +3900,7 @@ function renderVW(){
         <span class="status ${ok?'ok':'bad'}">${ok?'Matches the full stiffness analysis ✓':'Check: the stiffness analysis gives a slightly different value'}</span></div>
       <p class="note">A positive result means the point moves the same way as the unit load (${qty==='v'?'down':qty==='h'?'right':(state.ccw?'anticlockwise':'clockwise')}).</p></div>
   </div>`;
-  wireSolveHead(box);
+  wireSolveHead(box); wireDetPicker(box);
   box.querySelectorAll('[data-q]').forEach(b=>b.onclick=()=>{ state.dw.q=b.dataset.q; renderVW(); });
   $('#dwLoc').onchange=e=>{ const v=e.target.value; state.dw.loc = v[0]==='n' ? {type:'node',n:+v.slice(1)} : {type:'mem',m:+v.slice(1),t:0.5}; renderVW(); };
   if(l.type==='mem'){ const L=memberLen(l.m); const f=makeField({label:'Distance along member', kind:'len', min:0, max:L, step:0.05, hardMax:L, value:r2(l.t*L), onChange:v=>{}, onCommit:v=>{ state.dw.loc={type:'mem',m:l.m,t:clamp(v/L,0,1)}; renderVW(); }}); f.classList.add('dwposf'); $('#dwPos').appendChild(f); }
@@ -3802,7 +3915,7 @@ function renderVW(){
   if(state.fm.showV){ renderMini($('#dwRealV'),{restr, samples:real.elSamples, diag:'V'}); renderMini($('#dwVirtV'),{restr, samples:virt.elSamples, diag:'V'}); }
 }
 new ResizeObserver(()=>{ const b=$('#vwView'); if(b&&!b.hidden) renderVW(); }).observe($('#vwView'));
-function solveTarget(){ return detSolvable()?'vw':(state.solveMethod||'fm'); }
+function solveTarget(){ return detSolvable()?detTarget():(state.solveMethod||'fm'); }
 function detSolvable(){ const r=state.result; return !!(state.members.length && r && !r.unstable && determinacy().n<=0); }
 
 function updateSolveFab(){
@@ -3810,9 +3923,436 @@ function updateSolveFab(){
   const show = !$('#viewSeg').hidden && state.view==='play' && state.page!=='il';
   if(show && fab.hidden){ fab.classList.remove('hello'); void fab.offsetWidth; fab.classList.add('hello'); }
   fab.hidden=!show;
-  if(show){ const r=state.result, det=r&&!r.unstable?determinacy():null; fab.querySelector('span').textContent = det&&det.n<=0 ? 'Solve: deflections by virtual work' : 'Solve step by step'; }
+  if(show){ const r=state.result, det=r&&!r.unstable?determinacy():null; fab.querySelector('span').textContent = 'Solve step by step'; }
 }
 $('#solveFab').onclick=()=>setView(solveTarget());
+
+/* ======================= export: preview + PDF ======================= */
+const XP={title:'', sec:{problem:true, fbd:true, method:true, cuts:true, diagrams:true, summary:true}, method:'fm-vw', dwOn:true};
+let xpTimer=0;
+function xpOpen(){
+  const r=state.result;
+  if(!state.members.length||!r||r.unstable){ toast(state.members.length?'Fix the supports first: the structure is unstable':'Build something first'); return; }
+  const p=PRESETS.find(x=>x.id===state.preset);
+  XP.title = state.design&&state.page==='ws' ? state.design.name : (p?p.name:'My structure');
+  const det=determinacy();
+  if(det.n>0 && !['fm-vw','fm-tab','sd'].includes(XP.method)) XP.method='fm-vw';
+  if(det.n>0 && XP.method==='fm-tab' && !isBeam()) XP.method='fm-vw';
+  if(det.n<=0) XP.dwOn = state.detMethod==='vw';
+  $('#xp').hidden=false; document.body.classList.add('xp-open');
+  xpRenderSide(); xpBuild();
+}
+function xpClose(){ $('#xp').hidden=true; document.body.classList.remove('xp-open'); setView(state.view); }
+function xpRenderSide(){
+  const det=determinacy(), ind=det.n>0, side=$('#xpSide');
+  const chk=(k,t,sub)=>`<label class="xchk"><input type="checkbox" data-sec="${k}" ${XP.sec[k]?'checked':''}><span><b>${t}</b>${sub?`<small>${sub}</small>`:''}</span></label>`;
+  if(!dwValidLoc(state.dw.loc)) state.dw.loc=dwDefaultLoc();
+  side.innerHTML=`<h3>Export solution</h3>
+    <label class="xlbl">Title<input type="text" id="xpTitle" value="${XP.title.replace(/"/g,'&quot;')}" maxlength="80"></label>
+    ${ind?`<div class="xgrp"><span class="xlbl">Solve with</span>
+      <label class="xrad"><input type="radio" name="xpm" value="fm-vw" ${XP.method==='fm-vw'?'checked':''}> Force method: virtual work</label>
+      ${isBeam()?`<label class="xrad"><input type="radio" name="xpm" value="fm-tab" ${XP.method==='fm-tab'?'checked':''}> Force method: deflection tables</label>`:''}
+      <label class="xrad"><input type="radio" name="xpm" value="sd" ${XP.method==='sd'?'checked':''}> Slope-deflection</label></div>`
+    :`<div class="xgrp"><span class="xlbl">Solve with</span>
+      <label class="xrad"><input type="radio" name="xpd" value="st" ${XP.dwOn?'':'checked'}> Statics (reactions by equilibrium)</label>
+      <label class="xrad"><input type="radio" name="xpd" value="vw" ${XP.dwOn?'checked':''}> Statics + virtual work (deflection)</label>
+      ${XP.dwOn?'':'<!--'}
+      <div class="xrow"><select id="xpQ">${[['v','Vertical deflection'],...(isBeam()?[]:[['h','Horizontal deflection']]),['r','Rotation']].map(([v,t])=>`<option value="${v}" ${state.dw.q===v?'selected':''}>${t}</option>`).join('')}</select>
+      <select id="xpLoc">${state.nodes.map((_,n)=>`<option value="${n}" ${state.dw.loc.type==='node'&&state.dw.loc.n===n?'selected':''}>at joint ${letter(n)}</option>`).join('')}</select></div>${XP.dwOn?'':'-->'}</div>`}
+    <div class="xgrp"><span class="xlbl">Include</span>
+      ${chk('problem','Problem','drawing, dimensions, loads, given data')}
+      ${ind?'':chk('fbd','Support reactions','free-body diagram, ΣF and ΣM')}
+      ${chk('method',ind?'Method working':'Deflection working','every step of the solution')}
+      ${(ind?XP.method==='fm-vw':XP.dwOn)?chk('cuts','Method of sections for virtual work','cuts giving M(x) and m(x) for each loading'):''}
+      ${chk('diagrams','Shear and bending moment diagrams',isBeam()?'beam with reactions and loads, SFD and BMD':'frame with reactions and loads, SFD, BMD and axial force')}
+      ${chk('summary','Summary','reactions and largest values')}</div>
+    <button class="btn primary big" id="xpPdf"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l5 5v13H7z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M14 3v5h5M10 14h6M10 17h4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>Export as PDF</button>
+    <p class="note">Opens your browser's print window. Choose <b>Save as PDF</b> as the printer.</p>
+    <button class="btn" id="xpClose">Close preview</button>`;
+  $('#xpTitle').oninput=e=>{ XP.title=e.target.value; const h=$('#expDoc .xtitle'); if(h) h.textContent=XP.title||'Solution'; };
+  side.querySelectorAll('[data-sec]').forEach(c=>c.onchange=()=>{ XP.sec[c.dataset.sec]=c.checked; xpBuildSoon(); });
+  side.querySelectorAll('input[name=xpm]').forEach(r=>r.onchange=()=>{ XP.method=r.value; xpRenderSide(); xpBuildSoon(); });
+  side.querySelectorAll('input[name=xpd]').forEach(r=>r.onchange=()=>{ XP.dwOn=r.value==='vw'; xpRenderSide(); xpBuildSoon(); });
+  if($('#xpQ')){ $('#xpQ').onchange=e=>{ state.dw.q=e.target.value; xpBuildSoon(); }; $('#xpLoc').onchange=e=>{ state.dw.loc={type:'node',n:+e.target.value}; xpBuildSoon(); }; }
+  $('#xpPdf').onclick=xpPrint; $('#xpClose').onclick=xpClose;
+}
+function xpBuildSoon(){ clearTimeout(xpTimer); xpTimer=setTimeout(xpBuild,120); }
+
+/* light theme while drawing figures, so they print on white paper */
+function withLight(fn){
+  const root=document.documentElement, prev=root.dataset.theme;
+  root.dataset.theme='light'; readColors();
+  try{ return fn(); } finally { if(prev==null) delete root.dataset.theme; else root.dataset.theme=prev; readColors(); }
+}
+function figure(cls,h,draw){
+  const cv=document.createElement('canvas'); cv.className='mini xfigc'; cv.style.height=h+'px';
+  const holder=$('#xpScratch'); holder.appendChild(cv); draw(cv);
+  const img=document.createElement('img'); img.className='xfig '+(cls||''); img.src=cv.toDataURL('image/png'); img.alt='';
+  cv.remove(); return img.outerHTML;
+}
+// render one of the Solve pages and turn it into static, printable HTML
+function capture(view, prep){
+  const box=$({fm:'#fmView',sd:'#sdView',vw:'#vwView'}[view]);
+  const keep={view:state.view, hidden:box.hidden, sm:state.fm.showM, sv:state.fm.showV, sn:state.fm.showN, dm:state.fm.dm};
+  try{
+    if(prep) prep();
+    state.view=view; state.fm.showM=false; state.fm.showV=false; state.fm.showN=false;
+    box.hidden=false; box.style.width='840px';
+    if(view==='fm') renderFM(); else if(view==='sd') renderSDView(); else renderVW();
+    const clone=box.cloneNode(true), src=box.querySelectorAll('canvas'), dst=clone.querySelectorAll('canvas');
+    dst.forEach((c,i)=>{ const img=document.createElement('img'); img.className='xfig'; try{ img.src=src[i].toDataURL('image/png'); }catch(e){} c.replaceWith(img); });
+    clone.querySelectorAll('.solvehead, .ccards, button, select, input, .chips, .dwpick, .eibar, .fmtoolbar').forEach(e=>e.remove());
+    clone.querySelectorAll('details').forEach(d=>{ const div=document.createElement('div'); div.className='xwork'; const s=d.querySelector('summary'); if(s){ const h=document.createElement('h5'); h.innerHTML=s.innerHTML; s.replaceWith(h); } div.innerHTML=d.innerHTML; d.replaceWith(div); });
+    clone.querySelectorAll('.card').forEach(c=>{ const t=(c.querySelector('h3')||{}).textContent||''; if(/Final result/i.test(t)){ c.querySelectorAll('img, h4.sub').forEach(e=>e.remove()); } });
+    clone.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+    clone.querySelectorAll('p').forEach(e=>{ if(/toolbar|in the toolbar|Pick a method/i.test(e.textContent)) e.remove(); });
+    if(view==='vw'){ const what={v:'vertical deflection',h:'horizontal deflection',r:'rotation'}[state.dw.q]; clone.querySelectorAll('.card h3').forEach(h=>{ if(/What do you want to find/.test(h.textContent)){ const card=h.closest('.card'); card.innerHTML=`<h3>Find the ${what} at ${locName(state.dw.loc)}</h3><p>Use virtual work: Δ = ∫ M·m / EI dx, where M comes from the real loads and m from a ${state.dw.q==='r'?'unit moment':'unit load'} at that point.</p>`; } }); }
+    clone.querySelectorAll('.dmcard h3').forEach(h=>{ h.textContent = /tables/i.test(h.parentElement.textContent)&&state.fm.dm==='tables' ? 'Finding Δ and δ with deflection tables' : 'Segments and cuts for virtual work'; });
+    let out=clone.innerHTML; if(view==='fm'&&state.fm.dm==='tables') out=out.replace(/By virtual work, [^<]*?dx\./g,'Find it from deflection tables (working below).');
+    return out.replace(/,? ?as the bent shape shows\.?/g,'.').replace(/\(apart from any settlement\)\./g,'(apart from any settlement).');
+  } finally {
+    box.hidden=keep.hidden; box.style.width=''; state.view=keep.view; state.fm.showM=keep.sm; state.fm.showV=keep.sv; state.fm.showN=keep.sn; state.fm.dm=keep.dm;
+  }
+}
+
+/* ---------- equilibrium equations ---------- */
+function loadResultants(members){
+  // every load as a resultant force (or couple) with its point of action, in SI
+  const out=[], r=state.result;
+  (r.EL||[]).forEach(l=>{
+    if(members && !members.has(l.m)) return;
+    const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b], Lm=memberLen(l.m);
+    const at=t=>[A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t];
+    if(l.type==='moment'){ out.push({kind:'M', M:(l.dir==='ccw'?1:-1)*l.mag, txt:`${q(l.mag,'moment',1)} ${l.dir==='ccw'?'anticlockwise':'clockwise'} couple`}); return; }
+    const d=DIRS[l.dir]||[0,-1];
+    if(l.type==='point'){ out.push({kind:'F', F:[d[0]*l.mag,d[1]*l.mag], P:at(l.t), txt:q(l.mag,'force',1)}); return; }
+    const len=(l.b-l.a)*Lm, w1=l.wa, w2=l.wb, tot=(w1+w2)/2*len; if(Math.abs(tot)<1e-12) return;
+    const xc = (w1+w2)>1e-12 ? len*(w1+2*w2)/(3*(w1+w2)) : len/2;
+    out.push({kind:'F', F:[d[0]*tot,d[1]*tot], P:at(l.a+(l.b-l.a)*xc/len), txt:`${q(tot,'force',2)} (resultant of the distributed load)`});
+  });
+  // merge pieces of the same distributed load is not needed for the equation; each piece is a valid resultant
+  return out;
+}
+const nf=v=>{ const r=Math.abs(v)<5e-10?0:v; return String(parseFloat(r.toFixed(Math.abs(r)>=100?1:Math.abs(r)>=1?2:3))).replace(/^-/,'−'); };
+function signed(terms){ // [{c,s}] → "A_y + 24C_y − 35 − 40"
+  let h=''; terms.filter(t=>Math.abs(t.c)>1e-9).forEach((t,i)=>{ const neg=t.c<0, a=Math.abs(t.c);
+    const num=t.s?(Math.abs(a-1)<1e-9?'':nf(a)):nf(a);
+    h+=(i===0?(neg?'−':''):(neg?' − ':' + '))+num+(t.s||''); });
+  return h||'0';
+}
+const RN=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+function eqTable(rows){ // rows: [{lab, lhs, rhs, n}] → aligned textbook equations
+  return `<table class="xeqt">${rows.map(r=>`<tr><td class="l">${r.lab||''}</td><td class="m">${r.lab?'':''}</td><td class="a">${r.arrow===false?'':'⇒'}</td><td class="r">${r.rhs}</td><td class="n">${r.n?`… (${r.n})`:''}</td></tr>`).join('')}</table>`;
+}
+function eqSection(){
+  const det=determinacy(), r=state.result, R=restraintsFrom(state.supports), Lf=uc(1,'len'), Ff=uc(1,'force'), Mf=uc(1,'moment');
+  const rnm=(n,d)=>d===0?`<i>${letter(n)}</i><sub>x</sub>`:d===1?`<i>${letter(n)}</i><sub>y</sub>`:`<i>M</i><sub>${letter(n)}</sub>`;
+  const sups=Object.keys(R).map(Number).sort((a,b)=>a-b), On=sups[0], O=state.nodes[On];
+  const L=loadResultants(null);
+  const fx=[], fy=[], mo=[], lfx=[], lfy=[], lmo=[];
+  sups.forEach(n=>R[n].forEach(d=>{ const P=state.nodes[n];
+    if(d===0){ fx.push({c:1,s:rnm(n,0)}); mo.push({c:-(P[1]-O[1])*Lf,s:rnm(n,0)}); }
+    if(d===1){ fy.push({c:1,s:rnm(n,1)}); mo.push({c:(P[0]-O[0])*Lf,s:rnm(n,1)}); }
+    if(d===2){ mo.push({c:1,s:rnm(n,2)}); } }));
+  L.forEach(l=>{ if(l.kind==='M'){ lmo.push({c:l.M*Mf,s:''}); return; }
+    if(Math.abs(l.F[0])>1e-9) lfx.push({c:l.F[0]*Ff,s:''}); if(Math.abs(l.F[1])>1e-9) lfy.push({c:l.F[1]*Ff,s:''});
+    const m=((l.P[0]-O[0])*l.F[1]-(l.P[1]-O[1])*l.F[0])*Lf*Ff; if(Math.abs(m)>1e-9) lmo.push({c:m,s:''}); });
+  const sum=a=>a.reduce((s,t)=>s+t.c,0);
+  const rows=[]; let k=0;
+  const add=(lab,unk,lds)=>{ const full=signed([...unk,...lds]); if(lds.length>1){ rows.push({lab,rhs:`${full} = 0`}); rows.push({lab:'',rhs:`${signed([...unk,{c:sum(lds),s:''}])} = 0`,n:RN[k++]}); } else rows.push({lab,rhs:`${full} = 0`,n:RN[k++]}); };
+  if(!(det.beamMode && !fx.length)) add('(→+) &nbsp;Σ<i>F</i><sub>x</sub> = 0',fx,lfx);
+  add('(↑+) &nbsp;Σ<i>F</i><sub>y</sub> = 0',fy,lfy);
+  add(`(↺+) &nbsp;Σ<i>M</i><sub>${letter(On)}</sub> = 0`,mo,lmo);
+  let sepFigs='';
+  state.nodes.forEach((H,h)=>{ if(!isHingeNode(h)) return;
+    const ms=state.members.map((m,i)=>i).filter(i=>state.members[i].includes(h)); const start=ms[ms.length-1];
+    const side=new Set([start]), nodes=new Set(); const stack=[state.members[start][0]===h?state.members[start][1]:state.members[start][0]];
+    while(stack.length){ const n=stack.pop(); if(nodes.has(n)||n===h) continue; nodes.add(n); state.members.forEach(([a,b],i)=>{ if(a===n||b===n){ side.add(i); const o=a===n?b:a; if(o!==h) stack.push(o); } }); }
+    const t=[], tl=[]; nodes.forEach(n=>(R[n]||[]).forEach(d=>{ const P=state.nodes[n]; if(d===0) t.push({c:-(P[1]-H[1])*Lf,s:rnm(n,0)}); if(d===1) t.push({c:(P[0]-H[0])*Lf,s:rnm(n,1)}); if(d===2) t.push({c:1,s:rnm(n,2)}); }));
+    loadResultants(side).forEach(l=>{ const m = l.kind==='M' ? l.M*Mf : ((l.P[0]-H[0])*l.F[1]-(l.P[1]-H[1])*l.F[0])*Lf*Ff; if(Math.abs(m)>1e-9) tl.push({c:m,s:''}); });
+    const right = [...nodes].every(n=>state.nodes[n][0]>=H[0]-1e-9) ? 'right' : [...nodes].every(n=>state.nodes[n][0]<=H[0]+1e-9) ? 'left' : 'part';
+    add(`(↺+) &nbsp;Σ<i>M</i><sub>${letter(h)}</sub><sup>${right==='part'?'':right==='right'?'right':'left'}</sup> = 0`,t,tl);
+    const fade=new Set(state.members.map((_,i)=>i).filter(i=>!side.has(i)));
+    const restr={}; nodes.forEach(n=>{ if(R[n]) restr[n]=R[n]; });
+    sepFigs+=figure('',230,cv=>renderMini(cv,{restr, EL:r.EL.filter(l=>side.has(l.m)), loadLabels:true, fade, dims:false, marks:[...nodes].flatMap(n=>(R[n]||[]).map(d=>({n,d,text:d===0?`${letter(n)}x`:d===1?`${letter(n)}y`:`M${letter(n)}`})))}))
+      +`<p class="xcap">Separation at the hinge ${letter(h)}: isolate the part on the ${right==='part'?'one side':right} and take moments about ${letter(h)} (the moment there is zero).</p>`;
+  });
+  const vals=[]; r.reactions.slice().sort((a,b)=>a.n-b.n).forEach(re=>re.dofs.slice().sort().forEach(d=>{ if(det.beamMode&&d===0&&Math.abs(re.Rx)<1e-9&&false) return; vals.push({lab:'',rhs:`${rnm(re.n,d)} = <span class="xbox">${nf(uc([re.Rx,re.Ry,re.Mz][d],d===2?'moment':'force'))} ${uu(d===2?'moment':'force')}</span>`}); }));
+  const unk=sups.reduce((s,n)=>s+R[n].length,0), neq=3+det.c;
+  return det.n<=0
+    ? `${sepFigs}${eqTable(rows)}<p class="xcap">Solving equations ${RN.slice(0,k).join(', ')}:</p>${eqTable(vals)}`
+    : `${eqTable(rows)}<p>That is ${unk} unknown reactions but only ${neq} independent equation${neq>1?'s':''}, so equilibrium alone cannot find them: the structure is indeterminate to degree <b>${det.n}</b>. The ${XP.method==='sd'?'slope-deflection method':'force method'} below supplies the missing equation${det.n>1?'s':''}; the reactions are listed in the summary at the end.</p>`;
+}
+
+/* ---------- free body of each cut ---------- */
+function cutFBD(cv, el, xcut, res, S, unit){
+  res=res||state.result;
+  const m=el.m, [a,b]=state.members[m], Lm=memberLen(m), A=state.nodes[a], B=state.nodes[b], c=(B[0]-A[0])/Lm, s=(B[1]-A[1])/Lm;
+  const e0=res.els.find(e=>e.m===m&&e.t0<1e-9);
+  withTarget(cv,(w,h)=>{
+    readColors(); const x0=70, x1=w-150, y=h/2+6, sx=v=>x0+(x1-x0)*v/Math.max(xcut,1e-9);
+    ctx.fillStyle=C.panel; ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle=C.ink; ctx.lineWidth=5; ctx.lineCap='butt'; ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+    ctx.save(); ctx.setLineDash([4,3]); ctx.strokeStyle=C.load; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(x1,y-32); ctx.lineTo(x1,y+32); ctx.stroke(); ctx.restore();
+    label(letter(a),x0-4,y-18,C.muted,'right',13,800); label('cut',x1,y-40,C.load,'center',11.5,700);
+    // loads on this piece, in member-local directions (x along the member, y to its left)
+    const loc=(fx,fy)=>[fx*c+fy*s, -fx*s+fy*c];
+    (unit&&unit.n!=null ? [] : unit&&unit.el ? [unit.el] : (res.EL||[])).forEach(l=>{ if(l.m!==m||(!(l.mag>0)&&!(l.wa>0)&&!(l.wb>0))) return; const d=DIRS[l.dir]||[0,-1], [la,lt]=loc(d[0],d[1]);
+      if(l.type==='point' && l.t*Lm<xcut-1e-9){ const px=sx(l.t*Lm); if(Math.abs(lt)>1e-9){ const up=lt>0; arrow(px,up?y+40:y-40,px,up?y+6:y-6,C.load,2.2,8); } if(Math.abs(la)>1e-9){ arrow(px-(la>0?34:-34),y-12,px,y-12,C.load,2,7); } label(q(l.mag,'force',1),px,lt>0?y+52:y-48,C.load,'center',11.5,700); }
+      if(l.type==='moment' && l.t*Lm<xcut-1e-9){ const px=sx(l.t*Lm); ctx.strokeStyle=C.load; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(px,y,14,0.3,Math.PI*1.6); ctx.stroke(); label(q(l.mag,'moment',1),px,y-26,C.load,'center',11.5,700); }
+      if(l.type==='udl'){ const s0=l.a*Lm, s1=Math.min(l.b*Lm,xcut); if(s1<=s0+1e-9) return; const n=Math.max(2,Math.round((sx(s1)-sx(s0))/26));
+        for(let i=0;i<=n;i++){ const sv=s0+(s1-s0)*i/n, wv=l.wa+(l.wb-l.wa)*((sv-l.a*Lm)/((l.b-l.a)*Lm||1)), len=6+22*Math.abs(wv)/Math.max(l.wa,l.wb,1e-9), px=sx(sv), up=lt>0; if(Math.abs(lt)>0.2) arrow(px,up?y+6+len:y-6-len,px,up?y+6:y-6,C.load,1.4,6); }
+        label(`${fmt(uc(l.wa,'dist'),1)}${Math.abs(l.wa-l.wb)>1e-9?' → '+fmt(uc(l.wb,'dist'),1):''} ${uu('dist')}`,(sx(s0)+sx(s1))/2,lt>0?y+44:y-38,C.load,'center',11.5,700); } });
+    // end forces at the start of the member (what the rest of the structure does to this piece)
+    if(e0){ const f=e0.f, Nv=f[0], Vv=f[1], Mv=f[2];
+      if(Math.abs(Nv)>1e-6){ arrow(Nv>0?x0-46:x0-6,y+18,Nv>0?x0-6:x0-46,y+18,C.deform,2,7); label(q(Math.abs(Nv),'force',2),x0-26,y+32,C.deform,'center',11,700); }
+      if(Math.abs(Vv)>1e-6){ const up=Vv>0; arrow(x0-10,up?y+44:y-44,x0-10,up?y+8:y-8,C.deform,2.2,8); label(q(Math.abs(Vv),'force',2),x0-16,up?y+56:y-52,C.deform,'right',11,700); }
+      if(Math.abs(Mv)>1e-6){ ctx.strokeStyle=C.deform; ctx.lineWidth=2; ctx.beginPath(); const ccw=Mv>0; ctx.arc(x0,y,20,ccw?-0.4:Math.PI+0.4,ccw?Math.PI*1.2:-0.2-Math.PI*0.2,!ccw); ctx.stroke(); label(q(Math.abs(Mv),'moment',2),x0+26,y-24,C.deform,'left',11,700); } }
+    // internal forces at the cut, drawn in their positive directions
+    arrow(x1+8,y,x1+46,y,C.shear,2.2,8); label('N',x1+52,y,C.shear,'left',13,800);
+    arrow(x1+4,y-6,x1+4,y+38,C.shear,2.2,8); label('V',x1+10,y+40,C.shear,'left',13,800);
+    ctx.strokeStyle=C.shear; ctx.lineWidth=2.2; ctx.beginPath(); ctx.arc(x1,y,24,Math.PI*0.25,-Math.PI*0.6,true); ctx.stroke(); label((S||'M').replace(/<[^>]+>/g,''),x1+24,y-30,C.shear,'left',13,800);
+    label(`x = ${q(xcut,'len',2)} from ${letter(a)}`,(x0+x1)/2,h-12,C.muted,'center',11.5,600);
+  });
+}
+function beamGlobal(){ // a straight left-to-right beam can use one x from its left end
+  if(!isBeam()) return null; const xs=state.nodes.map(p=>p[0]), minx=Math.min(...xs), maxx=Math.max(...xs);
+  if(!state.members.every(([a,b])=>state.nodes[a][0]<state.nodes[b][0])) return null; return {minx,maxx};
+}
+const it=(t)=>`<i>${t}</i>`;
+function pDesc(c){ // highest power first, variables in italics: −1.25x² + 5x + 240
+  const mx=Math.max(1e-12,...c.map(Math.abs)); const parts=[];
+  for(let k=c.length-1;k>=0;k--){ const v=c[k]; if(Math.abs(v)<mx*1e-9||Math.abs(v)<1e-9) continue; const a=Math.abs(v);
+    const num=k&&Math.abs(a-1)<1e-9?'':nf(a); parts.push({neg:v<0, t:num+(k===0?'':k===1?'<i>x</i>':`<i>x</i>${k===2?'²':'³'}`)}); }
+  if(!parts.length) return '0'; return parts.map((p,i)=>(i===0?(p.neg?'−':''):(p.neg?' − ':' + '))+p.t).join('');
+}
+function cutsSection(res, sym, title, unit){
+  const Lf=uc(1,'len'), Mf=uc(1,'moment'), G=beamGlobal();
+  const virtual = sym!=='M' && sym!=='M₀';
+  const mF = virtual ? null : Mf;   // a unit-load system's m has length units (or none for a unit moment)
+  const els=res.els.slice().sort((a,b)=>G ? (state.nodes[state.members[a.m][0]][0]+a.t0*memberLen(a.m))-(state.nodes[state.members[b.m][0]][0]+b.t0*memberLen(b.m)) : 0).slice(0,24);
+  const S=`${it(sym[0])}${sym.slice(1)}`;
+  let h=`<h3>${title}</h3>`;
+  let k=0;
+  els.forEach(el=>{ k++;
+    const [a,b]=state.members[el.m], P=elPolys(el), xs=G?state.nodes[a][0]-G.minx:0;
+    const Mg=G?pShift(P.M,xs):P.M;
+    const unitMoment = virtual && (unit ? unit.d===2 : res.EL.some(l=>l.type==='moment'&&l.mag===1));
+    const scale = virtual ? (unitMoment?1:Lf) : Mf;
+    const Md=pScale(Mg,scale,Lf), xa=(G?xs:0)+P.x0, xb=(G?xs:0)+P.x1;
+    const uTxt = virtual ? (unitMoment?'':uu('len')) : uu('moment');
+    const ev=(c,x)=>c.reduce((t,v,i)=>t+v*x**i,0);
+    const node=x=>G?state.nodes.findIndex(p=>Math.abs(p[0]-G.minx-x)<1e-6):-1;
+    const at=x=>{ const xx=x*Lf, n=node(x); return `<tr><td class="l">${it('x')} = ${nf(xx)}${n>=0?` (${letter(n)})`:''} →</td><td class="r">${S}(${nf(xx)}) = ${nf(ev(Md,xx))} ${uTxt}</td></tr>`; };
+    const from=G?letter(node(xa)):letter(a), to=G?letter(node(xb)):letter(b);
+    const img=figure('xcutimg',G?250:200,cv=>G?beamCutFBD(cv,G,(xa+xb)/2,res,S,unit):cutFBD(cv,el,(P.x0+P.x1)/2,res,S,unit));
+    h+=`<div class="xcut"><div class="tramo"><b>Segment ${k}</b> &nbsp;(${nf(xa*Lf)} ≤ ${it('x')} ≤ ${nf(xb*Lf)})<br><span>${G?`${from&&node(xa)>=0?`From ${from}`:''}${to&&node(xb)>=0?` to ${to}`:''}`:`Member ${letter(a)}${letter(b)}, ${it('x')} from ${letter(a)}`}</span></div>${img}
+      <table class="xeqt c"><tr><td class="l">(↺+) Σ${it('M')}<sub>cut</sub> = 0 &nbsp;⇒</td><td class="r">${S}(${it('x')}) = ${pDesc(Md)} &nbsp;${uTxt}</td></tr>${G?`${at(xa)}${at(xb)}`:''}</table></div>`;
+  });
+  if(res.els.length>24) h+=`<p class="xcap">Showing the first 24 of ${res.els.length} segments.</p>`;
+  return h;
+}
+function vwCutsSection(ind){
+  const G=beamGlobal();
+  let h=`<p>Virtual work needs the bending moment in every segment for each loading. ${G?`Measure ${it('x')} from the left end ${letter(state.members[0][0])}, cut`:'Cut each member at a distance '+it('x')+' from its first joint,'} keep the part ${G?'to the left of the cut':'between the joint and the cut'}, and take moments about the cut. The same segments are used for every loading, so the products can be integrated segment by segment.</p>`;
+  if(ind){
+    const R=forceMethod(); if(!R||R.error) return h+'<p>The primary structure could not be set up.</p>';
+    h+=cutsSection(R.P0,'M₀',`Primary structure under the real loads: ${it('M')}<sub>0</sub>(${it('x')})`);
+    R.reds.forEach((rd,j)=>{ h+=cutsSection(R.U[j],`m${'₁₂₃₄₅₆'[j]}`,`Unit load X${'₁₂₃₄₅₆'[j]} = 1 at ${redName(rd)}: ${it('m')}${'₁₂₃₄₅₆'[j]}(${it('x')})`,{n:rd.n,d:rd.d}); });
+  } else {
+    const D=dwCompute(); if(D.err) return h;
+    h+=cutsSection(D.real,'M',`Real loads: ${it('M')}(${it('x')})`);
+    h+=cutsSection(D.virt,'m',`Virtual ${D.qty==='r'?'unit moment':'unit load'} at ${locName(D.l)}: ${it('m')}(${it('x')})`,{el:D.U, d:D.qty==='r'?2:D.qty==='h'?0:1});
+  }
+  return h;
+}
+// free body of the beam from the left end to a cut at xc (beam drawn horizontally)
+function beamCutFBD(cv,G,xc,res,S,unit){
+  const r=res, Lf=uc(1,'len'), unitSys=!!unit;
+  withTarget(cv,(w,h)=>{
+    readColors(); ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+    const x0=170, x1=w-130, y=h*0.52, X=v=>x0+(x1-x0)*v/Math.max(xc,1e-9);
+    ctx.strokeStyle='#1a1f24'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+    // supports to the left of the cut, with their reaction values
+    r.reactions.forEach(re=>{ const xn=state.nodes[re.n][0]-G.minx; if(xn>xc+1e-9) return; const px=X(xn);
+      ctx.save(); ctx.globalAlpha=0.35; drawSupport(typeFromDofs(re.dofs),px,y,re.n); ctx.restore();
+      if(Math.abs(re.Ry)>1e-9){ const up=re.Ry>0; arrow(px,up?y+62:y-62,px,up?y+8:y-8,C.shear,2.4,9); label(`${letter(re.n)}y = ${res===state.result||!unitSys?q(Math.abs(re.Ry),'force',2):nf(Math.abs(re.Ry))}`,px+6,up?y+74:y-70,C.shear,'left',12,700); }
+      if(re.dofs.includes(2)&&Math.abs(re.Mz)>1e-9){ const ccw=re.Mz>0; ctx.strokeStyle=C.shear; ctx.lineWidth=2.2; ctx.beginPath(); ctx.arc(px,y,24,ccw?Math.PI*0.6:Math.PI*0.4,ccw?Math.PI*1.6:-Math.PI*0.6,!ccw); ctx.stroke(); label(`M${letter(re.n)} = ${res===state.result||!unitSys?q(Math.abs(re.Mz),'moment',2):nf(uc(Math.abs(re.Mz),'len'))}`,px-8,y-34,C.shear,'right',12,700); }
+      label(letter(re.n),px-10,y-14,'#5d6872','right',13,800); });
+    // loads to the left of the cut
+    // a unit-load system carries only its unit load (at a redundant's joint, or the virtual load)
+    if(unit && unit.n!=null){ const xn=state.nodes[unit.n][0]-G.minx; if(xn<=xc+1e-9){ const px=X(xn); if(unit.d===1) { arrow(px,y+60,px,y+8,C.load,2.6,10); label('1',px+10,y+56,C.load,'left',13,800); } else if(unit.d===0){ arrow(px-46,y-14,px-6,y-14,C.load,2.6,10); label('1',px-50,y-14,C.load,'right',13,800); } else { ctx.strokeStyle=C.load; ctx.lineWidth=2.4; ctx.beginPath(); ctx.arc(px,y,18,Math.PI*0.2,Math.PI*1.7); ctx.stroke(); label('1',px,y-28,C.load,'center',13,800); } } }
+    (unit&&unit.n!=null ? [] : unit&&unit.el ? [unit.el] : (r.EL||[])).forEach(l=>{ if(!(l.mag>0)&&!(l.wa>0)&&!(l.wb>0)) return; const [a,b]=state.members[l.m], xa=state.nodes[a][0]-G.minx, Lm=memberLen(l.m);
+      if(l.type==='point'){ const xl=xa+l.t*Lm; if(xl>xc-1e-9) return; const px=X(xl), down=l.dir!=='up'; arrow(px,down?y-60:y+60,px,down?y-6:y+6,C.load,2.4,9); label(l.id===-77?'1':q(l.mag,'force',1),px,down?y-70:y+72,C.load,'center',12,700); }
+      if(l.type==='moment'){ const xl=xa+l.t*Lm; if(xl>xc-1e-9) return; const px=X(xl); ctx.strokeStyle=C.load; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(px,y,16,0.3,Math.PI*1.6); ctx.stroke(); label(q(l.mag,'moment',1),px,y-28,C.load,'center',12,700); }
+      if(l.type==='udl'){ const s0=xa+l.a*Lm, s1e=xa+l.b*Lm, s1=Math.min(s1e,xc); if(s1<=s0+1e-9) return;
+        const n=Math.max(3,Math.round((X(s1)-X(s0))/22)), wmax=Math.max(l.wa,l.wb,1e-9);
+        ctx.strokeStyle=alpha(C.load,0.55); ctx.lineWidth=1.2;
+        for(let i=0;i<=n;i++){ const sv=s0+(s1-s0)*i/n, wv=l.wa+(l.wb-l.wa)*(sv-s0)/((s1e-s0)||1), len=6+20*wv/wmax, px=X(sv); arrow(px,y-8-len,px,y-8,alpha(C.load,0.6),1.1,5); }
+        ctx.beginPath(); ctx.moveTo(X(s0),y-8-(6+20*l.wa/wmax)); ctx.lineTo(X(s1),y-8-(6+20*(l.wa+(l.wb-l.wa)*(s1-s0)/((s1e-s0)||1))/wmax)); ctx.stroke();
+        // resultant of the part of the load left of the cut
+        if(Math.abs(l.wa-l.wb)<1e-9){ const cx=(s0+s1)/2, px=X(cx), cont=s1e>xc+1e-9;
+          const txt = cont ? (s0<1e-9 ? `${nf(uc(l.wa,'dist'))}x` : `${nf(uc(l.wa,'dist'))}(x − ${nf(s0*Lf)})`) : q(l.wa*(s1-s0),'force',1);
+          arrow(px,y-92,px,y-10,C.load,2.6,10); label(txt,px,y-102,C.load,'center',12.5,800);
+          if(cont){ ctx.strokeStyle='#5d6872'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(px,y-120); ctx.lineTo(X(xc),y-120); ctx.stroke(); label(s0<1e-9?'x/2':`(x − ${nf(s0*Lf)})/2`,(px+X(xc))/2,y-130,'#5d6872','center',11.5,600); } }
+      } });
+    // the cut and the internal forces on it (positive directions)
+    ctx.save(); ctx.setLineDash([4,3]); ctx.strokeStyle=C.load; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(x1,y-46); ctx.lineTo(x1,y+46); ctx.stroke(); ctx.restore();
+    label('cut x',x1,y-54,C.load,'center',11.5,700);
+    ctx.strokeStyle='#6b3fa0'; ctx.lineWidth=2.2; ctx.beginPath(); ctx.arc(x1,y,20,-Math.PI*0.55,Math.PI*0.45); ctx.stroke(); arrow(x1+4,y+12,x1-2,y+20,'#6b3fa0',2,7);
+    label((S||'M').replace(/<[^>]+>/g,'')+'(x)',x1+26,y-22,'#6b3fa0','left',12.5,700);
+    arrow(x1+3,y-4,x1+3,y+34,'#2b55d6',2.2,8); label('V',x1+10,y+38,'#2b55d6','left',12.5,700);
+    // dimension: x from the left end
+    const dy=h-24; ctx.strokeStyle='#5d6872'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x0,dy); ctx.lineTo(x1,dy); ctx.moveTo(x0,dy-6); ctx.lineTo(x0,dy+6); ctx.moveTo(x1,dy-6); ctx.lineTo(x1,dy+6); ctx.stroke();
+    label('x',(x0+x1)/2,dy-9,'#5d6872','center',12.5,700);
+  });
+}
+// stacked beam, V and M diagrams on one x axis (textbook layout)
+function beamDiagrams(G){
+  const r=state.result, Lf=uc(1,'len'), Ff=uc(1,'force'), Mf=uc(1,'moment');
+  return figure('xdiag',600,cv=>withTarget(cv,(w,h)=>{
+    readColors(); ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h);
+    const x0=150, x1=w-50, L=G.maxx-G.minx, X=v=>x0+(x1-x0)*(v-G.minx)/L;
+    const yb=80, yV=290, yM=470;
+    // beam with supports and loads
+    ctx.strokeStyle='#1a1f24'; ctx.lineWidth=3.5; ctx.beginPath(); ctx.moveTo(X(G.minx),yb); ctx.lineTo(X(G.maxx),yb); ctx.stroke();
+    Object.entries(state.supports).forEach(([n,t])=>drawSupport(t,X(state.nodes[n][0]),yb,+n));
+    r.reactions.forEach(re=>{ const px=X(state.nodes[re.n][0]);
+      if(Math.abs(re.Ry)>1e-9){ const up=re.Ry>0; arrow(px,up?yb+66:yb+22,px,up?yb+24:yb+64,C.shear,2.2,8); const rt=px>X((G.minx+G.maxx)/2); label(`${letter(re.n)}y = ${q(Math.abs(re.Ry),'force',1)}`,rt?px-6:px+6,yb+76,C.shear,rt?'right':'left',11.5,700); }
+      if(Math.abs(re.Rx)>1e-9){ const rt=re.Rx>0; arrow(rt?px-44:px-4,yb+8,rt?px-4:px-44,yb+8,C.shear,2,7); label(`${letter(re.n)}x = ${q(Math.abs(re.Rx),'force',1)}`,px-48,yb+8,C.shear,'right',11.5,700); }
+      if(re.dofs.includes(2)&&Math.abs(re.Mz)>1e-9){ const ccw=re.Mz>0; ctx.strokeStyle=C.shear; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(px,yb,22,ccw?Math.PI*0.6:Math.PI*0.4,ccw?Math.PI*1.6:-Math.PI*0.6,!ccw); ctx.stroke(); label(`M${letter(re.n)} = ${q(Math.abs(re.Mz),'moment',1)}`,px+(px>X((G.minx+G.maxx)/2)?-26:26),yb-30,C.shear,px>X((G.minx+G.maxx)/2)?'right':'left',11.5,700); } });
+    state.nodes.forEach((p,n)=>{ if(isHingeNode(n)){ ctx.beginPath(); ctx.arc(X(p[0]),yb,5.5,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill(); ctx.strokeStyle='#1a1f24'; ctx.lineWidth=2; ctx.stroke(); } label(letter(n),X(p[0])+8,yb-12,'#5d6872','left',12.5,800); });
+    (r.EL||[]).forEach(l=>{ const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
+      if(l.type==='point'){ const px=X(A[0]+(B[0]-A[0])*l.t); arrow(px,yb-48,px,yb-5,C.load,2.2,8); label(nf(uc(l.mag,'force')),px,yb-56,C.load,'center',12,700); }
+      if(l.type==='udl'){ const s0=A[0]+(B[0]-A[0])*l.a, s1=A[0]+(B[0]-A[0])*l.b, n=Math.max(2,Math.round((X(s1)-X(s0))/22)); for(let i=0;i<=n;i++){ const sv=s0+(s1-s0)*i/n; arrow(X(sv),yb-30,X(sv),yb-5,alpha(C.load,0.7),1.1,5); } ctx.strokeStyle=alpha(C.load,0.7); ctx.beginPath(); ctx.moveTo(X(s0),yb-30); ctx.lineTo(X(s1),yb-30); ctx.stroke(); } });
+    // dimension chain
+    const js=[...new Set(state.nodes.map(p=>+p[0].toFixed(6)))].sort((a,b)=>a-b);
+    ctx.strokeStyle='#5d6872'; ctx.lineWidth=1; const dy=yb+104; ctx.beginPath(); ctx.moveTo(X(js[0]),dy); ctx.lineTo(X(js[js.length-1]),dy); js.forEach(x=>{ ctx.moveTo(X(x),dy-6); ctx.lineTo(X(x),dy+6); }); ctx.stroke();
+    for(let i=0;i<js.length-1;i++) label(nf((js[i+1]-js[i])*Lf),(X(js[i])+X(js[i+1]))/2,dy-9,'#5d6872','center',11.5,600);
+    // guides
+    ctx.save(); ctx.setLineDash([2,4]); ctx.strokeStyle='#c9d0d6'; js.forEach(x=>{ ctx.beginPath(); ctx.moveTo(X(x),yb+10); ctx.lineTo(X(x),h-20); ctx.stroke(); }); ctx.restore();
+    const plot=(key,y0,col,fill,title,sgn)=>{
+      let mx=0; r.elSamples.forEach(a=>a.forEach(s=>mx=Math.max(mx,Math.abs(s[key])))); const sc=mx>1e-9?62/mx:0;
+      ctx.strokeStyle='#8a949c'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(X(G.minx),y0); ctx.lineTo(X(G.maxx),y0); ctx.stroke();
+      label(title,x0-14,y0,'#5d6872','right',12.5,600);
+      r.elSamples.forEach(arr=>{ if(arr.length<2) return; ctx.beginPath(); ctx.moveTo(X(arr[0].x0),y0); arr.forEach(s=>ctx.lineTo(X(s.x0),y0-sgn*s[key]*sc)); ctx.lineTo(X(arr[arr.length-1].x0),y0); ctx.closePath(); ctx.fillStyle=fill; ctx.fill();
+        ctx.beginPath(); arr.forEach((s,i)=>{ const px=X(s.x0), py=y0-sgn*s[key]*sc; i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.strokeStyle=col; ctx.lineWidth=2; ctx.stroke(); });
+      // values at segment ends (avoid repeats) and the largest
+      const seen=new Set(); let best=null;
+      r.elSamples.forEach(arr=>{ if(!arr.length) return; [arr[0],arr[arr.length-1]].forEach(s=>{ const v=s[key]*(key==='V'?Ff:Mf); const k2=Math.round(X(s.x0))+'|'+nf(v); if(Math.abs(v)<1e-6||seen.has(k2)) return; seen.add(k2); label(nf(v),X(s.x0)+3,y0-sgn*s[key]*sc+(sgn*s[key]>0?-10:14),col,'left',11.5,700); });
+        arr.forEach(s=>{ if(!best||Math.abs(s[key])>Math.abs(best[key])) best=s; }); });
+      return best; };
+    const sgnM = state.bmSide==='tension' ? -1 : 1;
+    plot('V',yV,'#c0392b','rgba(192,57,43,0.14)','Shear force V',1);
+    const bm=plot('M',yM,'#8e44ad','rgba(142,68,173,0.14)','Bending moment M',sgnM);
+    if(bm) label(`M_max = ${nf(bm.M*Mf)} ${uu('moment')} at x = ${nf((bm.x0-G.minx)*Lf)} ${uu('len')}`,(x0+x1)/2,h-12,'#8e44ad','center',12,700);
+  }));
+}
+
+/* ---------- build the document ---------- */
+function xpBuild(){
+  const doc=$('#expDoc'), r=state.result, det=determinacy(), ind=det.n>0;
+  const restr=restraintsFrom(state.supports), S=XP.sec, date=new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const vwUsed = ind ? XP.method==='fm-vw' : XP.dwOn;
+  let n=0; const sec=(title,body)=>`<section class="xsec"><h2>${++n}. &nbsp;${title}</h2>${body}</section>`;
+  const html=withLight(()=>{
+    const kind=isBeam()?'BEAM':'FRAME';
+    const meth = ind ? (XP.method==='sd'?'Slope-deflection method':XP.method==='fm-tab'?'Force method (deflection tables)':'Force method (virtual work)') : (XP.dwOn?'Equilibrium and virtual work':'Equilibrium');
+    let h=`<div class="xtitlebox"><div class="xtitle">${XP.title||'Solution'}</div><div class="xkind">${kind}</div><div class="xby">${meth} · step-by-step solution · ${date}</div></div>
+      <p class="xunits">Working units: &nbsp;${it('L')} [${uu('len')}] &nbsp; ${it('F')} [${uu('force')}] &nbsp; ${it('M')} [${uu('moment')}] &nbsp; ${it('q')} [${uu('dist')}] &nbsp; ${it('δ')} [${uu('defl')}] &nbsp; ${it('EI')} [${uu('EI')}] &nbsp;·&nbsp; EI = ${Math.round(uc(curEI(),'EI')).toLocaleString()} ${uu('EI')} &nbsp;·&nbsp; moments ${state.ccw?'anticlockwise':'clockwise'} positive</p>`;
+    if(S.problem){
+      const img=figure('',300,cv=>renderMini(cv,{restr, EL:r.EL, dims:true, loadLabels:true}));
+      const lines=[];
+      const sn={pin:'pinned',roller:'roller',fixed:'fixed',sideroller:'side roller'};
+      lines.push('Supports: '+Object.entries(state.supports).map(([k,t])=>`${letter(+k)} ${sn[t]||t}`).join(', '));
+      const hz=state.nodes.map((_,i)=>i).filter(isHingeNode); if(hz.length) lines.push('Internal hinge'+(hz.length>1?'s':'')+' at '+hz.map(letter).join(', '));
+      Object.entries(state.settle).forEach(([k,v])=>{ if(v) lines.push(`Support ${letter(+k)} ${v>0?'settles':'lifts'} ${q(Math.abs(v),'settle',1)}`); });
+      state.loads.forEach(l=>{ const run=state.runs[l.run], st=letter(run.nodes[0]);
+        if(l.type==='point') lines.push(`Point load ${q(l.mag,'force',1)} (${l.dir}) at ${q(l.s,'len',2)} from ${st}`);
+        else if(l.type==='moment') lines.push(`Couple ${q(l.mag,'moment',1)} (${l.dir==='ccw'?'anticlockwise':'clockwise'}) at ${q(l.s,'len',2)} from ${st}`);
+        else lines.push(`Distributed load ${nf(uc(l.mag,'dist'))}${Math.abs(l.mag-(l.mag2??l.mag))>1e-9?' → '+nf(uc(l.mag2,'dist')):''} ${uu('dist')} (${l.dir}) from ${q(l.sa,'len',2)} to ${q(l.sb,'len',2)}, measured from ${st}`); });
+      const formula=det.beamMode?`${det.ry} − 2${det.c?` − ${det.c}`:''} = ${det.n}`:`3m + r − 3j${det.c?' − c':''} = 3(${det.m}) + ${det.r} − 3(${det.j})${det.c?` − ${det.c}`:''} = ${det.full}`;
+      h+=sec('Data and static classification',`${img}<p class="xcap">Geometry, supports and loads of the structure.</p><ul class="xlist">${lines.map(x=>`<li>${x}</li>`).join('')}</ul>
+        <p>Degree of indeterminacy: &nbsp;${it('n')} = ${formula} &nbsp;⇒&nbsp; <b>${ind?`statically indeterminate to degree ${det.n}`:'statically determinate'}</b>.</p>`);
+    }
+    if(S.fbd && !ind){
+      const marks=[]; Object.entries(restr).forEach(([k,d])=>d.forEach(dd=>marks.push({n:+k,d:dd,text:dd===0?`${letter(+k)}x`:dd===1?`${letter(+k)}y`:`M${letter(+k)}`})));
+      const img=figure('',260,cv=>renderMini(cv,{restr:{}, EL:r.EL, loadLabels:true, marks}));
+      h+=sec(ind?'Free-body diagram and equilibrium':'Support reactions',`${img}<p class="xcap">Free-body diagram: each support replaced by its unknown reactions.</p>${eqSection()}`);
+    }
+    if(S.method){
+      if(ind){
+        if(XP.method==='sd') h+=sec('Slope-deflection method', capture('sd'));
+        else h+=sec(`Force method (${XP.method==='fm-tab'?'deflection tables':'virtual work'})`, capture('fm',()=>{ state.fm.dm = XP.method==='fm-tab'?'tables':'vw'; }));
+      } else if(XP.dwOn){
+        h+=sec('Deflection by virtual work', capture('vw'));
+      }
+    }
+    if(S.cuts && vwUsed) h+=sec('Method of sections for virtual work', vwCutsSection(ind));
+    if(S.diagrams){
+      const G=beamGlobal(); let d='';
+      if(G) d+=beamDiagrams(G);
+      else { d+=figure('',270,cv=>renderMini(cv,{restr, EL:r.EL, loadLabels:true, dims:true, marks:reactionMarks()}));
+        d+=`<h4>Shear force V (${uu('force')})</h4>`+figure('',230,cv=>renderMini(cv,{restr, samples:r.elSamples, diag:'V'}));
+        d+=`<h4>Bending moment M (${uu('moment')})</h4>`+figure('',230,cv=>renderMini(cv,{restr, samples:r.elSamples, diag:'M'}));
+        d+=`<h4>Axial force N (${uu('force')}), tension T and compression C</h4>`+figure('',230,cv=>renderMini(cv,{restr, samples:r.elSamples, diag:'N'})); }
+      h+=sec(isBeam()?'Shear and bending moment diagrams':'Shear, bending moment and axial force diagrams', d+`<p class="xcap">${state.bmSide==='tension'?'Moments drawn on the tension side.':'Moments drawn on the compression side.'}</p>`);
+    }
+    if(S.summary){
+      const rows=r.reactions.slice().sort((a,b)=>a.n-b.n).map(re=>`<tr><td>${letter(re.n)}</td><td>${re.dofs.includes(0)?q(re.Rx,'force',2):'–'}</td><td>${re.dofs.includes(1)?q(re.Ry,'force',2):'–'}</td><td>${re.dofs.includes(2)?q(re.Mz,'moment',2):'–'}</td></tr>`).join('');
+      h+=sec('Summary',`<table class="sdt xtab"><tr><th>Support</th><th>Horizontal</th><th>Vertical</th><th>Moment</th></tr>${rows}</table>
+        <table class="sdt xtab" style="margin-top:10px"><tr><th>Largest</th><th>Value</th></tr><tr><td>Bending moment</td><td>${q(r.maxM,'moment',2)}</td></tr><tr><td>Shear force</td><td>${q(r.maxV,'force',2)}</td></tr>${isBeam()?'':`<tr><td>Axial force</td><td>${q(r.maxN,'force',2)}</td></tr>`}</table>
+        <p class="xcap">Positive reactions act right, up or anticlockwise.</p>`);
+    }
+    h+=`<div class="xfoot"><span>Beam & frame playground</span><span>Structural analysis</span></div>`;
+    return h;
+  });
+  doc.innerHTML=html;
+}
+function xpPrint(){
+  const t=document.title; document.title=(XP.title||'Solution').replace(/[\\/:*?"<>|]/g,'');
+  try{ window.print(); } catch(e){ toast('Printing is blocked here. Open the site in its own tab to export.'); }
+  setTimeout(()=>{ document.title=t; },500);
+}
+$('#exportBtn').onclick=xpOpen;
+document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('#xp').hidden) xpClose(); });
+
+function reactionMarks(){ // reaction arrows with their values, for a rigid (undeformed) drawing
+  const out=[]; state.result.reactions.forEach(re=>re.dofs.forEach(d=>{ const v=[re.Rx,re.Ry,re.Mz][d]; if(Math.abs(v)<1e-9) return;
+    out.push({n:re.n, d, text:`${d===0?letter(re.n)+'x':d===1?letter(re.n)+'y':'M'+letter(re.n)} = ${q(Math.abs(v),d===2?'moment':'force',1)}`, flip:v<0}); })); return out;
+}
+
+/* ---------- determinate structures: solve by statics, or virtual work for deflections ---------- */
+state.detMethod = state.detMethod || 'st';
+function detTarget(){ return state.detMethod==='vw' ? 'vw' : 'st'; }
+function detPicker(){
+  const m=state.detMethod;
+  const c=(v,t,s)=>`<button class="ccard" data-det="${v}" aria-pressed="${m===v}"><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
+  return `<div class="ccards">${c('st','Statics','reactions from ΣF = 0 and ΣM = 0')}${c('vw','Virtual work','deflection or rotation at a point')}</div>`;
+}
+function wireDetPicker(box){ box.querySelectorAll('[data-det]').forEach(b=>b.onclick=()=>{ state.detMethod=b.dataset.det; setView(detTarget()); }); }
+function renderST(){
+  const box=$('#stView'); if(!box||box.hidden) return;
+  const r=state.result;
+  const head=`<div class="solvehead"><h3>Solve this structure</h3>${detPicker()}<p>It's statically determinate, so equilibrium alone gives every reaction. Use virtual work if you also need a deflection or rotation.</p></div>`;
+  if(!r||r.unstable){ box.innerHTML=`<div class="fm-grid">${head}<div class="card wide"><p class="status bad">The structure is unstable. Add or change a support first.</p></div></div>`; wireDetPicker(box); return; }
+  const R=restraintsFrom(state.supports);
+  const marks=[]; Object.entries(R).forEach(([k,d])=>d.forEach(dd=>marks.push({n:+k,d:dd,text:dd===0?`${letter(+k)}x`:dd===1?`${letter(+k)}y`:`M${letter(+k)}`})));
+  const rows=r.reactions.slice().sort((a,b)=>a.n-b.n).map(re=>`<tr><td>${letter(re.n)}</td><td>${re.dofs.includes(0)?q(re.Rx,'force',2):'–'}</td><td>${re.dofs.includes(1)?q(re.Ry,'force',2):'–'}</td><td>${re.dofs.includes(2)?q(re.Mz,'moment',2):'–'}</td></tr>`).join('');
+  const G=beamGlobal(), diag = state.fm.showM||state.fm.showV;
+  box.innerHTML=`<div class="fm-grid">${head}
+    <div class="card wide"><h3><span class="step">1</span>Free-body diagram</h3><p>Replace each support by the reactions it can provide, drawn in their positive directions (right, up, anticlockwise).</p><canvas class="mini" id="stFbd" style="height:250px"></canvas></div>
+    <div class="card wide st-eq"><h3><span class="step">2</span>Equilibrium equations</h3>${eqSection()}</div>
+    <div class="card wide"><h3><span class="step">3</span>Reactions</h3><table class="sdt"><tr><th>Support</th><th>Horizontal</th><th>Vertical</th><th>Moment</th></tr>${rows}</table><p class="note">Positive reactions act right, up or anticlockwise.</p></div>
+    <div class="card wide"><h3><span class="step">4</span>${isBeam()?'Shear and bending moment diagrams':'Shear, bending moment and axial force diagrams'}</h3>
+      ${diag ? (G ? `<div class="st-diag">${beamDiagrams(G)}</div>` : `<canvas class="mini" id="stV" style="height:220px"></canvas><canvas class="mini" id="stM" style="height:220px"></canvas><canvas class="mini" id="stN" style="height:220px"></canvas>`)
+             : `<p class="note">Use <b>Moment diagram</b> or <b>Shear diagram</b> in the toolbar to show the diagrams here.</p>`}</div>
+  </div>`;
+  wireDetPicker(box);
+  renderMini($('#stFbd'),{restr:{}, EL:r.EL, loadLabels:true, marks});
+  if(diag && !G){ const restr=R; renderMini($('#stV'),{restr, samples:r.elSamples, diag:'V'}); renderMini($('#stM'),{restr, samples:r.elSamples, diag:'M'}); renderMini($('#stN'),{restr, samples:r.elSamples, diag:'N'}); }
+}
+new ResizeObserver(()=>{ const b=$('#stView'); if(b&&!b.hidden) renderST(); }).observe($('#stView'));
 
 /* ---------- home screen ---------- */
 const HOME_ART=`<svg class="hart" viewBox="0 0 480 220" aria-hidden="true">
@@ -3927,7 +4467,7 @@ function renderMini(canvas,opt){
     const D = bent ? 0.12*structSpan().span/opt.res.maxDisp : 0;
     // fit the view around the original AND the bent shape so nothing is cut off
     fitMini(w,h, bent ? opt.res.samples.map(s=>[s.x0+s.dx*D, s.y0+s.dy*D]) : null, opt.dims);
-    const members=()=>state.members.forEach(([a,b])=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); });
+    const members=()=>state.members.forEach(([a,b],i)=>{ const [x1,y1]=toS(...state.nodes[a]), [x2,y2]=toS(...state.nodes[b]); const f=opt.fade&&opt.fade.has(i); if(f){ ctx.save(); ctx.globalAlpha=0.15; } ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke(); if(f) ctx.restore(); });
     // moment diagram (optional)
     const labels=[];
     if(opt.samples && opt.diag){
@@ -4007,8 +4547,8 @@ function renderMini(canvas,opt){
     (opt.marks||[]).forEach(mk=>{
       const [x,y]=toS(...state.nodes[mk.n]), col=mk.col||C.deform;
       ctx.save(); if(mk.dashed) ctx.setLineDash([4,3]);
-      if(mk.d===1){ arrow(x,y+46,x,y+7,col,2.2,8); ctx.restore(); label(mk.text,x+8,y+40,col,'left',13,700); }
-      else if(mk.d===0){ arrow(x-48,y,x-7,y,col,2.2,8); ctx.restore(); label(mk.text,x-50,y-12,col,'left',13,700); }
+      if(mk.d===1){ if(mk.flip) arrow(x,y+7,x,y+46,col,2.2,8); else arrow(x,y+46,x,y+7,col,2.2,8); ctx.restore(); label(mk.text,x+8,y+40,col,'left',13,700); }
+      else if(mk.d===0){ if(mk.flip) arrow(x-7,y,x-48,y,col,2.2,8); else arrow(x-48,y,x-7,y,col,2.2,8); ctx.restore(); label(mk.text,x-50,y-12,col,'left',13,700); }
       else { ctx.strokeStyle=col; ctx.lineWidth=2.2; ctx.beginPath(); const a0=-0.25*Math.PI, a1=a0-1.4*Math.PI; ctx.arc(x,y,17,a0,a1,true); ctx.stroke(); ctx.restore();
         const ex=x+17*Math.cos(a1), ey=y+17*Math.sin(a1); arrow(ex-Math.sin(a1)*-6,ey+Math.cos(a1)*-6,ex+Math.sin(a1)*4,ey-Math.cos(a1)*4,col,2.2,8);
         label(mk.text,x+20,y-20,col,'left',13,700); }
@@ -4131,17 +4671,17 @@ function setView(v){
   $('#buildGrp').hidden=!(state.page==='ws'&&v==='play'); ws.start=null; updateWsStatus();
   if(v==='fm'||v==='sd') state.solveMethod=v;
   document.querySelectorAll('#viewSeg button').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.v==='solve'?(v==='fm'||v==='sd'||v==='vw'):b.dataset.v===v)?'true':'false'));
-  const fm=v==='fm', sdv=v==='sd', vwv=v==='vw', other=fm||sdv||vwv;
+  const fm=v==='fm', sdv=v==='sd', vwv=v==='vw', stv=v==='st', other=fm||sdv||vwv||stv;
   document.body.classList.toggle('in-solve',other);
-  $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv; $('#vwView').hidden=!vwv;
+  $('#wrap').hidden=other; $('#fmView').hidden=!fm; $('#sdView').hidden=!sdv; $('#vwView').hidden=!vwv; $('#stView').hidden=!stv;
   ['#diag','#fit','#dims','#wobble','#bent'].forEach(s=>$(s).hidden=other);
   $('#exag').closest('.tool').hidden=other;
   $('#fmM').hidden=!other; $('#fmV').hidden=!other; $('#fmN').hidden=!(fm||sdv)||isBeam();
   $('#sideWrap').hidden = other ? !state.fm.showM : state.diagram!=='M';
   updateSolveFab();
-  if(fm) renderFM(); else if(sdv) renderSDView(); else if(vwv) renderVW(); else resize();
+  if(fm) renderFM(); else if(sdv) renderSDView(); else if(vwv) renderVW(); else if(stv) renderST(); else resize();
 }
-document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v==='solve'?(detSolvable()?'vw':(state.solveMethod||'fm')):b.dataset.v));
+document.querySelectorAll('#viewSeg button').forEach(b=>b.onclick=()=>setView(b.dataset.v==='solve'?(detSolvable()?detTarget():(state.solveMethod||'fm')):b.dataset.v));
 function solveHead(){
   const m=state.view;
   const c=(v,t,s)=>`<button class="ccard" data-solve="${v}" aria-pressed="${m===v}"><span class="ci">${ICONS[v]}</span><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
@@ -4156,9 +4696,9 @@ function wireSolveHead(box){
   ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) return; setEI(v/uc(1,'EI')); commitHistory(); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
   ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
 }
-$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else renderFM(); };
+$('#fmM').onclick=e=>{ state.fm.showM=!state.fm.showM; e.currentTarget.setAttribute('aria-pressed',state.fm.showM); $('#sideWrap').hidden=!state.fm.showM; if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else if(state.view==='st') renderST(); else renderFM(); };
 $('#fmN').onclick=e=>{ state.fm.showN=!state.fm.showN; e.currentTarget.setAttribute('aria-pressed',state.fm.showN); if(state.view==='sd') renderSDView(); else renderFM(); };
-$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else renderFM(); };
+$('#fmV').onclick=e=>{ state.fm.showV=!state.fm.showV; e.currentTarget.setAttribute('aria-pressed',state.fm.showV); if(state.view==='sd') renderSDView(); else if(state.view==='vw') renderVW(); else if(state.view==='st') renderST(); else renderFM(); };
 
 /* ---------- force method view ---------- */
 function fmtEI(v,dec=2){ const a=Math.abs(v); return (v<0?'−':'')+a.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
