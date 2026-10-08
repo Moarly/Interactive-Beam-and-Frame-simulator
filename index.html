@@ -805,6 +805,25 @@ body.in-solve #viewSeg{box-shadow:none}
 .st-eq .xbox{border:1.4px solid var(--deform);padding:1px 7px;border-radius:3px}
 .st-eq .xcap{text-align:center;font-style:italic;color:var(--muted)}
 .st-eq img.xfig,.st-diag img.xfig{width:100%;border-radius:8px;display:block}
+
+/* ---------- per-member EI ---------- */
+details.memei{border:1px solid var(--line);border-radius:12px;padding:8px 12px;margin-top:12px;background:var(--paper)}
+details.memei > summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:14.5px}
+.mchip2{font-size:12px;color:var(--muted);font-weight:600;text-align:right}
+.mei-list{display:flex;flex-direction:column;gap:10px;margin:8px 0}
+.mei-row{border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--panel)}
+.mei-h{display:flex;align-items:baseline;gap:8px}
+.mei-h b{font-family:var(--cond);font-size:16px}.mei-h small{color:var(--muted)}
+.mei-val{margin-left:auto;font-size:12.5px;color:var(--muted);font-family:var(--cond);font-weight:600}
+.mei-q{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:6px 0 2px}
+.mei-q button{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:3px 9px;font-size:12.5px;font-weight:700;cursor:pointer}
+.mei-q button[aria-pressed="true"]{background:var(--deform);border-color:var(--deform);color:#fff}
+.mei-q .num{margin-left:auto}.mei-q .num input{width:64px}
+.mei-ei{margin-top:6px}.mei-ei summary{cursor:pointer;color:var(--muted);font-size:12.5px;font-weight:600}
+.mei-calc{margin-top:6px}.mei-calc .btn{margin-top:6px;width:100%}
+.mei-calc .erow{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;margin-top:6px}
+.mei-calc .erow label{font-family:var(--cond);font-weight:800}.mei-calc select{width:auto;min-width:104px}
+.mei-calc .econv{font-size:12.5px;color:var(--muted);margin-top:6px;font-family:var(--cond)}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 </head>
@@ -1081,7 +1100,7 @@ const PRESETS = [
 const state = {
   preset:null, kind:'beam', spans:[8], W:8, H:4,
   nodes:[], members:[], runs:[], runOf:[], supports:{}, loads:[],
-  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', hinges:{}, cgeo:{nodes:[],members:[],mid:1}, units:'si', ccw:true, eachColor:false, theme:'auto', colors:{}, showBent:true,
+  mat:'steel', E:200, I:8000, A:1e5, page:'det', view:'play', fm:{sel:null,showM:false,showV:false,showN:false}, tab:'edit', hinges:{}, cgeo:{nodes:[],members:[],mid:1}, units:'si', memK:{}, ccw:true, eachColor:false, theme:'auto', colors:{}, showBent:true,
   settle:{}, diagram:'none', bmSide:'tension', probe:{run:0,s:0,show:true}, showDims:true, scaleMul:1, baseScale:null, result:null, hl:null
 };
 const isBeam = () => state.kind==='beam';
@@ -1093,6 +1112,12 @@ const UNITSYS={
   us:{len:['ft',FT], force:['kip',KIP], dist:['kip/ft',KIP/FT], moment:['kip·ft',KIP*FT], defl:['in',39.37007874], settle:['in',0.0393700787], E:['ksi',145.0377377], I:['in⁴',0.0240250961], EI:['kip·ft²',KIP*FT*FT]}
 };
 const STEPS={si:{len:0.05,force:0.5,dist:0.5,moment:0.5,settle:0.5,E:1,I:10}, us:{len:0.1,force:0.1,dist:0.05,moment:0.5,settle:0.02,E:100,I:1}};
+/* per-member EI: each member can carry a multiple k of the reference EI (E × I) */
+function memKey(mi){ return (state.preset==='custom'&&state.cgeo&&state.cgeo.members[mi]) ? 'c'+state.cgeo.members[mi].id : 'm'+mi; }
+function memK(mi){ const k=state.memK&&state.memK[memKey(mi)]; return k>0?k:1; }
+function eiVaries(){ return state.members.some((_,i)=>Math.abs(memK(i)-1)>1e-9); }
+function kLabel(k){ k=+k.toPrecision(4); return Math.abs(k-1)<1e-9?'EI':(k+'EI'); }
+function eiSummary(){ return state.members.map(([a,b],i)=>`${letter(a)}${letter(b)} = ${kLabel(memK(i))}`).join(', '); }
 const PALETTE=['#E4572E','#2E86AB','#E09F1F','#7B2CBF','#139A8A','#D7263D','#4361EE','#6A994E'];
 function loadColor(l){
   if(state.eachColor){ const i=state.loads.findIndex(x=>x.id===l.id); return PALETTE[(i<0?0:i)%PALETTE.length]; }
@@ -1283,7 +1308,8 @@ function solve(opts={}){
       const i=list[k].n, j=list[k+1].n;
       const dx=nodes[j].x-nodes[i].x, dy=nodes[j].y-nodes[i].y, L=Math.hypot(dx,dy);
       if(L<1e-9) continue;
-      const c=dx/L, s=dy/L, kl=localK(EA,EI,L), T=rotT(c,s);
+      const EIm=EI*memK(mi);
+      const c=dx/L, s=dy/L, kl=localK(EA,EIm,L), T=rotT(c,s);
       const rs=[]; if(rel.has(mi+':a')&&ta<1e-9) rs.push(2); if(rel.has(mi+':b')&&tb>1-1e-9) rs.push(5);
       const dofs=[3*i,3*i+1,3*i+2,3*j,3*j+1,3*j+2];
       const qa0=qx0*c+qy0*s, qt0=-qx0*s+qy0*c, qa1=qx1*c+qy1*s, qt1=-qx1*s+qy1*c;
@@ -1298,7 +1324,7 @@ function solve(opts={}){
       const kg=TtKT(T,kc);
       for(let p=0;p<6;p++) for(let q=0;q<6;q++) K[dofs[p]*nd+dofs[q]]+=kg[p][q];
       const feg=matTVec(T,fc); for(let p=0;p<6;p++) F[dofs[p]]+=feg[p];
-      els.push({i,j,m:mi,t0:ta,t1:tb,L,c,s,kl,T,dofs,qt0,qt1,qa0,qa1,fe,mLen,EI,EA,rs});
+      els.push({i,j,m:mi,t0:ta,t1:tb,L,c,s,kl,T,dofs,qt0,qt1,qa0,qa1,fe,mLen,EI:EIm,EA,rs});
     }
   });
   EL.forEach(l=>{
@@ -1465,7 +1491,7 @@ function slopeDeflection(){
     const va=-r.u[3*a]*s+r.u[3*a+1]*c, vb=-r.u[3*b]*s+r.u[3*b+1]*c;
     const psi=-(vb-va)/L*g;
     const [fa,fb]=memberFEM(m);
-    return {m,a,b,L,psi,FEMab:fa*g,FEMba:fb*g,Mab:-e0.f[2]*g,Mba:-e1.f[5]*g,relA:isHingeNode(a),relB:isHingeNode(b)};
+    return {m,a,b,L,k:memK(m),psi,FEMab:fa*g,FEMba:fb*g,Mab:-e0.f[2]*g,Mba:-e1.f[5]*g,relA:isHingeNode(a),relB:isHingeNode(b)};
   });
   return {EI,theta,members};
 }
@@ -2275,6 +2301,7 @@ function renderMaterial(){
   eiw.innerHTML=`<div class="fh"><label for="eiDirect"><b>EI</b> (bending stiffness)</label><span class="num"><input id="eiDirect" type="number" inputmode="decimal" step="any" min="1"><span>${uu('EI')}</span></span></div>`;
   box.prepend(eiw);
   if(custom) box.prepend(eiCalc());
+  box.appendChild(memberEICard());
   const ei=eiw.querySelector('input');
   ei.onchange=()=>{ const v=parseFloat(ei.value); if(!(v>0)) { updateEI(); return; } commitHistory(); setEI(v/uc(1,'EI')); renderMaterial(); recompute(); toast(`EI set to ${Math.round(v).toLocaleString()} ${uu('EI')}`); };
   ei.onkeydown=e=>{ if(e.key==='Enter') ei.blur(); };
@@ -2377,7 +2404,7 @@ let saved={}, defaults={}, lastPreset={}, saveTimer=0;
 try{ const raw=JSON.parse(localStorage.getItem(SAVE_KEY)||'{}'); saved=raw.saved||{}; lastPreset=raw.last||{}; }catch(e){}
 function snapshot(){
   return JSON.parse(JSON.stringify({kind:state.kind, spans:state.spans, W:state.W, H:state.H, supports:state.supports, settle:state.settle,
-    loads:state.loads, mat:state.mat, E:state.E, I:state.I, hinges:state.hinges||{}, ...(state.preset==='custom'?{cgeo:state.cgeo}:{})}));
+    loads:state.loads, mat:state.mat, E:state.E, I:state.I, memK:state.memK||{}, hinges:state.hinges||{}, ...(state.preset==='custom'?{cgeo:state.cgeo}:{})}));
 }
 const cmpKey=sn=>JSON.stringify({...sn, loads:sn.loads.map(({id,...rest})=>rest)});
 function isModified(id){ return !!(saved[id] && defaults[id] && cmpKey(saved[id])!==cmpKey(defaults[id])); }
@@ -2393,7 +2420,7 @@ function updateEditedMarks(){
   const r=$('#resetBtn'); if(r){ r.disabled=!mod; r.title=mod?'Reset this structure to its original setup':'Nothing to reset yet'; }
 }
 function applyDefaults(p){
-  state.kind=p.kind; state.hinges={...(p.hinges||{})};
+  state.kind=p.kind; state.hinges={...(p.hinges||{})}; state.memK={};
   if(p.id==='custom') state.cgeo=JSON.parse(JSON.stringify(p.cgeo||{nodes:[],members:[],mid:1}));
   if(p.kind==='beam'&&p.spans) state.spans=p.spans.slice(); else if(p.kind!=='beam'){ state.W=p.W; state.H=p.H; }
   state.supports={...p.supports}; state.settle={...(p.settle||{})}; state.loads=[]; state.runs=[];
@@ -2406,7 +2433,7 @@ function applyDefaults(p){
   });
 }
 function applySnapshot(sn){
-  state.kind=sn.kind; state.hinges={...(sn.hinges||{})};
+  state.kind=sn.kind; state.hinges={...(sn.hinges||{})}; state.memK={...(sn.memK||{})};
   if(sn.cgeo) state.cgeo=JSON.parse(JSON.stringify(sn.cgeo));
   if(sn.kind==='beam'&&sn.spans) state.spans=sn.spans.slice(); else if(sn.kind!=='beam'){ state.W=sn.W; state.H=sn.H; }
   state.supports={...sn.supports}; state.settle={...sn.settle}; state.runs=[];
@@ -2478,9 +2505,54 @@ function eiCalc(){
 // reset E, I and material to the structure's starting values
 $('#matReset').onclick=()=>{
   const d=defaults[state.preset]; commitHistory();
-  state.mat=d?d.mat:'steel'; state.E=d?d.E:200; state.I=d?d.I:8000; state.eiu={E:'GPa',I:'e6mm4'};
+  state.mat=d?d.mat:'steel'; state.E=d?d.E:200; state.I=d?d.I:8000; state.eiu={E:'GPa',I:'e6mm4'}; state.memK={...((d&&d.memK)||{})};
   renderMaterial(); recompute(); toast('Material reset');
 };
+
+/* ---------- different EI for each member ---------- */
+const K_QUICK=[0.5,1,1.5,2,3,4];
+function setMemK(mi,k,commit){
+  state.memK=state.memK||{}; const key=memKey(mi);
+  if(!(k>0)||Math.abs(k-1)<1e-9) delete state.memK[key]; else state.memK[key]=k;
+  recompute(); if(commit) commitHistory();
+}
+function memberEICard(){
+  const card=document.createElement('details'); card.className='memei'; card.open=eiVaries();
+  const n=state.members.length;
+  const refEI=()=>uc(curEI(),'EI');
+  card.innerHTML=`<summary><b>Different EI for each member</b><span class="mchip2">${eiVaries()?eiSummary():'all members the same'}</span></summary>
+    <p class="note">Questions often say things like "beam 2EI, columns EI". Set each member's stiffness as a multiple of the EI above. The solver, the force method, slope-deflection and virtual work all use it.</p><div class="mei-list"></div>
+    <button class="link" data-k="reset">Make all members the same</button>`;
+  const list=card.querySelector('.mei-list');
+  if(!n){ list.innerHTML='<p class="empty">Add a member first.</p>'; return card; }
+  state.members.forEach(([a,b],mi)=>{
+    const row=document.createElement('div'); row.className='mei-row';
+    const k=memK(mi);
+    row.innerHTML=`<div class="mei-h"><b>${letter(a)}${letter(b)}</b><small>${q(memberLen(mi),'len',2)}</small><span class="mei-val">= ${Math.round(refEI()*k).toLocaleString()} ${uu('EI')}</span></div>
+      <div class="mei-q">${K_QUICK.map(v=>`<button data-v="${v}" aria-pressed="${Math.abs(k-v)<1e-9}">${v===1?'EI':v+'EI'}</button>`).join('')}
+        <span class="num"><input type="number" step="any" min="0.01" inputmode="decimal" value="${+k.toPrecision(5)}" aria-label="EI multiple for member ${letter(a)}${letter(b)}"><span>× EI</span></span></div>
+      <details class="mei-ei"><summary>Set from E and I</summary><div class="mei-calc"></div></details>`;
+    const inp=row.querySelector('input');
+    const apply=(v,commit)=>{ setMemK(mi,v,commit); if(commit){ const open=card.open; const keep=[...card.querySelectorAll('.mei-ei')].map(d=>d.open); renderMaterial(); const c2=$('#matFields')&&$('#matFields').querySelector('.memei'); if(c2) c2.open=true; } };
+    row.querySelectorAll('.mei-q button').forEach(b=>b.onclick=()=>apply(+b.dataset.v,true));
+    inp.oninput=()=>{ const v=parseFloat(inp.value); if(v>0){ setMemK(mi,v,false); row.querySelector('.mei-val').textContent=`= ${Math.round(refEI()*v).toLocaleString()} ${uu('EI')}`; card.querySelector('.mchip2').textContent=eiVaries()?eiSummary():'all members the same'; } };
+    inp.onchange=()=>{ const v=parseFloat(inp.value); if(v>0) apply(v,true); };
+    // this member's own E and I, in any units; stored as a multiple of the reference EI
+    const calc=row.querySelector('.mei-calc'), eu0=E_UNITS[0], iu0=I_UNITS[1];
+    const Em=state.E*1e6, Im=state.I*1e-8*k;  // starting values: reference E, I scaled by k
+    calc.innerHTML=`<div class="erow"><label>E</label><span class="num"><input type="number" step="any" min="0" data-k="E" value="${+(Em/eu0[1]).toPrecision(6)}"></span><select data-k="Eu">${E_UNITS.map(u=>`<option value="${u[0]}" ${u[0]===eu0[0]?'selected':''}>${u[2]}</option>`).join('')}</select></div>
+      <div class="erow"><label>I</label><span class="num"><input type="number" step="any" min="0" data-k="I" value="${+(Im/iu0[1]).toPrecision(6)}"></span><select data-k="Iu">${I_UNITS.map(u=>`<option value="${u[0]}" ${u[0]===iu0[0]?'selected':''}>${u[2]}</option>`).join('')}</select></div>
+      <div class="econv"></div><button class="btn" data-k="apply">Use for ${letter(a)}${letter(b)}</button>`;
+    const eIn=calc.querySelector('[data-k=E]'), iIn=calc.querySelector('[data-k=I]'), eSel=calc.querySelector('[data-k=Eu]'), iSel=calc.querySelector('[data-k=Iu]'), out=calc.querySelector('.econv');
+    const kOf=()=>{ const eU=E_UNITS.find(u=>u[0]===eSel.value), iU=I_UNITS.find(u=>u[0]===iSel.value), E=parseFloat(eIn.value), I=parseFloat(iIn.value); if(!(E>0)&&!(I>0)) return null; if(!(E>0)||!(I>0)) return null; const EI=E*eU[1]*I*iU[1]; return {EI, k:EI/curEI()}; };
+    const show=()=>{ const r=kOf(); out.innerHTML = r ? `EI = ${Math.round(uc(r.EI,'EI')).toLocaleString()} ${uu('EI')} = <b>${+r.k.toPrecision(4)} × EI</b> of the reference` : 'Enter E and I.'; };
+    [eIn,iIn].forEach(i=>i.oninput=show); [eSel,iSel].forEach(s=>s.onchange=()=>{ const old=s===eSel?eu0:iu0; show(); });
+    calc.querySelector('[data-k=apply]').onclick=()=>{ const r=kOf(); if(r) apply(r.k,true); };
+    show(); list.appendChild(row);
+  });
+  card.querySelector('[data-k=reset]').onclick=()=>{ state.memK={}; commitHistory(); recompute(); renderMaterial(); const c2=$('#matFields')&&$('#matFields').querySelector('.memei'); if(c2) c2.open=false; toast('All members use the same EI'); };
+  return card;
+}
 
 /* ---------- slope-deflection view ---------- */
 function kinematic(){
@@ -2544,11 +2616,11 @@ function renderSDView(){
     const end=(n1,n2,F,lab,Ffar,nearHinge,farHinge)=>{
       let s=`M<sub>${lab}</sub> = `, parts=[];
       if(nearHinge) return s+'0 &nbsp;<span class="sm">(hinge)</span>';
-      const mod=farHinge, kN=mod?3/L:4/L;
+      const mod=farHinge, kk=m.k||1, kN=(mod?3:4)*kk/L;
       if(free(n1)) parts.push({c:kN,t:`EI${th(n1)}`});
-      if(!mod && free(n2)) parts.push({c:2/L,t:`EI${th(n2)}`});
+      if(!mod && free(n2)) parts.push({c:2*kk/L,t:`EI${th(n2)}`});
       let konst=uc(mod?F-Ffar/2:F,'moment');
-      const kp=mod?-3/L:-6/L;
+      const kp=(mod?-3:-6)*kk/L;
       if(Math.abs(m.psi)>1e-9){ if(psiKnown) konst+= kp*EI*m.psi; else parts.push({c:kp,t:`EIψ<sub>${A}${B}</sub>`}); }
       parts.forEach((p,i)=>{ s+=(i===0?(p.c<0?'−':''):sgnN(p.c))+coef(p.c)+p.t; });
       if(!parts.length) s+=fmt(konst,2); else if(Math.abs(konst)>1e-9) s+=sgnN(konst)+fmt(Math.abs(konst),2);
@@ -2557,7 +2629,7 @@ function renderSDView(){
     const hdr = m.relA&&m.relB ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinged at both ends, so both end moments are zero`
       : (m.relA||m.relB) ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinge at ${m.relA?A:B}, so use the modified equation M = (3EI/L)(θ − ψ) + FEM′, with FEM′ = FEM<sub>near</sub> − ½FEM<sub>far</sub>`
       : `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM`;
-    eqs+=`<div class="sdblk"><div class="sm">${hdr}</div>${end(m.a,m.b,m.FEMab,A+B,m.FEMba,m.relA,m.relB)}<br>${end(m.b,m.a,m.FEMba,B+A,m.FEMab,m.relB,m.relA)}</div>`;
+    eqs+=`<div class="sdblk"><div class="sm">${hdr}${Math.abs((m.k||1)-1)>1e-9?` &nbsp;·&nbsp; <b>this member is ${kLabel(m.k)}</b>, so its stiffness terms are multiplied by ${+m.k.toPrecision(4)}`:''}</div>${end(m.a,m.b,m.FEMab,A+B,m.FEMba,m.relA,m.relB)}<br>${end(m.b,m.a,m.FEMba,B+A,m.FEMab,m.relB,m.relA)}</div>`;
   });
   cards.push(`<div class="card wide"><h3><span class="step">4</span>Slope-deflection equations</h3><p><b>Sign convention: ${signName()}</b> for moments, rotations θ and chord rotations ψ. Write the equation for both ends of every member. Rotations at fixed supports are zero, so they drop out${psiKnown&&sd.members.some(m=>Math.abs(m.psi)>1e-9)?', and known settlement chord rotations are already worked into the numbers':''}. Moments in ${mu}, EI in ${uu('EI')}.</p><div class="eq">${eqs}</div></div>`);
   // 5. equilibrium
@@ -2868,7 +2940,7 @@ function loadTemplate(i){
 }
 function afterGeoChange(full){
   if(state.runs.length && state.probe && !state.runs[state.probe.run]){ state.probe.run=0; state.probe.s=r2(state.runs[0].len/2); }
-  renderSize(); renderSupports(); if(full) renderLoads(); else state.loads.forEach(syncLoadRow); renderProbe(); recompute();
+  renderSize(); renderSupports(); if(full) renderLoads(); else state.loads.forEach(syncLoadRow); renderProbe(); renderMaterial(); recompute();
 }
 // keep loads attached to their members (by stable member id) through any geometry edit
 function editGeo(mutate){
@@ -3227,13 +3299,13 @@ const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 const pick=arr=>arr[Math.floor(Math.random()*arr.length)];
 // run fn with a temporary structure loaded, then put everything back exactly as it was
 function withStructure(def,fn){
-  const keys=['preset','kind','spans','W','H','nodes','members','runs','runOf','supports','settle','loads','result','E','I','mat','fm','cgeo','hinges'];
+  const keys=['preset','kind','spans','W','H','nodes','members','runs','runOf','supports','settle','loads','result','E','I','mat','fm','cgeo','hinges','memK'];
   const keep={}; keys.forEach(k=>keep[k]=state[k]);
   try{
     state.preset=def.preset; state.kind=def.kind; state.fm={...state.fm, sel:null, sig:null};
     if(def.kind==='beam') state.spans=def.spans.slice(); else { state.W=def.W; state.H=def.H; }
     if(def.preset==='custom') state.cgeo={nodes:def.nodes.map(p=>[...p]), members:def.members.map(([a,b],i)=>({a,b,id:i+1})), mid:def.members.length+1};
-    state.hinges={...(def.hinges||{})};
+    state.hinges={...(def.hinges||{})}; state.memK={};
     state.supports={...def.supports}; state.settle={}; state.loads=[]; state.runs=[]; state.E=200; state.I=8000; state.mat='steel';
     const g=genGeometry(); state.nodes=g.nodes; state.members=g.members; if(def.preset==='custom') state.kind='frame'; buildRuns();
     state.loads=def.loads.map(d=>{ const id=uid++;
@@ -3544,6 +3616,7 @@ function openPracticeShared(code){
 /* ---------- what's new feed ---------- */
 // newest first; items older than a week drop off the main feed
 const UPDATES=[
+  {d:'2026-10-05', tag:'new', t:'Different EI for each member', p:'In Material & section, give every member its own stiffness (like 2EI for a beam and EI for the columns), or set it from its own E and I. The solver, force method, slope-deflection and virtual work all use it.'},
   {d:'2026-10-04', tag:'new', t:'Solve determinate structures by statics', p:'Solve now offers Statics (free-body diagram, numbered equilibrium equations, boxed reactions, diagrams) or Virtual work for deflections. The export has the same choice.'},
   {d:'2026-10-04', tag:'new', t:'Export the full solution as a PDF', p:'The new Export button opens a preview of a complete worked solution (problem, free-body diagram, equilibrium, method working, cuts with N, V and M, diagrams and summary), then saves it as a PDF.'},
   {d:'2026-10-04', tag:'improved', t:'Solve is easier to find', p:'A highlighted "Solve step by step" button in the toolbar and a floating Solve button on the drawing take you straight to the working.'},
@@ -3645,10 +3718,10 @@ function vwTable(R,i,j){ // j = null → Δ_i0 (M0 · m_i); else δ_ij (m_i · m
     const A=elPolys(j==null?e0:R.U[j].els[sg.k]), Bp=elPolys(ei);
     const fa = j==null ? pScale(A.M,Mf,Lf) : pScale(A.M,mScale(R.reds[j]),Lf);
     const fb = pScale(Bp.M,mScale(R.reds[i]),Lf);
-    const x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(fa,fb),x0,x1));
+    const x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(fa,fb),x0,x1)/memK(sg.m));
     total+=val; n++;
     const [a,b]=state.members[sg.m];
-    rows+=`<tr><td><span class="segno">${n}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td><td class="eqn">${pFmt(fa)}</td><td class="eqn">${pFmt(fb)}</td><td>${fmtEI(val)}</td></tr>`;
+    rows+=`<tr><td><span class="segno">${n}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td><td class="eqn">${pFmt(fa)}</td><td class="eqn">${pFmt(fb)}</td>${eiVaries()?`<td>${kLabel(memK(sg.m))}</td>`:''}<td>${fmtEI(val)}</td></tr>`;
   });
   return {rows,total};
 }
@@ -3659,16 +3732,17 @@ function vwBlock(R,i,j){
   const nm = j==null ? `Δ${sub(i+1)}${sub(0)}` : `δ${sub(i+1)}${sub(j+1)}`;
   const A = j==null ? `M${sub(0)}(x)` : `m${sub(j+1)}(x)`, B=`m${sub(i+1)}(x)`;
   return `<details class="vwork" open><summary>Virtual work: ${nm} × EI = ∫ ${A}·${B} dx</summary>
-    <p class="note">x is measured from the first joint of each member (A→B means from A). Moments in ${uu('moment')}, x in ${uu('len')}, sagging positive.</p>
-    <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>${A}</th><th>${B}</th><th>∫ ${A==='M₀(x)'?'M₀':A.replace('(x)','')}·${B.replace('(x)','')} dx</th></tr>${rows}
-    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="4">Settlement of the supports you kept (moves the primary structure without bending it)</td><td>${fmtEI(settle)}</td></tr>`:''}
-    <tr class="tot"><td colspan="4"><b>${nm} × EI</b></td><td><b>${fmtEI(total+settle)}</b></td></tr></table></div>
+    <p class="note">x is measured from the first joint of each member (A→B means from A). Moments in ${uu('moment')}, x in ${uu('len')}, sagging positive.${eiVaries()?` Members have different stiffness (${eiSummary()}), so each segment's integral is divided by its member's k, where EI<sub>member</sub> = k·EI.`:''}</p>
+    <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>${A}</th><th>${B}</th>${eiVaries()?'<th>EI of member</th>':''}<th>${eiVaries()?'∫ ':'∫ '}${A==='M₀(x)'?'M₀':A.replace('(x)','')}·${B.replace('(x)','')} dx${eiVaries()?' / k':''}</th></tr>${rows}
+    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="${eiVaries()?5:4}">Settlement of the supports you kept (moves the primary structure without bending it)</td><td>${fmtEI(settle)}</td></tr>`:''}
+    <tr class="tot"><td colspan="${eiVaries()?5:4}"><b>${nm} × EI</b></td><td><b>${fmtEI(total+settle)}</b></td></tr></table></div>
     <p class="status ${Math.abs(total+settle-target)<1e-3*Math.max(1,Math.abs(target))?'ok':'bad'}" style="margin-top:6px">${Math.abs(total+settle-target)<1e-3*Math.max(1,Math.abs(target))?'Same as the value above ✓':'Check: the value above is '+fmtEI(target)}</p></details>`;
 }
 
 /* ---------- deflection tables (beams with a simply supported or cantilever primary) ---------- */
 function tablesSetup(R){
   if(!isBeam()) return {err:'Deflection tables are set up here for beams. For frames, use Virtual work.'};
+  if(eiVaries()) return {err:'Deflection tables assume the same EI along the whole beam. Your members have different EI ('+eiSummary()+'), so use Virtual work.'};
   const xs=state.nodes.map(p=>p[0]), minx=Math.min(...xs), maxx=Math.max(...xs), L=maxx-minx;
   const supp=Object.entries(R.prim).filter(([n,d])=>d.some(k=>k!==0)).map(([n,d])=>({n:+n,d,x:state.nodes[n][0]-minx}));
   let kind=null, fixedLeft=true;
@@ -3748,7 +3822,7 @@ function tablesBlock(R,i,j){
   return `<details class="vwork" open><summary>Deflection tables: Δ${sub(i+1)}${sub(0)} × EI, the ${want} at ${redName(rd)}</summary>
     <p class="note">Superposition: add the effect of each load on the ${caseName}, using the standard table formulas (they give downward deflection${rd.d===2?' and clockwise slope':''} for a downward load, so the sign is flipped to match ${rd.d===2?'anticlockwise':'upward'} positive).</p>
     <div class="wtab"><table class="sdt work-t"><tr><th>Load</th><th>Table case</th><th>Formula (× 1/EI)</th><th>Values</th><th>× EI</th></tr>${rows}
-    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="4">Settlement of the supports you kept (rigid-body movement)</td><td>${fmtEI(settle)}</td></tr>`:''}
+    ${Math.abs(settle)>1e-6*Math.max(1,Math.abs(target))?`<tr><td colspan="${eiVaries()?5:4}">Settlement of the supports you kept (rigid-body movement)</td><td>${fmtEI(settle)}</td></tr>`:''}
     <tr class="tot"><td colspan="4"><b>Δ${sub(i+1)}${sub(0)} × EI</b></td><td><b>${fmtEI(sum+settle)}</b></td></tr></table></div>
     <p class="status ${Math.abs(sum+settle-target)<1e-3*Math.max(1,Math.abs(target))?'ok':'bad'}" style="margin-top:6px">${Math.abs(sum+settle-target)<1e-3*Math.max(1,Math.abs(target))?'Same as the value above ✓':'Close to the value above (rounding in the integration).'}</p></details>`;
 }
@@ -3849,11 +3923,11 @@ function renderVW(){
   let rowsM='', rowsm='', rowsI='', total=0, k=0;
   real.els.forEach((e,i)=>{ const ev=virt.els[i]; if(!ev) return; k++;
     const A=elPolys(e), B=elPolys(ev), [a,b]=state.members[e.m];
-    const Md=pScale(A.M,Mf,Lf), md=pScale(B.M,mF,Lf), x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(Md,md),x0,x1)); total+=val;
+    const Md=pScale(A.M,Mf,Lf), md=pScale(B.M,mF,Lf), x0=A.x0*Lf, x1=A.x1*Lf, val=(v=>Math.abs(v)<1e-9?0:v)(pInt(pMul(Md,md),x0,x1)/memK(e.m)); total+=val;
     const seg=`<td><span class="segno">${k}</span> ${letter(a)}${letter(b)}</td><td>${fmt(x0,2)} → ${fmt(x1,2)}</td>`;
     rowsM+=`<tr>${seg}<td class="eqn">${pFmt(Md)}</td><td class="eqn">${pFmt(pScale(A.V,uc(1,'force'),Lf))}</td></tr>`;
     rowsm+=`<tr>${seg}<td class="eqn">${pFmt(md)}</td></tr>`;
-    rowsI+=`<tr>${seg}<td class="eqn">${pFmt(Md)}</td><td class="eqn">${pFmt(md)}</td><td>${fmtEI(val)}</td></tr>`;
+    rowsI+=`<tr>${seg}<td class="eqn">${pFmt(Md)}</td><td class="eqn">${pFmt(md)}</td>${eiVaries()?`<td>${kLabel(memK(e.m))}</td>`:''}<td>${fmtEI(val)}</td></tr>`;
   });
   // the answer, and the exact value from the stiffness solution to check against
   const exactSI = qty==='v' ? -exact.dy : qty==='h' ? exact.dx : exact.rot*(state.ccw?1:-1);
@@ -3892,9 +3966,9 @@ function renderVW(){
       ${!state.fm.showM&&!state.fm.showV?'':''}
       <details class="vwork" open><summary>Virtual moment in each segment</summary><div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range (${uu('len')})</th><th>m(x)${qty==='r'?'':' ('+uu('len')+')'}</th></tr>${rowsm}</table></div></details></div>
     <div class="card wide"><h3><span class="step">4</span>Virtual work: Δ = ∫ M·m / EI dx</h3>
-      <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>M(x)</th><th>m(x)</th><th>∫ M·m dx</th></tr>${rowsI}
-      ${hasSettle?`<tr><td colspan="4">Support settlement (virtual reactions × settlement, a rigid-body term)</td><td>${fmtEI(settleTerm)}</td></tr>`:''}
-      <tr class="tot"><td colspan="4"><b>EI × Δ</b></td><td><b>${fmtEI(total+(hasSettle?settleTerm:0))}</b></td></tr></table></div>
+      <div class="wtab"><table class="sdt work-t"><tr><th>Segment</th><th>x range</th><th>M(x)</th><th>m(x)</th>${eiVaries()?'<th>EI of member</th>':''}<th>∫ M·m dx${eiVaries()?' / k':''}</th></tr>${rowsI}
+      ${hasSettle?`<tr><td colspan="${eiVaries()?5:4}">Support settlement (virtual reactions × settlement, a rigid-body term)</td><td>${fmtEI(settleTerm)}</td></tr>`:''}
+      <tr class="tot"><td colspan="${eiVaries()?5:4}"><b>EI × Δ</b></td><td><b>${fmtEI(total+(hasSettle?settleTerm:0))}</b></td></tr></table></div>
       <div class="dwans"><span class="lbl">${what[0].toUpperCase()+what.slice(1)} at ${locName(l)}</span>
         <span class="eq">Δ = ${fmtEI(total+(hasSettle?settleTerm:0))} / ${Math.round(EId).toLocaleString()} = <b>${ansTxt}</b></span>
         <span class="status ${ok?'ok':'bad'}">${ok?'Matches the full stiffness analysis ✓':'Check: the stiffness analysis gives a slightly different value'}</span></div>
@@ -4259,7 +4333,7 @@ function xpBuild(){
     const kind=isBeam()?'BEAM':'FRAME';
     const meth = ind ? (XP.method==='sd'?'Slope-deflection method':XP.method==='fm-tab'?'Force method (deflection tables)':'Force method (virtual work)') : (XP.dwOn?'Equilibrium and virtual work':'Equilibrium');
     let h=`<div class="xtitlebox"><div class="xtitle">${XP.title||'Solution'}</div><div class="xkind">${kind}</div><div class="xby">${meth} · step-by-step solution · ${date}</div></div>
-      <p class="xunits">Working units: &nbsp;${it('L')} [${uu('len')}] &nbsp; ${it('F')} [${uu('force')}] &nbsp; ${it('M')} [${uu('moment')}] &nbsp; ${it('q')} [${uu('dist')}] &nbsp; ${it('δ')} [${uu('defl')}] &nbsp; ${it('EI')} [${uu('EI')}] &nbsp;·&nbsp; EI = ${Math.round(uc(curEI(),'EI')).toLocaleString()} ${uu('EI')} &nbsp;·&nbsp; moments ${state.ccw?'anticlockwise':'clockwise'} positive</p>`;
+      <p class="xunits">Working units: &nbsp;${it('L')} [${uu('len')}] &nbsp; ${it('F')} [${uu('force')}] &nbsp; ${it('M')} [${uu('moment')}] &nbsp; ${it('q')} [${uu('dist')}] &nbsp; ${it('δ')} [${uu('defl')}] &nbsp; ${it('EI')} [${uu('EI')}] &nbsp;·&nbsp; EI = ${Math.round(uc(curEI(),'EI')).toLocaleString()} ${uu('EI')}${eiVaries()?' (reference; members: '+eiSummary()+')':''} &nbsp;·&nbsp; moments ${state.ccw?'anticlockwise':'clockwise'} positive</p>`;
     if(S.problem){
       const img=figure('',300,cv=>renderMini(cv,{restr, EL:r.EL, dims:true, loadLabels:true}));
       const lines=[];
@@ -4710,7 +4784,7 @@ function solveHead(){
   const c=(v,t,s)=>`<button class="ccard" data-solve="${v}" aria-pressed="${m===v}"><span class="ci">${ICONS[v]}</span><span class="ct"><b>${t}</b><small>${s}</small></span></button>`;
   const settled=Object.keys(state.settle).some(n=>state.settle[n]&&state.supports[n]);
   const eiBox=`<div class="eibar ${settled?'warn':''}"><b>EI used:</b><span class="num"><input class="eiSolve" aria-label="EI used in this solution" type="number" inputmode="decimal" step="any" min="1" value="${showNum(uc(curEI(),'EI'),0)}"><span>${uu('EI')}</span></span>
-    <span class="eimsg">${settled?'⚠ A support settles, so the answers depend on EI. Make sure this matches the EI in your question.':'Moments from loads don\'t depend on EI; it only changes deflections and settlement effects.'}</span></div>`;
+    <span class="eimsg">${eiVaries()?'Reference EI. Members differ: '+eiSummary()+'.':settled?'⚠ A support settles, so the answers depend on EI. Make sure this matches the EI in your question.':'Moments from loads don\'t depend on EI; it only changes deflections and settlement effects.'}</span></div>`;
   return `<div class="solvehead"><h3>Solve this structure</h3><div class="ccards">${c('fm','Force method','redundants & compatibility')}${c('sd','Slope-deflection','rotations & end moments')}</div><p>Pick a method. Each one walks through every step, and both give the same final answer.</p>${eiBox}</div>`;
 }
 function wireSolveHead(box){
