@@ -828,6 +828,15 @@ details.memei > summary{cursor:pointer;display:flex;justify-content:space-betwee
 .atj .lbl{margin:0 4px 0 0}
 .atj button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:3px 9px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink)}
 .atj button:hover{border-color:var(--deform);color:var(--deform)}
+.sdmod{display:flex;align-items:center;gap:8px;margin:2px 0 8px;padding:8px 10px;border:1px solid color-mix(in srgb,var(--deform) 35%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--deform) 7%,transparent);font-weight:600;font-size:14px;cursor:pointer}
+.sdmod input{width:17px;height:17px;accent-color:var(--deform)}
+.sdmod small{color:var(--muted);font-weight:500}
+.femwork{margin-top:12px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper)}
+.femt{font-weight:700;font-size:13.5px;margin-bottom:6px}.femt small{font-weight:500;color:var(--muted)}
+.femrow{padding:6px 0;border-top:1px dashed var(--line);font-family:"STIX Two Text","Times New Roman",serif;font-size:15px;line-height:1.6}
+.femrow:first-of-type{border-top:0}
+.femh{font-family:var(--font);font-size:13.5px}.femh small{color:var(--muted)}
+.femind{padding-left:2.2em}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 </head>
@@ -1478,9 +1487,9 @@ function forceMethod(){
 }
 
 /* ---------- slope-deflection values (clockwise positive) ---------- */
-function memberFEM(m){
+function memberFEM(m,only){
   const r=state.result; if(!r||r.unstable) return [0,0];
-  const sub=r.EL.filter(l=>l.m===m).map(l=>({...l,m:0}));
+  const sub=(only||r.EL.filter(l=>l.m===m)).map(l=>({...l,m:0}));
   const [a,b]=state.members[m];
   const keep={nodes:state.nodes, members:state.members};
   state.nodes=[state.nodes[a],state.nodes[b]]; state.members=[[0,1]];
@@ -2583,9 +2592,90 @@ function memberEICard(){
 }
 
 /* ---------- slope-deflection view ---------- */
+function pinEnd(n){
+  if(state.sdMod===false || isHingeNode(n)) return false;
+  const d=restraintsFrom(state.supports)[n]; if(!d || d.includes(2) || !(d.includes(0)||d.includes(1))) return false;
+  return state.members.filter(m=>m[0]===n||m[1]===n).length===1;
+}
+function modFEM(m){
+  const rA=!!(m.relA||pinEnd(m.a)), rB=!!(m.relB||pinEnd(m.b));
+  if(rA&&rB) return {ab:0, ba:0, rA, rB};
+  if(rA) return {ab:0, ba:m.FEMba-m.FEMab/2, rA, rB};
+  if(rB) return {ab:m.FEMab-m.FEMba/2, ba:0, rA, rB};
+  return {ab:m.FEMab, ba:m.FEMba, rA, rB};
+}
+
+/* ---------- fixed-end moments written with the Hibbeler table formulas ---------- */
+function femWorkingHTML(sd){
+  const r=state.result, g=SG(), Lf=uc(1,'len'), mu=uu('moment');
+  const n2=v=>{ const x=Math.abs(v)<5e-10?0:v; return String(parseFloat(x.toFixed(Math.abs(x)>=100?1:Math.abs(x)>=1?2:3))).replace(/^-/,'−'); };
+  const blocks=[];
+  sd.members.forEach(m=>{
+    const loads=(r.EL||[]).filter(l=>l.m===m.m && l.type!=='moment');
+    if(!loads.length) return;
+    const f=modFEM(m), A=letter(m.a), B=letter(m.b), L=m.L, [na,nb]=state.members[m.m];
+    const ex=(state.nodes[nb][0]-state.nodes[na][0])/L, ey=(state.nodes[nb][1]-state.nodes[na][1])/L;
+    const perp=l=>{ const d=DIRS[l.dir]||[0,-1]; return Math.abs(d[0]*ey-d[1]*ex); };
+    const Ld=n2(L*Lf);
+    // one table case per load: returns {fab, fba, pin (fixed-end formula when the other end is pinned)} as [text, plugged, magnitude]
+    const cases=l=>{
+      const k=perp(l); if(k<1e-9) return null;
+      if(l.type==='point'){
+        const P=l.mag*k, a=l.t*L, b=L-a, Pd=n2(uc(P,'force')), ad=n2(a*Lf), bd=n2(b*Lf);
+        if(l.t<1e-9||l.t>1-1e-9) return {zero:true};
+        if(Math.abs(l.t-0.5)<1e-9) return {fab:['PL/8',`(${Pd})(${Ld})/8`,P*L/8], fba:['PL/8',`(${Pd})(${Ld})/8`,P*L/8], pA:['3PL/16',`3(${Pd})(${Ld})/16`,3*P*L/16], pB:['3PL/16',`3(${Pd})(${Ld})/16`,3*P*L/16]};
+        return {fab:['Pb²a/L²',`(${Pd})(${bd})²(${ad})/(${Ld})²`,P*b*b*a/(L*L)], fba:['Pa²b/L²',`(${Pd})(${ad})²(${bd})/(${Ld})²`,P*a*a*b/(L*L)],
+          pA:['(P/L²)(b²a + a²b/2)',`(${Pd}/${Ld}²)((${bd})²(${ad}) + (${ad})²(${bd})/2)`,P/(L*L)*(b*b*a+a*a*b/2)],   // fixed at A, pinned at B
+          pB:['(P/L²)(a²b + b²a/2)',`(${Pd}/${Ld}²)((${ad})²(${bd}) + (${bd})²(${ad})/2)`,P/(L*L)*(a*a*b+b*b*a/2)]};  // fixed at B, pinned at A
+      }
+      const full=l.a<1e-9&&l.b>1-1e-9, w1=l.wa*k, w2=l.wb*k;
+      if(full && Math.abs(w1-w2)<1e-9){ const w=w1, wd=n2(uc(w,'dist'));
+        return {fab:['wL²/12',`(${wd})(${Ld})²/12`,w*L*L/12], fba:['wL²/12',`(${wd})(${Ld})²/12`,w*L*L/12], pA:['wL²/8',`(${wd})(${Ld})²/8`,w*L*L/8], pB:['wL²/8',`(${wd})(${Ld})²/8`,w*L*L/8]}; }
+      if(full && Math.min(w1,w2)<1e-9){ const w=Math.max(w1,w2), wd=n2(uc(w,'dist')), atA=w1>w2;
+        const big=['wL²/20',`(${wd})(${Ld})²/20`,w*L*L/20], small=['wL²/30',`(${wd})(${Ld})²/30`,w*L*L/30];
+        const p15=['wL²/15',`(${wd})(${Ld})²/15`,w*L*L/15], p7=['7wL²/120',`7(${wd})(${Ld})²/120`,7*w*L*L/120];
+        return atA ? {fab:big, fba:small, pA:p15, pB:p7} : {fab:small, fba:big, pA:p7, pB:p15}; }
+      const half=Math.abs(l.b-l.a-0.5)<1e-9 && Math.abs(w1-w2)<1e-9;
+      if(half && (l.a<1e-9||l.b>1-1e-9)){ const w=w1, wd=n2(uc(w,'dist')), atA=l.a<1e-9;
+        const big=['11wL²/192',`11(${wd})(${Ld})²/192`,11*w*L*L/192], small=['5wL²/192',`5(${wd})(${Ld})²/192`,5*w*L*L/192];
+        const p=atA?{pA:['9wL²/128',`9(${wd})(${Ld})²/128`,9*w*L*L/128]}:{pB:['9wL²/128',`9(${wd})(${Ld})²/128`,9*w*L*L/128]};
+        return atA ? {fab:big, fba:small, ...p} : {fab:small, fba:big, ...p}; }
+      return null;
+    };
+    // the end moments to write: fixed-fixed both ends, or only the fixed end of a pinned–fixed member
+    const ends = f.rA&&f.rB ? [] : f.rA ? [['ba',true]] : f.rB ? [['ab',true]] : [['ab',false],['ba',false]];
+    if(!ends.length){ blocks.push(`<div class="femrow"><b>${A}${B}</b>: pinned at both ends, so both fixed-end moments are 0.</div>`); return; }
+    const lines=ends.map(([end,pinned])=>{
+      const nearL = end==='ab'?A+B:B+A;
+      const lab = pinned ? `(FEM)′<sub>${nearL}</sub>` : `(FEM)<sub>${nearL}</sub>`;
+      const terms=[]; let ok=true, total=0;
+      loads.forEach(l=>{
+        const v=memberFEM(m.m,[l]); // clockwise +, fixed-fixed
+        const exact = pinned ? (end==='ab' ? v[0]-v[1]/2 : v[1]-v[0]/2) : (end==='ab'?v[0]:v[1]);
+        total+=exact;
+        if(Math.abs(exact)<1e-9) return;
+        const c=cases(l); const key = pinned ? (end==='ab'?'pA':'pB') : (end==='ab'?'fab':'fba');
+        const t=c&&c[key];
+        const sg=exact*g<0?'−':'';
+        if(t && Math.abs(Math.abs(t[2])-Math.abs(exact))<1e-6*Math.max(1,Math.abs(exact))) terms.push({f:`${sg}${t[0]}`, p:`${sg}${t[1]}`, v:exact*g});
+        else { ok=false; terms.push({f:'(found by integration)', p:'', v:exact*g}); }
+      });
+      if(!terms.length) return `${lab} = 0`;
+      const jn=(arr)=>arr.map((x,i)=>i===0?x:(x.startsWith('−')?' − '+x.slice(1):' + '+x)).join('');
+      const vals=terms.map(t=>n2(uc(t.v,'moment')));
+      return terms.length===1
+        ? `${lab} = ${terms[0].f}${terms[0].p?` = ${terms[0].p}`:''} = <b>${n2(uc(total*g,'moment'))}</b> ${mu}`
+        : `${lab} = ${jn(terms.map(t=>t.f))}<br><span class="femind">= ${jn(vals)} = <b>${n2(uc(total*g,'moment'))}</b> ${mu}</span>`;
+    });
+    const caseTxt = f.rA ? `pinned at ${A}, fixed at ${B}` : f.rB ? `fixed at ${A}, pinned at ${B}` : 'fixed at both ends';
+    blocks.push(`<div class="femrow"><div class="femh"><b>${A}${B}</b> <small>(${caseTxt}, L = ${Ld} ${uu('len')})</small></div>${lines.join('<br>')}</div>`);
+  });
+  if(!blocks.length) return '';
+  return `<div class="femwork"><div class="femt">Table formulas <small>(Hibbeler fixed-end moments; P, w and a, b are measured on each member, perpendicular to it)</small></div>${blocks.join('')}</div>`;
+}
 function kinematic(){
   const N=state.nodes.length, R=restraintsFrom(state.supports);
-  const rot=state.nodes.map((_,n)=>n).filter(n=>!(R[n]||[]).includes(2) && !isHingeNode(n));
+  const rot=state.nodes.map((_,n)=>n).filter(n=>!(R[n]||[]).includes(2) && !isHingeNode(n) && !pinEnd(n));
   // translations: members are axially rigid, so (u_b − u_a)·e = 0 for each member
   const rows=[];
   state.members.forEach(([a,b])=>{ const dx=state.nodes[b][0]-state.nodes[a][0], dy=state.nodes[b][1]-state.nodes[a][1], L=Math.hypot(dx,dy);
@@ -2613,25 +2703,32 @@ function renderSDView(){
   const sgnN=v=>v<0?' − ':' + ';
   const coef=v=>{ const a=Math.abs(v); return (Math.abs(a-1)<1e-9?'':fmt(a,4).replace(/\.?0+$/,'')) ; };
   const free=n=>kin.rot.includes(n);
+  const pinEnds=state.nodes.map((_,n)=>n).filter(pinEnd);
+  sd.members.forEach(m=>{ m.pinA=pinEnd(m.a); m.pinB=pinEnd(m.b); m.relA=m.relA||m.pinA; m.relB=m.relB||m.pinB; });
   // ignore numerically tiny chord rotations (from the very stiff axial members)
   const psiMax=Math.max(0,...sd.members.map(m=>Math.abs(m.psi)));
-  sd.members.forEach(m=>{ if(Math.abs(m.psi)<Math.max(1e-9,1e-3*psiMax)) m.psi=0; });
+  sd.members.forEach(m=>{ if(Math.abs(m.psi)<Math.max(1e-6,1e-3*psiMax)) m.psi=0; });
   const cards=[];
   // 1. kinematic indeterminacy
   const pinNodes=kin.rot.filter(n=>{ const d=R[n]||[]; return d.includes(0)||d.includes(1); });
+  const hasPinEnd=state.nodes.some((_,n)=>{ const d=R[n]; return d && !d.includes(2) && (d.includes(0)||d.includes(1)) && !isHingeNode(n) && state.members.filter(m=>m[0]===n||m[1]===n).length===1; });
   cards.push(`<div class="card wide"><h3><span class="step">1</span>Degree of kinematic indeterminacy</h3>
+    ${hasPinEnd?`<label class="sdmod"><input type="checkbox" id="sdModT" ${state.sdMod!==false?'checked':''}> Use the modified equation at pin and roller ends <small>(skips those rotations, like a hand solution)</small></label>`:''}
     <p>Count the joint movements you don't know: rotations of joints that aren't fixed, plus independent sideways movements (sway), treating members as unable to stretch.</p>
     <div class="eq">Unknown rotations: ${kin.rot.length?kin.rot.map(th).join(', '):'none'} &nbsp;(${kin.rot.length})<br>
     Independent sway / joint translations: ${kin.sway}<br><b>Degree of kinematic indeterminacy = ${kin.rot.length} + ${kin.sway} = ${kin.rot.length+kin.sway}</b></div>
     ${state.nodes.some((_,n)=>isHingeNode(n))?`<p>Internal hinge${state.nodes.filter((_,n)=>isHingeNode(n)).length>1?'s':''} at ${state.nodes.map((_,n)=>n).filter(n=>isHingeNode(n)).map(letter).join(', ')}: the moment there is zero, so members meeting the hinge use the modified equation and the hinge rotation isn't an unknown.</p>`:''}
-    ${pinNodes.length?`<p>Tip: at a pinned or roller end (${pinNodes.map(letter).join(', ')}) you can use the modified equation M = (3EI/L)(θ − ψ) + FEM′ to remove that rotation from the unknowns.</p>`:''}
+    ${pinEnds.length?`<p><b>${pinEnds.map(letter).join(', ')}</b> ${pinEnds.length>1?'are pins or rollers':'is a '+(state.supports[pinEnds[0]]==='roller'?'roller':'pin')} at the end of a member, so the moment there is zero. That member uses the modified equation M = (3EI/L)(θ − ψ) + FEM′, and ${pinEnds.map(th).join(', ')} ${pinEnds.length>1?'are':'is'} not counted as unknown${pinEnds.length>1?'s':''}.</p>`
+      : pinNodes.length?`<p>Tip: at a pinned or roller end (${pinNodes.map(letter).join(', ')}) you can use the modified equation M = (3EI/L)(θ − ψ) + FEM′ to remove that rotation from the unknowns. Turn on the option above to do that.</p>`:''}
     ${kin.sway?`<p>This structure can sway, so the chord rotations ψ of the columns are unknown too, and you need one extra equation per sway (horizontal equilibrium, written with column shears).</p>`:''}
     <canvas class="mini" id="sdKin" style="height:280px"></canvas>
     <p class="note">The blue line is how the loads bend the structure (exaggerated). Each red tangent shows an unknown joint rotation θ measured from the original member${kin.sway?', and Δ marks joints that move sideways or down':''}${Object.keys(state.settle).some(n=>state.settle[n])?'. A settled support is drawn where it ends up (its original spot is faded); that movement is known, so it isn\'t an unknown':''}.</p></div>`);
   // 2. fixed-end moments
-  cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Treat every member as fixed at both ends and find the end moments its loads cause (${signName()}).</p>
-    <table class="sdt"><tr><th>Member</th><th>L (${uu('len')})</th><th>FEM near (${mu})</th><th>FEM far (${mu})</th></tr>
-    ${sd.members.map(m=>`<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.L*Lf,2)}</td><td>${Mv(m.FEMab)}</td><td>${Mv(m.FEMba)}</td></tr>`).join('')}</table></div>`);
+  const anyRel=sd.members.some(m=>{ const f=modFEM(m); return f.rA||f.rB; });
+  const caseOf=m=>{ const f=modFEM(m), A=letter(m.a), B=letter(m.b); return f.rA&&f.rB?'pinned both ends':f.rA?`pinned ${A}, fixed ${B}`:f.rB?`fixed ${A}, pinned ${B}`:'fixed both ends'; };
+  cards.push(`<div class="card"><h3><span class="step">2</span>Fixed-end moments</h3><p>Lock every joint you are solving for and find the end moments each member's loads cause (${signName()}).${anyRel?' A member with a pinned end (a pin or roller at the end, or a hinge) is pinned–fixed, so its moment at the pinned end is zero and the fixed end takes FEM′ = FEM<sub>fixed end</sub> − ½FEM<sub>pinned end</sub> (3PL/16 for a centred point load, wL²/8 for a uniform load).':''}</p>
+    <table class="sdt"><tr><th>Member</th><th>L (${uu('len')})</th>${anyRel?'<th>Case</th>':''}<th>FEM near (${mu})</th><th>FEM far (${mu})</th></tr>
+    ${sd.members.map(m=>{ const f=modFEM(m); return `<tr><td>${nm(m.a,m.b)}</td><td>${fmt(m.L*Lf,2)}</td>${anyRel?`<td>${caseOf(m)}</td>`:''}<td>${Mv(f.ab)}</td><td>${Mv(f.ba)}</td></tr>`; }).join('')}</table>${femWorkingHTML(sd)}</div>`);
   // 3. chord rotations
   const psiKnown=kin.sway===0;
   cards.push(`<div class="card"><h3><span class="step">3</span>Chord rotations ψ</h3><p>ψ is how much a member's straight line between its ends rotates (${signName()}): ψ = Δ/L. It comes from support settlement or sway.</p>
@@ -2643,7 +2740,7 @@ function renderSDView(){
     // hinged (released) far end: modified equation M = (3EI/L)(θ − ψ) + FEM′, and the hinged end moment is zero
     const end=(n1,n2,F,lab,Ffar,nearHinge,farHinge)=>{
       let s=`M<sub>${lab}</sub> = `, parts=[];
-      if(nearHinge) return s+'0 &nbsp;<span class="sm">(hinge)</span>';
+      if(nearHinge) return s+`0 &nbsp;<span class="sm">(${pinEnd(n1)?(state.supports[n1]==='roller'?'roller':'pin')+' end':'hinge'})</span>`;
       const mod=farHinge, kk=m.k||1, kN=(mod?3:4)*kk/L;
       if(free(n1)) parts.push({c:kN,t:`EI${th(n1)}`});
       if(!mod && free(n2)) parts.push({c:2*kk/L,t:`EI${th(n2)}`});
@@ -2651,11 +2748,11 @@ function renderSDView(){
       const kp=(mod?-3:-6)*kk/L;
       if(Math.abs(m.psi)>1e-9){ if(psiKnown) konst+= kp*EI*m.psi; else parts.push({c:kp,t:`EIψ<sub>${A}${B}</sub>`}); }
       parts.forEach((p,i)=>{ s+=(i===0?(p.c<0?'−':''):sgnN(p.c))+coef(p.c)+p.t; });
-      if(!parts.length) s+=fmt(konst,2); else if(Math.abs(konst)>1e-9) s+=sgnN(konst)+fmt(Math.abs(konst),2);
+      if(!parts.length) s+=fmt(konst,2); else if(Math.abs(konst)>=0.005) s+=sgnN(konst)+fmt(Math.abs(konst),2);
       return s;
     };
     const hdr = m.relA&&m.relB ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinged at both ends, so both end moments are zero`
-      : (m.relA||m.relB) ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: hinge at ${m.relA?A:B}, so use the modified equation M = (3EI/L)(θ − ψ) + FEM′, with FEM′ = FEM<sub>near</sub> − ½FEM<sub>far</sub>`
+      : (m.relA||m.relB) ? `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: ${(m.relA?m.pinA:m.pinB)?((state.supports[m.relA?m.a:m.b]==='roller'?'roller':'pin')+' at the end '+(m.relA?A:B)):'hinge at '+(m.relA?A:B)}, so use the modified equation M = (3EI/L)(θ − ψ) + FEM′, with FEM′ = FEM<sub>near</sub> − ½FEM<sub>far</sub>`
       : `Member ${A}${B}, L = ${fmt(L,2)} ${uu('len')}: M = (2EI/L)(2θ<sub>near</sub> + θ<sub>far</sub> − 3ψ) + FEM`;
     eqs+=`<div class="sdblk"><div class="sm">${hdr}${Math.abs((m.k||1)-1)>1e-9?` &nbsp;·&nbsp; <b>this member is ${kLabel(m.k)}</b>, so its stiffness terms are multiplied by ${+m.k.toPrecision(4)}`:''}</div>${end(m.a,m.b,m.FEMab,A+B,m.FEMba,m.relA,m.relB)}<br>${end(m.b,m.a,m.FEMba,B+A,m.FEMab,m.relB,m.relA)}</div>`;
   });
@@ -2683,6 +2780,7 @@ function renderSDView(){
     ${state.fm.showN&&!isBeam()?`<h4 class="sub">Axial force (${uu('force')}), tension (T) and compression (C)</h4><canvas class="mini" id="sdN" style="height:240px"></canvas>`:''}
     ${!state.fm.showM&&!state.fm.showV&&!(state.fm.showN&&!isBeam())?`<p class="note">Use <b>Moment diagram</b>, <b>Shear diagram</b>${isBeam()?'':' or <b>Axial diagram</b>'} in the toolbar to add the final diagrams here.</p>`:''}</div>`);
   box.innerHTML=`<div class="fm-grid">${solveHead()}${cards.join('')}</div>`; wireSolveHead(box);
+  const smt=$('#sdModT'); if(smt) smt.onchange=()=>{ state.sdMod=smt.checked; saveSettings(); renderSDView(); };
   const restr=restraintsFrom(state.supports);
   // markers: rotation arcs at unknown joints, sway arrow at a free top joint
   const md=r.maxDisp||1;
@@ -3519,9 +3617,10 @@ function buildQuestions(def,method){
       const nm=(a,b)=>letter(a)+letter(b);
       out.intro=`Use the slope-deflection method (${signName()} for moments and rotations). Unknown rotations: ${kin.rot.map(n=>'θ'+letter(n)).join(', ')||'none'}${kin.sway?`, plus ${kin.sway} sway`:''}.`;
       const loaded=new Set(state.result.EL.map(l=>l.m));
+      sd.members.forEach(m=>{ const f=modFEM(m); m.rFA=f.rA; m.rFB=f.rB; m.FEMab=f.ab; m.FEMba=f.ba; });
       sd.members.filter(m=>loaded.has(m.m)&&(Math.abs(m.FEMab)>1e-6||Math.abs(m.FEMba)>1e-6)).slice(0,2).forEach(m=>{
         out.qs.push({label:`FEM<sub>${nm(m.a,m.b)}</sub>`, sub:`fixed-end moment at ${letter(m.a)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMab,'moment'), hint:`Uniform load: wL²/12. Point load: Pab²/L² (near end) and Pa²b/L² (far end). With ${signName()}, a downward load on a left-to-right member gives ${state.ccw?'a positive near-end and a negative far-end':'a negative near-end and a positive far-end'} FEM.`});
-        out.qs.push({label:`FEM<sub>${nm(m.b,m.a)}</sub>`, sub:`fixed-end moment at ${letter(m.b)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMba,'moment'), hint:'Same member, other end; opposite sign for a symmetric load.'});
+        out.qs.push({label:`FEM<sub>${nm(m.b,m.a)}</sub>`, sub:`fixed-end moment at ${letter(m.b)} of member ${nm(m.a,m.b)}`, unit:mu, value:uc(m.FEMba,'moment'), hint:(m.rFA||m.rFB)?'This member is pinned at one end: FEM′ = FEM(fixed end) − ½·FEM(pinned end), e.g. 3PL/16 or wL²/8; the pinned end is 0.':'Same member, other end; opposite sign for a symmetric load.'});
       });
       kin.rot.forEach(n=>out.qs.push({label:`θ${letter(n)} × EI`, sub:`joint rotation at ${letter(n)}, ${signName()}, times EI`, unit:EIu, value:sd.theta[n]*EI, hint:`Write ΣM = 0 at ${letter(n)} using the slope-deflection equations, then solve.`}));
       let ends=[];
@@ -3646,6 +3745,8 @@ function openPracticeShared(code){
 /* ---------- what's new feed ---------- */
 // newest first; items older than a week drop off the main feed
 const UPDATES=[
+  {d:'2026-10-14', tag:'improved', t:'Fixed-end moments with table formulas', p:'Slope-deflection step 2 now writes each fixed-end moment with its Hibbeler table formula and the numbers plugged in, like (FEM)′BA = 3PL/16 = 3(120)(6)/16 = 135, including the pinned–fixed cases.'},
+  {d:'2026-10-14', tag:'new', t:'Modified equation at pin and roller ends', p:'Slope-deflection now drops the rotation at a pin or roller at the end of a member and uses M = (3EI/L)(θ − ψ) + FEM′, so you solve for the same θ\'s as a hand solution. Switch it off in step 1 to see the long way.'},
   {d:'2026-10-14', tag:'improved', t:'Point loads stay on their member', p:'Each point load or couple now sits on a chosen member: pick it under On member, set the distance along it, or use the At / Midpoint buttons. Dragging keeps it on that member.'},
   {d:'2026-10-14', tag:'improved', t:'Point loads drawn outside the frame', p:'Arrows now sit on the outside of the structure, pushing in or pulling out, so a sideways load at a corner no longer cuts across the frame.'},
   {d:'2026-10-14', tag:'fixed', t:'Joint coordinates stay open', p:'The Joint coordinates panel in the Workshop no longer closes after every value you type.'},
@@ -4980,10 +5081,10 @@ function loadSettings(){
     if(s.units==='si'||s.units==='us') state.units=s.units;
     if(['auto','light','dark'].includes(s.theme)) state.theme=s.theme;
     if(s.colors&&typeof s.colors==='object') state.colors=s.colors;
-    state.eachColor=!!s.eachColor; if(typeof s.ccw==='boolean') state.ccw=s.ccw; }catch(e){}
+    state.eachColor=!!s.eachColor; if(typeof s.ccw==='boolean') state.ccw=s.ccw; if(typeof s.sdMod==='boolean') state.sdMod=s.sdMod; }catch(e){}
   applyTheme(); applyColors();
 }
-function saveSettings(){ try{ localStorage.setItem('bfp-settings',JSON.stringify({units:state.units,theme:state.theme,colors:state.colors,eachColor:state.eachColor,ccw:state.ccw})); }catch(e){} }
+function saveSettings(){ try{ localStorage.setItem('bfp-settings',JSON.stringify({units:state.units,theme:state.theme,colors:state.colors,eachColor:state.eachColor,ccw:state.ccw,sdMod:state.sdMod})); }catch(e){} }
 function applyTheme(){ if(state.theme==='auto') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme=state.theme; }
 function applyColors(){ const st=document.documentElement.style; COLOR_KEYS.forEach(([k])=>{ if(state.colors[k]) st.setProperty('--'+k,state.colors[k]); else st.removeProperty('--'+k); }); }
 function refreshAll(){
