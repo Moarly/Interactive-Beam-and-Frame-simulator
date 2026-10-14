@@ -824,6 +824,10 @@ details.memei > summary{cursor:pointer;display:flex;justify-content:space-betwee
 .mei-calc .erow{display:grid;grid-template-columns:18px 1fr auto;gap:8px;align-items:center;margin-top:6px}
 .mei-calc .erow label{font-family:var(--cond);font-weight:800}.mei-calc select{width:auto;min-width:104px}
 .mei-calc .econv{font-size:12.5px;color:var(--muted);margin-top:6px;font-family:var(--cond)}
+.atj{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:-2px 0 8px}
+.atj .lbl{margin:0 4px 0 0}
+.atj button{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:3px 9px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--ink)}
+.atj button:hover{border-color:var(--deform);color:var(--deform)}
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap">
 </head>
@@ -1198,12 +1202,19 @@ function expandLoads(){
           out.push({id:l.id, type:'udl', m:g.m, a, b, wa, wb, mag:Math.max(l.mag,l.mag2), dir:l.dir}); }
       });
     } else {
-      const {m,t}=toMember(l.run,l.s);
+      const {m,t}=loadMember(l);
       out.push({id:l.id, type:l.type, m, t, mag:l.mag, dir:l.dir});
     }
   });
   return out;
 }
+// the member a point load or couple is on: its pinned member (l.pm) when it still holds the load
+function loadMember(l){
+  const a=toMember(l.run,l.s,false), b=toMember(l.run,l.s,true);
+  if(l.pm!=null && state.members[l.pm]){ if(a.m===l.pm) return a; if(b.m===l.pm) return b; }
+  return a;
+}
+function setLoadOnMember(l,m,t){ const r=fromMember(m,clamp(t,0,1)); l.run=r.run; l.s=r2(r.s); l.pm=m; }
 function rebuildGeometry(anchor){
   let anchors=null;
   if(anchor && state.runs.length) anchors=state.loads.map(l=> l.type==='udl'
@@ -1796,10 +1807,14 @@ function draw(){
     } else if(l.type==='point'){
       const pc=EL.find(e=>e.id===l.id); if(!pc){ ctx.shadowBlur=0; return; }
       const [px,py]=memberPos(pc.m,pc.t,Da), d=DIRS[l.dir], ds=[d[0],-d[1]];
-      const tp=[px-ds[0]*4, py-ds[1]*4], tl=[tp[0]-ds[0]*54, tp[1]-ds[1]*54];
+      const pull=outward(px,py,ds);
+      // pull: tail on the member, head pointing away; push: head on the member, tail outside
+      const tp = pull ? [px+ds[0]*58, py+ds[1]*58] : [px-ds[0]*4, py-ds[1]*4];
+      const tl = pull ? [px+ds[0]*4, py+ds[1]*4] : [tp[0]-ds[0]*54, tp[1]-ds[1]*54];
       arrow(tl[0],tl[1],tp[0],tp[1],col,2.6*wmul,11);
       ctx.shadowBlur=0;
-      label(q(l.mag,'force'), tl[0]-ds[0]*12+(ds[0]!==0?-ds[0]*18:0), tl[1]-ds[1]*12, col,'center',13,700);
+      const far = pull ? tp : tl, sg = pull ? 1 : -1;
+      label(q(l.mag,'force'), clamp(far[0]+sg*ds[0]*12+(ds[0]!==0?sg*ds[0]*18:0),36,W-90), clamp(far[1]+sg*ds[1]*12,14,Hh-14), col,'center',13,700);
       hits.push({kind:'load',id:l.id,x1:tl[0],y1:tl[1],x2:tp[0],y2:tp[1],px,py,tol:14});
     } else {
       const pc=EL.find(e=>e.id===l.id); if(!pc){ ctx.shadowBlur=0; return; }
@@ -1938,6 +1953,12 @@ function project(sx,sy){
     const t=clamp(((wx-A[0])*vx+(wy-A[1])*vy)/L2,0,1), d=Math.hypot(wx-(A[0]+vx*t), wy-(A[1]+vy*t)); if(d<bd){bd=d;best={m:mi,t};} });
   return best ? {...best, ...fromMember(best.m,best.t)} : null;
 }
+function projectOn(m,sx,sy){ // nearest point on one member only
+  if(!state.members[m]) return null; const [wx,wy]=fromS(sx,sy), [a,b]=state.members[m], A=state.nodes[a], B=state.nodes[b], vx=B[0]-A[0], vy=B[1]-A[1];
+  return {m, t:clamp(((wx-A[0])*vx+(wy-A[1])*vy)/(vx*vx+vy*vy),0,1)};
+}
+// a point load is drawn on the outside of the structure: pushing in from outside, or pulling outward
+function outward(px,py,ds){ const b=structSpan(), [cx,cy]=toS((b.minx+b.maxx)/2,(b.miny+b.maxy)/2); return (px-cx)*ds[0]+(py-cy)*ds[1] > 2; }
 let drag=null, downNode=null;
 cv.addEventListener('pointerdown',e=>{
   if(spaceDown||e.button===1){ const p0=pt(e); panning={x:p0.x,y:p0.y,px:cam.px,py:cam.py,moved:true}; cv.setPointerCapture(e.pointerId); e.preventDefault(); return; }
@@ -1947,7 +1968,7 @@ cv.addEventListener('pointerdown',e=>{
   if(h){
     const l=state.loads.find(x=>x.id===h.id);
     if(h.udl){ const pr=project(p.x+h.adj[0], p.y+h.adj[1]); drag={id:h.id, udl:true, adj:h.adj, offS:(pr&&pr.run===l.run)?pr.s-l.sa:(l.sb-l.sa)/2}; }
-    else drag={id:h.id, offx:p.x-h.px, offy:p.y-h.py};
+    else drag={id:h.id, offx:p.x-h.px, offy:p.y-h.py, pm:loadMember(l).m};
     cv.setPointerCapture(e.pointerId); tip.style.display='none'; cv.style.cursor='grabbing'; setHL(h.id); e.preventDefault(); return;
   }
   const pc=hits.find(x=>x.kind==='probeClose' && Math.hypot(p.x-x.x,p.y-x.y)<11);
@@ -1983,7 +2004,7 @@ cv.addEventListener('pointermove',e=>{
       const R=state.runs[pr.run]; const w=Math.min(l.sb-l.sa, R.len);
       const sa=clamp(r2(pr.s-drag.offS),0,r2(R.len-w)); l.run=pr.run; l.sa=sa; l.sb=r2(Math.min(R.len,sa+w));
     } else {
-      const pr=project(p.x-drag.offx, p.y-drag.offy); if(!pr) return; l.run=pr.run; l.s=r2(pr.s);
+      const pr=projectOn(drag.pm, p.x-drag.offx, p.y-drag.offy); if(!pr) return; setLoadOnMember(l,pr.m,pr.t);
     }
     if(l.run!==prevRun) renderLoads(); else syncLoadRow(l);
     recompute(); return;
@@ -2158,8 +2179,9 @@ function renderLoads(){
       : Object.keys(DIRS).map(k=>`<option value="${k}">${DIR_LABEL[k]}</option>`).join('');
     const runOpts=state.runs.map((r,k)=>`<option value="${k}">${r.name}</option>`).join('');
     row.innerHTML=`<div class="lh"><span class="lt"><i class="lsw"></i>${TITLES[l.type]}${num}</span><button class="link" data-del>Remove</button></div>
-      <div class="row2" ${state.runs.length>1?'':'style="grid-template-columns:1fr"'}>
-        ${state.runs.length>1?`<div><span class="lbl">Along</span><select data-k="run" aria-label="Along members">${runOpts}</select></div>`:''}
+      <div class="row2" ${(l.type!=='udl'?state.members.length>1:state.runs.length>1)?'':'style="grid-template-columns:1fr"'}>
+        ${l.type!=='udl' && state.members.length>1 ? `<div><span class="lbl">On member</span><select data-k="mem" aria-label="Member">${state.members.map(([a,b],k)=>`<option value="${k}">${letter(a)}${letter(b)}</option>`).join('')}</select></div>`
+          : state.runs.length>1?`<div><span class="lbl">Along</span><select data-k="run" aria-label="Along members">${runOpts}</select></div>`:''}
         <div><span class="lbl">Direction</span><select data-k="dir" aria-label="Direction">${dirOpts}</select></div>
       </div>`;
     const f={};
@@ -2186,9 +2208,13 @@ function renderLoads(){
       if(f.w1) row.appendChild(f.w1); if(f.w2) row.appendChild(f.w2);
       const note=document.createElement('p'); note.className='note'; note.dataset.o='cover'; row.appendChild(note); f.note=note;
     } else {
-      f.s=makeField({label:`Distance from ${from}`, kind:'len', min:0, max:R.len, step:0.05, hardMax:R.len, value:l.s,
-        onChange:v=>{ l.s=v; recompute(); }});
-      row.appendChild(f.s);
+      const lm=loadMember(l), Lm=memberLen(lm.m), [ma,mb]=state.members[lm.m];
+      f.s=makeField({label:`Distance from ${letter(ma)} along ${letter(ma)}${letter(mb)}`, kind:'len', min:0, max:Lm, step:0.05, hardMax:Lm, value:r2(lm.t*Lm),
+        onChange:v=>{ const cur=loadMember(l); setLoadOnMember(l,cur.m,v/memberLen(cur.m)); recompute(); }});
+      const jb=document.createElement('div'); jb.className='atj';
+      jb.innerHTML=`<span class="lbl">Quick place</span><button data-t="0">At ${letter(ma)}</button><button data-t="0.5">Midpoint</button><button data-t="1">At ${letter(mb)}</button>`;
+      jb.querySelectorAll('button').forEach(b=>b.onclick=()=>{ const cur=loadMember(l); setLoadOnMember(l,cur.m,+b.dataset.t); syncLoadRow(l); recompute(); });
+      row.append(f.s,jb);
     }
     if(l.type!=='udl'){
       f.mag=makeField({label:'Size', kind:LKIND[l.type], min:0, max:MAXES[l.type], step:0.5, hardMax:100000, dec:2, value:l.mag,
@@ -2201,6 +2227,8 @@ function renderLoads(){
     if(rs){ rs.value=l.run; rs.onchange=e=>{ l.run=+e.target.value; const L=state.runs[l.run].len;
       if(l.type==='udl'){ const w=Math.min(l.sb-l.sa,L); l.sa=clamp(l.sa,0,L-w); l.sb=r2(l.sa+w); } else l.s=clamp(l.s,0,L);
       renderLoads(); recompute(); }; }
+    const msel=row.querySelector('[data-k=mem]');
+    if(msel){ const cur=loadMember(l); msel.value=cur.m; msel.onchange=e=>{ const m=+e.target.value, t=loadMember(l).t; setLoadOnMember(l,m,Math.min(t,1)); renderLoads(); recompute(); }; }
     const ds=row.querySelector('[data-k=dir]'); ds.value=l.dir; ds.onchange=e=>{ l.dir=e.target.value; recompute(); };
     row.addEventListener('mouseenter',()=>setHL(l.id)); row.addEventListener('mouseleave',()=>setHL(null));
     row.addEventListener('focusin',()=>setHL(l.id));
@@ -2216,7 +2244,7 @@ function syncLoadRow(l){
     const covered=l.sb-l.sa;
     f.note.textContent=`Covers ${q(covered,'len',2)} of ${q(L,'len',2)}. Total load ${q((l.mag+l.mag2)/2*covered,'force',1)}.`;
     if(f.w1) f.w1.set(l.mag); if(f.w2) f.w2.set(l.mag2);
-  } else { f.s.set(l.s,{max:L,hardMax:L}); f.mag.set(l.mag); }
+  } else { const lm=loadMember(l), Lm=memberLen(lm.m); f.s.set(r2(lm.t*Lm),{max:Lm,hardMax:Lm}); f.mag.set(l.mag); }
 }
 function defaultRun(){
   if(isBeam()) return 0;
@@ -2925,6 +2953,8 @@ const TEMPLATES=[
   {name:'Past paper frame 2', nodes:[[0,0],[0,4],[5,4],[4,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:0,mag:30,dir:'right'},{type:'point',m:1,t:0.5,mag:80}]},
   {name:'Past paper frame 3', nodes:[[0,0],[0,3],[3,3],[4,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'udl',m:0,mag:18,dir:'right'}]},
   {name:'Past paper frame 4', nodes:[[0,0],[1,3],[4,3],[6,0]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:1,mag:80}]},
+  {name:'Past paper frame 6', nodes:[[0,0],[2,5],[7,5],[8,1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:1,mag:24},{type:'point',m:1,t:1,mag:90,dir:'right'}]},
+  {name:'Past paper frame 6', nodes:[[0,0],[2,5],[7,5],[8,1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{1:true}, loads:[{type:'udl',m:1,mag:24},{type:'point',m:1,t:1,mag:90,dir:'right'}]},
   {name:'Past paper frame 5', nodes:[[0,0],[2,4],[8,4],[9,1]], members:[[0,1],[1,2],[3,2]], supports:{0:'fixed',3:'fixed'}, hinges:{2:true}, loads:[{type:'point',m:0,t:1,mag:60,dir:'left'},{type:'udl',m:1,mag:18}]},
 ];
 function loadTemplate(i){
@@ -3183,7 +3213,7 @@ function renderJoints(){
     box.appendChild(h); }
   // advanced: raw coordinates
   if(cg.nodes.length){
-    const d=document.createElement('details'); d.className='coords';
+    const d=document.createElement('details'); d.className='coords'; d.open=!!ws.coordsOpen; d.addEventListener('toggle',()=>{ ws.coordsOpen=d.open; });
     d.innerHTML=`<summary>Joint coordinates (advanced)</summary><div class="jt" style="margin-top:8px"><div class="jh" style="grid-template-columns:20px 1fr 1fr 22px"><span></span><span>x (${uu('len')})</span><span>y (${uu('len')})</span><span></span></div>${cg.nodes.map((p,n)=>`<div class="jr" data-n="${n}" style="grid-template-columns:20px 1fr 1fr 22px"><b>${letter(n)}</b>
       <span class="num"><input type="number" step="${STEPS[state.units].len}" data-k="x" value="${showNum(uc(p[0],'len'),3)}" aria-label="x of joint ${letter(n)}"></span>
       <span class="num"><input type="number" step="${STEPS[state.units].len}" data-k="y" value="${showNum(uc(p[1],'len'),3)}" aria-label="y of joint ${letter(n)}"></span>
@@ -3616,6 +3646,11 @@ function openPracticeShared(code){
 /* ---------- what's new feed ---------- */
 // newest first; items older than a week drop off the main feed
 const UPDATES=[
+  {d:'2026-10-14', tag:'improved', t:'Point loads stay on their member', p:'Each point load or couple now sits on a chosen member: pick it under On member, set the distance along it, or use the At / Midpoint buttons. Dragging keeps it on that member.'},
+  {d:'2026-10-14', tag:'improved', t:'Point loads drawn outside the frame', p:'Arrows now sit on the outside of the structure, pushing in or pulling out, so a sideways load at a corner no longer cuts across the frame.'},
+  {d:'2026-10-14', tag:'fixed', t:'Joint coordinates stay open', p:'The Joint coordinates panel in the Workshop no longer closes after every value you type.'},
+  {d:'2026-10-07', tag:'new', t:'Another past-paper frame to start from', p:'Workshop → Start from… now includes Past paper frame 6: fixed bases at A and D, a hinge at B, 24 kN/m on BC and a 90 kN horizontal load at C.'},
+  {d:'2026-10-07', tag:'new', t:'Another past-paper frame to start from', p:'Workshop → Start from… now includes Past paper frame 6: fixed bases at A and D, a hinge at B, 24 kN/m on BC and a 90 kN horizontal load at C.'},
   {d:'2026-10-05', tag:'new', t:'Different EI for each member', p:'In Material & section, give every member its own stiffness (like 2EI for a beam and EI for the columns), or set it from its own E and I. The solver, force method, slope-deflection and virtual work all use it.'},
   {d:'2026-10-04', tag:'new', t:'Solve determinate structures by statics', p:'Solve now offers Statics (free-body diagram, numbered equilibrium equations, boxed reactions, diagrams) or Virtual work for deflections. The export has the same choice.'},
   {d:'2026-10-04', tag:'new', t:'Export the full solution as a PDF', p:'The new Export button opens a preview of a complete worked solution (problem, free-body diagram, equilibrium, method working, cuts with N, V and M, diagrams and summary), then saves it as a PDF.'},
@@ -4631,8 +4666,9 @@ function renderMini(canvas,opt){
         } else if(l.type==='point'){
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
-          arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,LC,2,8);
-          { const t=q(l.mag,'force',0); setFont(12,700); const tw=ctx.measureText(t).width; pillQ.push({t, x:px-ds[0]*(42+tw/2), y:py-ds[1]*44, c:LC}); }
+          const pull=outward(px,py,ds), sg=pull?1:-1;
+          if(pull) arrow(px+ds[0]*3,py+ds[1]*3,px+ds[0]*32,py+ds[1]*32,LC,2,8); else arrow(px-ds[0]*30,py-ds[1]*30,px-ds[0]*3,py-ds[1]*3,LC,2,8);
+          { const t=q(l.mag,'force',0); setFont(12,700); const tw=ctx.measureText(t).width; pillQ.push({t, x:px+sg*ds[0]*(44+tw/2), y:py+sg*ds[1]*46, c:LC}); }
         } else {
           const [a,b]=state.members[l.m], A=state.nodes[a], B=state.nodes[b];
           const [px,py]=toS(A[0]+(B[0]-A[0])*l.t, A[1]+(B[1]-A[1])*l.t);
